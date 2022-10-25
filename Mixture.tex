@@ -134,7 +134,6 @@ this as a {\bf convex combination}.}
 
 As noted, the above definition is pretty abstract, but it can be readily
 grasped by considering the above trick coin example.  Here,
-% (\ref{caution}) is (\ref{hsum}), with
 
 \begin{itemize}
 
@@ -252,6 +251,24 @@ And the Law of Total Variance,
 \begin{equation}
 \label{bis}
 Var(Y)=E[Var(Y|W)]+Var[E(Y|W)]
+\end{equation}
+
+Note that the RHSs of (\ref{hsum}) and (\ref{continmix}) can be written as
+
+\begin{equation}
+E[ P(M = k | G) ]
+\end{equation}
+
+and
+
+\begin{equation}
+E[ E(f_M (G) | G)]
+\end{equation}
+
+where $G$ is the mixing variable.  And in both cases
+
+\begin{equation}
+F_M(t) = E[ P(M \leq t ) | G) ]
 \end{equation}
 
 \section{Estimation by Method of Maximum Likelihood and the Method of
