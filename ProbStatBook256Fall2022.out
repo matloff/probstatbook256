@@ -1,0 +1,76 @@
+\BOOKMARK [0][-]{chapter.1}{Time Waste Versus Empowerment}{}% 1
+\BOOKMARK [0][-]{chapter.2}{Basic Probability Models}{}% 2
+\BOOKMARK [1][-]{section.2.1}{ALOHA Network Example}{chapter.2}% 3
+\BOOKMARK [1][-]{section.2.2}{The Crucial Notion of a Repeatable Experiment}{chapter.2}% 4
+\BOOKMARK [1][-]{section.2.3}{Our Definitions}{chapter.2}% 5
+\BOOKMARK [1][-]{section.2.4}{``Mailing Tubes''}{chapter.2}% 6
+\BOOKMARK [1][-]{section.2.5}{Example: ALOHA Network}{chapter.2}% 7
+\BOOKMARK [1][-]{section.2.6}{Bayes' Rule}{chapter.2}% 8
+\BOOKMARK [1][-]{section.2.7}{ALOHA in the Notebook Context}{chapter.2}% 9
+\BOOKMARK [1][-]{section.2.8}{A Note on Modeling}{chapter.2}% 10
+\BOOKMARK [1][-]{section.2.9}{Solution Strategies}{chapter.2}% 11
+\BOOKMARK [1][-]{section.2.10}{Example: Divisibility of Random Integers}{chapter.2}% 12
+\BOOKMARK [1][-]{section.2.11}{Example: A Simple Board Game}{chapter.2}% 13
+\BOOKMARK [1][-]{section.2.12}{Example: Bus Ridership}{chapter.2}% 14
+\BOOKMARK [1][-]{section.2.13}{Random Graph Models}{chapter.2}% 15
+\BOOKMARK [2][-]{subsection.2.13.1}{Example: Preferential Attachment Graph Model}{section.2.13}% 16
+\BOOKMARK [1][-]{section.2.14}{Simulation}{chapter.2}% 17
+\BOOKMARK [2][-]{subsection.2.14.1}{Example: Rolling Dice}{section.2.14}% 18
+\BOOKMARK [2][-]{subsection.2.14.2}{First Improvement}{section.2.14}% 19
+\BOOKMARK [2][-]{subsection.2.14.3}{Second Improvement}{section.2.14}% 20
+\BOOKMARK [2][-]{subsection.2.14.4}{Third Improvement}{section.2.14}% 21
+\BOOKMARK [2][-]{subsection.2.14.5}{Simulation of Conditional Probability in Dice Problem}{section.2.14}% 22
+\BOOKMARK [2][-]{subsection.2.14.6}{Simulation of the ALOHA Example}{section.2.14}% 23
+\BOOKMARK [2][-]{subsection.2.14.7}{Example: Bus Ridership, cont'd.}{section.2.14}% 24
+\BOOKMARK [2][-]{subsection.2.14.8}{Example: Board Game con'd.}{section.2.14}% 25
+\BOOKMARK [2][-]{subsection.2.14.9}{Example: Broken Rod}{section.2.14}% 26
+\BOOKMARK [2][-]{subsection.2.14.10}{How Long Should We Run the Simulation?}{section.2.14}% 27
+\BOOKMARK [1][-]{section.2.15}{Combinatorics-Based Probability Computation}{chapter.2}% 28
+\BOOKMARK [2][-]{subsection.2.15.1}{Which Is More Likely in Five Cards, One King or Two Hearts?}{section.2.15}% 29
+\BOOKMARK [2][-]{subsection.2.15.2}{Example: Random Groups of Students}{section.2.15}% 30
+\BOOKMARK [2][-]{subsection.2.15.3}{Example: Lottery Tickets}{section.2.15}% 31
+\BOOKMARK [2][-]{subsection.2.15.4}{``Association Rules'' in Data Mining}{section.2.15}% 32
+\BOOKMARK [2][-]{subsection.2.15.5}{Multinomial Coefficients}{section.2.15}% 33
+\BOOKMARK [2][-]{subsection.2.15.6}{Example: Probability of Getting Four Aces in a Bridge Hand}{section.2.15}% 34
+\BOOKMARK [0][-]{chapter.3}{Discrete Random Variables}{}% 35
+\BOOKMARK [1][-]{section.3.1}{Random Variables}{chapter.3}% 36
+\BOOKMARK [1][-]{section.3.2}{Discrete Random Variables}{chapter.3}% 37
+\BOOKMARK [1][-]{section.3.3}{Independent Random Variables}{chapter.3}% 38
+\BOOKMARK [1][-]{section.3.4}{Example: The Monty Hall Problem}{chapter.3}% 39
+\BOOKMARK [1][-]{section.3.5}{Expected Value}{chapter.3}% 40
+\BOOKMARK [2][-]{subsection.3.5.1}{Generality\204Not Just for Discrete Random Variables}{section.3.5}% 41
+\BOOKMARK [3][-]{subsubsection.3.5.1.1}{What Is It?}{subsection.3.5.1}% 42
+\BOOKMARK [2][-]{subsection.3.5.2}{Definition}{section.3.5}% 43
+\BOOKMARK [2][-]{subsection.3.5.3}{Existence of the Expected Value}{section.3.5}% 44
+\BOOKMARK [2][-]{subsection.3.5.4}{Computation and Properties of Expected Value}{section.3.5}% 45
+\BOOKMARK [2][-]{subsection.3.5.5}{``Mailing Tubes''}{section.3.5}% 46
+\BOOKMARK [2][-]{subsection.3.5.6}{Casinos, Insurance Companies and ``Sum Users,'' Compared to Others}{section.3.5}% 47
+\BOOKMARK [1][-]{section.3.6}{Variance}{chapter.3}% 48
+\BOOKMARK [2][-]{subsection.3.6.1}{Definition}{section.3.6}% 49
+\BOOKMARK [2][-]{subsection.3.6.2}{More Practice with the Properties of Variance}{section.3.6}% 50
+\BOOKMARK [2][-]{subsection.3.6.3}{Central Importance of the Concept of Variance}{section.3.6}% 51
+\BOOKMARK [2][-]{subsection.3.6.4}{Intuition Regarding the Size of Var\(X\)}{section.3.6}% 52
+\BOOKMARK [3][-]{subsubsection.3.6.4.1}{Chebychev's Inequality}{subsection.3.6.4}% 53
+\BOOKMARK [3][-]{subsubsection.3.6.4.2}{The Coefficient of Variation}{subsection.3.6.4}% 54
+\BOOKMARK [1][-]{section.3.7}{A Useful Fact}{chapter.3}% 55
+\BOOKMARK [1][-]{section.3.8}{Covariance}{chapter.3}% 56
+\BOOKMARK [1][-]{section.3.9}{Indicator Random Variables, and Their Means and Variances}{chapter.3}% 57
+\BOOKMARK [2][-]{subsection.3.9.1}{Example: Return Time for Library Books}{section.3.9}% 58
+\BOOKMARK [2][-]{subsection.3.9.2}{Example: Indicator Variables in a Committee Problem}{section.3.9}% 59
+\BOOKMARK [2][-]{subsection.3.9.3}{Example: Spinner Game}{section.3.9}% 60
+\BOOKMARK [1][-]{section.3.10}{Expected Value, Etc. in the ALOHA Example}{chapter.3}% 61
+\BOOKMARK [1][-]{section.3.11}{Example: Measurements at Different Ages}{chapter.3}% 62
+\BOOKMARK [1][-]{section.3.12}{Example: Bus Ridership Model}{chapter.3}% 63
+\BOOKMARK [1][-]{section.3.13}{Distributions}{chapter.3}% 64
+\BOOKMARK [2][-]{subsection.3.13.1}{Example: Toss Coin Until First Head}{section.3.13}% 65
+\BOOKMARK [2][-]{subsection.3.13.2}{Example: Sum of Two Dice}{section.3.13}% 66
+\BOOKMARK [2][-]{subsection.3.13.3}{Example: Watts-Strogatz Random Graph Model}{section.3.13}% 67
+\BOOKMARK [3][-]{subsubsection.3.13.3.1}{The Model}{subsection.3.13.3}% 68
+\BOOKMARK [3][-]{subsubsection.3.13.3.2}{Further Reading}{subsection.3.13.3}% 69
+\BOOKMARK [1][-]{section.3.14}{Proof of Chebychev's Inequality \(optional section\)}{chapter.3}% 70
+\BOOKMARK [0][-]{chapter.4}{Discrete Parametric Distribution Families}{}% 71
+\BOOKMARK [1][-]{section.4.1}{The Case of Importance to Us: Parameteric Families of pmfs}{chapter.4}% 72
+\BOOKMARK [1][-]{section.4.2}{The Geometric Family of Distributions}{chapter.4}% 73
+\BOOKMARK [2][-]{subsection.4.2.1}{R Functions}{section.4.2}% 74
+\BOOKMARK [2][-]{subsection.4.2.2}{Example: a Parking Space Problem}{section.4.2}% 75
+\BOOKMARK [1][-]{section.4.3}{The Binomial Family of Distributions}{chapter.4}% 76

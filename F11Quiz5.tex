@@ -1,0 +1,136 @@
+
+\documentclass[twocolumn]{article}
+
+\setlength{\oddsidemargin}{-0.5in}
+\setlength{\evensidemargin}{-0.5in}
+\setlength{\topmargin}{0.0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{0.05in}
+\setlength{\columnseprule}{0.3pt}
+\usepackage{fancyvrb}
+\usepackage{relsize}
+\usepackage{hyperref}
+
+\usepackage{listings}
+
+\begin{document}
+
+Name: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+Directions: {\bf Work only on this sheet} (on both sides, if needed); do
+not turn in any supplementary sheets of paper. There is actually plenty
+of room for your answers, as long as you organize yourself BEFORE
+starting writing.
+
+{\bf 1.} () Here you will write an R S3 class {\bf "stack"}, do serve as
+a stack data structure.  (Review:  Items are {\it pushed} onto the
+stack, meaning here that they are added to the right end of a vector,
+and they are popped, meaning deleted from the right end.)  
+
+Here is a sample session:
+
+\begin{lstlisting}
+> source("stack.R")  # read in code
+> ls()
+[1] "pop"   "push"  "stack"
+> stack("mystack")  # make an object
+> ls()  # did we make the object?
+[1] "mystack" "pop"     "push"    "stack"  
+> push(3,"mystack")  # push 3
+> mystack$data  
+[1] 3
+> push(8,"mystack")
+> mystack$data  # check vector is now 3,8
+[1] 3 8
+> pop("mystack")  # should return the 8
+[1] 8
+> mystack$data  # check vector is now 3
+[1] 3
+\end{lstlisting}
+
+The R functions {\bf get()} and {\bf assign()} do what their names
+imply, e.g.
+
+\begin{lstlisting}
+z <- get("x",envir = .GlobalEnv)
+\end{lstlisting}
+
+copies the global variable {\bf x} to {\bf z}, and
+
+\begin{lstlisting}
+assign("u",12,envir = .GlobalEnv)
+\end{lstlisting}
+
+is the equivalent of
+
+\begin{lstlisting}
+u <<- 12
+\end{lstlisting}
+
+Fill in the blanks:
+
+\begin{lstlisting}
+stack <- function(objname) {
+   tmp <-      # blank
+   tmp$data <- vector()
+   tmp$objname <-   # blank
+   # blank; insert 2 lines here
+}
+
+push <- function(val,objname) {
+   tmp <- get(objname, envir=.GlobalEnv)
+   # blank; insert 2 lines here
+}
+
+pop <- function(objname) {
+   tmp <- get(objname, envir=.GlobalEnv)
+   lng <- length(tmp$data)
+   val <-    # blank
+   # blank; insert 2 lines here
+}
+\end{lstlisting}
+
+\onecolumn
+
+{\bf Solutions:}
+
+\begin{lstlisting}
+# the stack class will (in this implementation) have objects only at the
+# global level; an object has 2 member variables, the vector
+# representing the stack, and the name of the object; values are pushed
+# onto/popped off of the right end of the data vector
+
+# constructor for "stack" class; objname is a string, namely a variable
+# to be created at the top level, i.e. global
+stack <- function(objname) {
+   tmp <- list()
+   tmp$data <- vector()
+   tmp$objname <- objname
+   class(tmp) <- "stack"
+   assign(objname, tmp, envir = .GlobalEnv)
+}
+
+# pushes val onto the stack named objname
+push <- function(val,objname) {
+   tmp <- get(objname, envir = .GlobalEnv)
+   tmp$data <- c(tmp$data,val)
+   assign(objname, tmp, envir = .GlobalEnv)
+}
+
+# pops the stack named objname, returns the popped value
+pop <- function(objname) {
+   tmp <- get(objname, envir = .GlobalEnv)
+   lng <- length(tmp$data)
+   val <- tmp$data[lng]
+   tmp$data <- tmp$data[-lng]
+   assign(objname, tmp, envir = .GlobalEnv)
+   return(val)
+}
+\end{lstlisting}
+
+\end{document}
+

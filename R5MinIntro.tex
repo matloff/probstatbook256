@@ -1,0 +1,302 @@
+\chapter{R Quick Start}
+\label{chap:rquickstart}
+
+Here we present a five-minute introduction to the R data/statistical
+programming language.  Further learning resources are available at
+\url{http://heather.cs.ucdavis.edu/~/matloff/r.html}.
+
+R syntax is similar to that of C. It is object-oriented (in the sense of
+encapsulation, polymorphism and everything being an object) and is a
+functional language (i.e. almost no side effects, every action is a
+function call, etc.).
+
+\section{Correspondences}
+
+\begin{tabular}{|l|l|l|}
+\hline
+aspect & C & R \\ \hline 
+\hline
+assignment & = & \verb#<-# (or =) \\ \hline 
+array terminology & array & vector (1-D), matrix (2-D), array (2-D+) \\ \hline 
+array element & m[2,3] & m[2][3] \\ \hline 
+storage & 2-D arrays in row-major order & matrices in column-major order \\ \hline 
+mixed container &struct, members denoted by . & list, members denoted by \$ \\ \hline 
+\end{tabular}
+
+\section{Starting R}
+
+To invoke R, just type ``R'' into a terminal window. On a Windows
+machine, you probably have an R icon to click.  
+
+If you prefer to run from an IDE, the easiest one for a quick install is
+probably RStudio, \url{www.rstudio.org}.
+
+R is (normally) interactive, with $>$ as the prompt.
+
+\section{First Sample Programming Session}
+
+Below is a commented R session, to introduce the concepts. I had a text
+editor open in another window, constantly changing my code, then loading
+it via R's {\bf source()} command.\footnote{I personally am not a big
+fan of using IDEs for my programming activities.  If you use one, it
+probably has a button to click as an alternative to using {\bf
+source()}.} The original contents of the file {\bf odd.R} were:
+
+\begin{lstlisting}[numbers=left]
+oddcount <- function(x)  {
+   k <- 0  # assign 0 to k
+   for (n in x)  {
+      if (n %% 2 == 1) k <- k+1  # %% is the modulo operator
+   }
+   return(k)
+}
+\end{lstlisting}
+
+The R session is shown below.  You may wish to type it yourself as you
+go along, trying little experiments of your own along the
+way.\footnote{The source code for this file is at
+\url{http://heather.cs.ucdavis.edu/~matloff/MiscPLN/R5MinIntro.tex}.}
+
+\begin{lstlisting}[numbers=left]
+> source("odd.R")  # load code from the given file
+> ls()  # what objects do we have?
+[1] "oddcount"
+> # what kind of object is oddcount (well, we already know)?
+> class(oddcount)
+[1] "function"
+> # can print any object by typing its name
+> oddcount
+function(x)  {
+   k <- 0  # assign 0 to k
+   for (n in x)  {
+      if (n %% 2 == 1) k <- k+1  # %% is the modulo operator
+   }
+   return(k)
+}
+> # test it
+> y <- c(5,12,13,8,88)  # c() is the concatenate function
+> y
+[1]  5 12 13  8 88
+> oddcount(y)  # should report 2 odd numbers
+[1] 2
+> # change code to vectorize the count operation
+> source("odd.R")
+> oddcount
+function(x)  {
+   x1 <- (x %% 2) == 1  # x1 now a vector of TRUEs and FALSEs
+   x2 <- x[x1]  # x2 now has the elements of x that were TRUE in x1
+   return(length(x2))
+}
+> # try subset of y, elements 2 through 3
+> oddcount(y[2:3])
+[1] 1
+> # try subset of y, elements 2, 4 and 5
+> oddcount(y[c(2,4,5)])
+[1] 0
+> # compactify the code
+> source("odd.R")
+> oddcount
+function(x)  {
+   length(x[x %% 2 == 1])  # last value computed auto returned
+}
+> oddcount(y)
+[1] 2
+> # now have ftn return odd count AND the odd numbers themselves
+> source("odd.R")
+> oddcount
+function(x)  {
+   x1 <- x[x %% 2 == 1]
+   return(list(odds=x1, numodds=length(x1)))
+}
+> # R's list type can contain any type; components delineated by $
+> oddcount(y)
+$odds
+[1]  5 13
+
+$numodds
+[1] 2
+
+> ocy <- oddcount(y)
+> ocy
+$odds
+[1]  5 13
+
+$numodds
+[1] 2
+
+> ocy$odds
+[1]  5 13
+\end{lstlisting}
+
+Note that the R function {\bf function()} produces functions! Thus
+assignment is used. For example, here is what {\bf odd.R} looked like at
+the end of the above session:
+
+\begin{lstlisting}[numbers=left]
+oddcount <- function(x)  {
+   x1 <- x[x %% 2 == 1]
+   return(list(odds=x1, numodds=length(x1)))
+}
+\end{lstlisting}
+  
+We created some code, and then used function to create a function
+object, which we assigned to {\bf oddcount}.
+
+Note that we eventually {\bf vectorized} our function {\bf oddcount()}.
+This means taking advantage of the vector-based, functional language
+nature of R, exploiting R's built-in functions instead of loops.  This
+changes the venue from interpreted R to C level, with a potentially
+large increase in speed.  For example:
+
+\begin{lstlisting}[numbers=left]
+> x <- runif(1000000)  # 1000000 random numbers from the interval (0,1)
+> system.time(sum(x))
+   user  system elapsed 
+  0.008   0.000   0.006 
+> system.time({s <- 0; for (i in 1:1000000) s <- s + x[i]})
+   user  system elapsed 
+  2.776   0.004   2.859 
+\end{lstlisting}
+
+\section{Second Sample Programming Session}
+
+A matrix is a special case of a vector, with added class attributes,
+the numbers of rows and columns.
+
+\begin{lstlisting}[numbers=left]
+> # "rowbind() function combines rows of matrices; there's a cbind() too
+> m1 <- rbind(1:2,c(5,8))
+> m1
+     [,1] [,2]
+[1,]    1    2
+[2,]    5    8
+> rbind(m1,c(6,-1))
+     [,1] [,2]
+[1,]    1    2
+[2,]    5    8
+[3,]    6   -1
+> m2 <- matrix(1:6,nrow=2)
+> m2
+     [,1] [,2] [,3]
+[1,]    1    3    5
+[2,]    2    4    6
+> ncol(m2)
+[1] 3
+> nrow(m2)
+[1] 2
+> m2[2,3]
+[1] 6
+# get submatrix of m2, cols 2 and 3, any row
+> m3 <- m2[,2:3]
+> m3
+     [,1] [,2]
+[1,]    3    5
+[2,]    4    6
+> m1 * m3  # elementwise multiplication
+     [,1] [,2]
+[1,]    3   10
+[2,]   20   48
+> 2.5 * m3  # scalar multiplication (but see below)
+     [,1] [,2]
+[1,]  7.5 12.5
+[2,] 10.0 15.0
+> m1 %*% m3  # linear algebra matrix multiplication
+     [,1] [,2]
+[1,]   11   17
+[2,]   47   73
+> # matrices are special cases of vectors, so can treat them as vectors 
+> sum(m1)
+[1] 16
+> ifelse(m2 %%3 == 1,0,m2) # (see below)
+     [,1] [,2] [,3]
+[1,]    0    3    5
+[2,]    2    0    6
+\end{lstlisting}
+
+The ``scalar multiplication'' above is not quite what you may think,
+even though the result may be.  Here's why:
+
+In R, scalars don't really exist; they are just one-element vectors.
+However, R usually uses {\bf recycling}, i.e. replication, to make
+vector sizes match.  In the example above in which we evaluated the
+express \verb^2.5 * m3^, the number 2.5 was recycled to the matrix 
+
+\begin{equation}
+\left (
+\begin{array}{rr}
+2.5 & 2.5 \\
+2.5 & 2.5 
+\end{array}
+\right )
+\end{equation}
+
+in order to conform with {\bf m3} for (elementwise) multiplication.
+
+The {\bf ifelse()} function's call has the form
+
+\begin{lstlisting}
+ifelse(boolean vectorexpression1, vectorexpression2, vectorexpression3)
+\end{lstlisting}
+
+All three vector expressions must be the same length, though R will
+lengthen some via recycling.  The action will be to return a vector of
+the same length (and if matrices are involved, then the result also has
+the same shape).  Each element of the result will be set to its
+corresponding element in {\bf vectorexpression2} or {\bf
+vectorexpression3}, depending on whether the corresponding element in
+{\bf vectorexpression1} is TRUE or FALSE.
+
+In our example above,
+
+\begin{lstlisting}
+> ifelse(m2 %%3 == 1,0,m2) # (see below)
+\end{lstlisting}
+
+the expression \verb^m2 %%3 == 1^ evaluated to the boolean matrix
+
+\begin{equation}
+\left (
+\begin{array}{rrr}
+T & F & F\\
+F & T & F
+\end{array}
+\right )
+\end{equation}
+
+(TRUE and FALSE may be abbreviated to T and F.)
+
+The 0 was recycled to the matrix
+
+\begin{equation}
+\left (
+\begin{array}{rrr}
+0 & 0 & 0 \\
+0 & 0 & 0
+\end{array}
+\right )
+\end{equation}
+
+while {\bf vectorexpression3}, {\bf m2}, evaluated to itself.
+
+\section{Online Help} 
+
+R's {\bf help()} function, which can be invoked also with a
+question mark, gives short descriptions of the R functions. For
+example, typing
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> ?rep
+\end{Verbatim}
+  
+will give you a description of R's {\bf rep()} function.
+
+An especially nice feature of R is its {\bf example()} function, which
+gives nice examples of whatever function you wish to query. For
+instance, typing
+
+\begin{lstlisting}
+> example(wireframe())
+\end{lstlisting}
+  
+will show examples---R code and resulting pictures---of {\bf wireframe()},
+one of R's 3-dimensional graphics functions.

@@ -1,0 +1,69 @@
+
+\subsection{Kolmogorov-Smirnov Confidence Bands}
+\label{kolsmi}
+
+Again consider the problem above, in which we were assessing the fit of
+a exponential model.  In line with our major point that confidence
+intervals are far superior to hypothesis tests, we now present {\bf
+Kolmogorov-Smirnov confidence bands}, which work as follows.
+
+Since this method relies on cdfs, recall  
+notion of the {\bf empirical distribution function} (ecdf), Section
+\ref{ecdfsec}.
+It is a sample estimate of a cdf, defined to be the proportion
+of $X_i$ that are below t in the sample.  Graphically, $\widehat{F}_X$
+is a step function, with jumps at the values of the $X_i$.
+
+What Kolmogorov-Smirnov does is form a {\bf confidence band} around the
+empirical cdf of a sample.  The basis for this is that the distribution
+of
+
+\begin{equation}
+\label{definem}
+M = \max_{-\infty < t \infty} |\widehat{F}_X(t) - F_X(t)|
+\end{equation}
+
+{\bf is the same for all distributions having a density}.  This 
+fact (whose proof is related to the general method for simulating random
+variables having a given density, in Section \ref{genrannumgen})
+tells us that, without knowing anything about the distribution of
+X, we can be sure that M has the same distribution.  And it turns out
+that
+
+\begin{equation}
+\label{m95}
+F_M(1.358 n^{-1/2}) \approx 0.95
+\end{equation}
+
+Define ``upper'' and ``lower'' functions
+
+\begin{equation}
+U(t) = \widehat{F}_X(t) + 1.358 n^{-1/2}, ~~
+L(t) = \widehat{F}_X(t) - 1.358 n^{-1/2}
+\end{equation}
+
+So, what (\ref{definem}) and (\ref{m95}) tell us is
+
+\begin{equation}
+0.95 \approx P \left (\textrm{the curve } F_X \textrm{ is entirely between U
+and L} \right ) 
+\end{equation}
+
+So, the pair of curves, (L(t), U(t)) is called a a {\bf 95\% confidence
+band} for $F_X$. 
+
+Now suppose we wish to see how well, say, the gamma distribution family
+fits our application.  If the band is very wide, we know we really don't
+have enough data to decide much about the distribution of X.  But if the
+band is narrow but some member of the family is in the band or is close
+to it, we would probably decide that the model is a good one.  Once
+again, we should NOT pounce on tiny deviations from the model.
+
+Warning:  The Kolmogorov-Smirnov procedure available in
+the R language performs only a hypothesis test, rather than forming a
+confidence band.  In other words, it simply checks to see whether a
+member of the family falls within the band.  This is not what we want,
+because we may be perfectly happy if a member is only {\it near} the
+band.
+
+

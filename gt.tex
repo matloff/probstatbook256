@@ -1,0 +1,931 @@
+\documentclass{beamer}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{fancyvrb}
+\usepackage{relsize}
+% \usepackage[pdftex]{color}
+
+\usepackage{CJKutf8}
+
+\mode<presentation>
+{ \usetheme{Darmstadt} }
+
+\title{Are They the Best and the Brightest? \\
+Analysis of Employer-Sponsored Tech Immigrants}
+
+\author{
+Norm Matloff \\
+Department of Computer Science \\
+University of California at Davis
+}
+
+\date{Institute for the Study of International Migration \\
+Georgetown University \\
+March 18, 2011}
+ 
+\begin{document} 
+
+\begin{frame}
+\titlepage
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The Setting}
+
+\pause
+
+\begin{itemize}
+
+\item ...``[restrictive U.S. immigration policy is] driving away the 
+world's \textcolor{red}{best and brightest}''---Bill Gates, 2007
+% International Educator, May/June 2007
+\pause
+
+\item ``We should not [send our] \textcolor{red}{bright and talented}
+international students...to work for our competitors abroad upon
+graduation''--NAFSA (Nat. Assoc. of Foreign Student Advisers)
+% http://www.nafsa.org/public_policy.sec/international_student_1/immigration_reform_issues/comprehensive_immigration_3
+\pause
+
+\item ``...we should be stapling a green card to the diploma of any
+foreign student who earns an advanced degree at any U.S. university...
+\textcolor{red}{The world’s best brains are on sale}. Let’s buy
+more!''---{\it New York Times} columnist Tom Friedman, 2009
+% NYT, June 27, 2009
+\pause
+
+\item Industry wants more H-1B work visas, and fast-track green cards
+for STEM foreign students.
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Questions}
+
+\begin{itemize}
+
+\item We all support the immigration of outstanding talents, the
+innovative, the ``game changers,'' etc.
+\pause
+
+\item But are most of those sponsored by the tech industry of that caliber?
+\pause
+
+\item How do rates of top foreign talent vary from employer to employer?
+\pause
+
+\item What are rates of top foreign talent among the main nationalities,
+i.e. Chinese and Indian?
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Previous Work}
+\pause
+
+\begin{itemize}
+ 
+\item (North, 1995) found foreign engineering PhD students were
+concentrated in lower-ranked universities.
+\pause
+
+\item (Hunt, 2009, 2011) considered  general immigrants, not just STEM.
+Found: 
+\pause
+
+   \begin{itemize}
+
+   \item immigrants paid less (but Europeans paid more)
+   \pause
+   
+   \item immigrants patent at rates $\leq$ natives
+   \pause
+
+   \item immigrants had more research pubs and higher rates of
+   entrepreneurship
+
+   \end{itemize}
+\pause
+
+\item Not much else.
+\pause
+
+\item I'm considering only studies that provide comparison to
+Americans.\footnote{American = U.S. citizen (native or naturalized) or
+green card holder.} 
+\pause
+
+\item 
+E.g. reporting plain \#s of immigrant patents is NOT meaningful.
+\pause
+(Lots of immigrants $\Rightarrow$ lots of immigrant patents.)
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Our Aproach}
+\pause
+
+\begin{itemize}
+
+\item Focus:
+\pause
+
+   \begin{itemize}
+
+   \item Mixing quite disparate groups (all STEM fields) ignores
+   interaction effects, thus clouding issues.
+   \pause
+
+   \item So, I focus on computer science and electrical engineering.
+   \pause
+
+   \item CS/EE forms the bulk of H-1Bs.
+   \pause
+
+   \item For CS/EE, I know ``where the bodies are buried.''
+   \pause
+
+   \end{itemize}
+
+\item Criteria for ``best and brightest'':
+\pause
+
+   \begin{itemize}
+
+   \item Higher salaries than Americans. 
+   \pause
+
+   \item Higher \% of awards than Americans.
+   \pause
+
+   \item Higher \% of patents than Americans.
+
+   \end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Criteria NOT Used}
+\pause
+
+\begin{itemize}
+
+\item Numbers of research publications:
+\pause
+
+   \begin{itemize}
+    
+   \item ``Deans can count but they can't read.''
+   \pause
+
+   \item Many researchers are ``CV builders.''
+   \pause
+
+   \item Quantity $\neq$ quality.
+   \pause
+
+   \end{itemize}
+
+\item Entrepreneurship:
+\pause
+
+   \begin{itemize}
+
+   \item Entrepreneurship $\neq$ innovation/U.S. jobs.
+   \pause
+
+   \item Saxenian (1999) found that 36\% of Chinese-immigrant
+   firms were in ``Computer [PC] Wholesaling.''
+   \pause
+
+   \item Many Indian-immigrant firms are in the outsourcing business.
+
+   \end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Wage Issues}
+\pause
+
+\begin{itemize}
+
+\item Foreign workers exploitable, esp. if sponsored for green card. 
+\pause
+
+\item Underpayment found to be 15-20\% in (Matloff, 2003) and 33\% in
+(Ong, 1997).  (Separate from age issues.)
+\pause
+
+\item Underpayment due to {\bf loopholes} in {\it prevailing
+wage}.\footnote{Similar loopholes for legal definition of ``actual
+wage.''}
+\pause
+
+\item Congressionally-commissioned employer surveys, (NRC 2001) and
+(GAO 2003), found many employers admitting to paying H-1B workers less
+than comparable Americans.
+\pause
+
+\item GAO even noted role of loopholes:  
+
+\begin{quote}
+... [employers] hired H-1B workers in part because these workers 
+would often accept lower salaries...however, these employers said 
+they never paid H-1B workers less than the required wage. 
+\end{quote}
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Solutions to Wage Issues}
+\pause
+
+\begin{itemize}
+
+\item Analyses based on wages must account for the underpayment of
+H-1Bs. 
+\pause
+
+\item Where possible restriction attention to green card holders (LPRs) and
+nat. citizens.
+\pause
+
+\item Artificially ``raise'' H-1B salaries by factor 1.2.
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Nationality Issues}
+\pause
+
+Majority of tech foreign workers are Indians and Chinese. 
+\pause
+
+\begin{itemize}
+
+\item Among computer-related H-1Bs, 64.8\% Indian, 8.2\% Chinese
+(Filipinos third, at 2.3\%)  (INS, 2001).
+\pause
+
+\item In 2009 employer apps for worker green cards, 59.0\% were for
+Indians and 7.5\% for Chinese.
+\pause
+
+\item Among those who (ever) came to U.S. as foreign students in CS/EE
+and were working in CS/EE as of 2003, 23.2\% were Chinese and 
+27.2\% were Indian.
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Interesting Time Trend}
+\pause
+
+CSEE EB green cards apps trend $\downarrow$ for Chinese, $\uparrow$
+for Indians:
+\pause
+
+\begin{tabular}{|r|r|r|}
+\hline
+year  & China & India \\ \hline
+\hline
+2005 & 0.134 & 0.444 \\ \hline
+2006 & 0.103 & 0.501 \\ \hline
+2007 & 0.097 & 0.515 \\ \hline
+2008 & 0.080 & 0.569 \\ \hline
+2009 & 0.075 & 0.590 \\ \hline
+\end{tabular}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{First Wage Analysis:  NSCG Data}
+\pause
+
+\begin{itemize}
+
+\item National Survey of College Graduates (2003) (Hunt's data)
+\pause 
+
+\item My focus: Degree {\it and} (nonacademic) job in CS/EE.
+\pause
+
+\item My focus: Green card holders and citizens only.
+\pause
+
+\item My focus:  Imms. came to U.S. as foreign students (F-1).
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{NSCG Salaries: Results}
+
+\pause
+
+Regression model; response variable is salary.
+\pause
+
+\medskip
+
+\begin{columns}
+
+  \begin{column}{0.5\textwidth}
+   \begin{tabular}{|r|r|}
+   \hline
+   factor & beta, marg. err.  \\ \hline
+   \hline
+   const. & -3272 {\footnotesize $\pm$ 18383} \\ \hline
+   age & 3400 {\footnotesize $\pm$ 863} \\ \hline
+   age $\times$ age & -34 {\footnotesize $\pm$ 10} \\ \hline
+   MS & 8809 {\footnotesize $\pm$ 2173} \\ \hline
+   PhD & 22495 {\footnotesize $\pm$ 4512} \\ \hline
+   highCOL & 8725 {\footnotesize $\pm$ 1918} \\ \hline
+   origF1 & 808 {\footnotesize $\pm$ 3019} \\ \hline
+   \end{tabular}
+  \end{column}
+  
+  \begin{column}{0.5\textwidth}
+  \pause
+  \begin{itemize}
+  \item note negative quadratic age effect
+  \pause
+  \item highCOL = high cost-of-living region
+  \pause
+  \item origF1 = came to U.S. as foreign student
+  \pause
+  \item no overall evidence of ``best and brightest''
+  \end{itemize}
+  \end{column}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{NSCG Salaries: Results, contd.}
+
+Separate out the Indians and Chinese (``ICs''). 
+\pause
+
+\medskip
+
+\begin{columns}
+
+  \begin{column}{0.5\textwidth}
+   \begin{tabular}{|r|r|}
+   \hline
+   factor & beta, marg. err.  \\ \hline
+   \hline
+   const. & -2640 {\footnotesize $\pm$ 18429} \\ \hline
+   age & 3369 {\footnotesize $\pm$ 865} \\ \hline
+   age $\times$ age & -33 {\footnotesize $\pm$ 10} \\ \hline
+   MS & 9948 {\footnotesize $\pm$ 2177} \\ \hline
+   PhD & 22667 {\footnotesize $\pm$ 4509} \\ \hline
+   highCOL & 8692 {\footnotesize $\pm$ 1917} \\ \hline
+   origF1nonIC & 4479 {\footnotesize $\pm$ 3847} \\ \hline
+   origF1chn & -6190 {\footnotesize $\pm$ 5632} \\ \hline
+   origF1ind & -978 {\footnotesize $\pm$ 5571} \\ \hline
+   \end{tabular}
+  \end{column}
+  
+  \begin{column}{0.5\textwidth}
+  \pause
+  \begin{itemize}
+  \item non-ICs paid $>$ avg., about 0.5 MS effect
+  \pause
+  \item Chinese paid $<$ avg. about 2/3 MS effect
+  \end{itemize}
+  \end{column}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Second Wage Analysis:  PERM Data}
+
+\pause
+
+\begin{itemize}
+
+\item DOL files of employer applications for green card (CS/EE). 
+% http://www.flcdatacenter.com/CasePerm.aspx
+\pause
+
+\item Enables analysis by employer and nationality.
+\pause
+
+\item Accounts for region via prevailing wage.
+\pause
+
+\item Lacks data on education, age.
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{PERM Analysis}
+
+\pause
+
+\begin{itemize}
+
+\item I calculated the median wage ratio:
+
+$$
+\textrm{WR = median of} ~~~
+   \frac{\textrm{actual wage}}{\textrm{emp. claimed prev. wg.}}
+$$
+
+\pause
+
+\item By law, must have $WR \geq 1$.
+\pause
+
+\item But, denominator too small by factor of 1.15 to 1.33 (prev. wg.
+def. loopholes).
+\pause
+
+\item ``Best and brightest'' salary premiums (U.S. workers):
+\pause
+
+   \begin{itemize}
+
+   \item New Stanford CS grads earn 37\% more than average CS.  
+   \pause
+
+   \item 20 years after graduation, Stanford grads (general) earn 28\%
+   more than San Jose State Unv. grads.
+   \pause
+
+   \item Grads (general) of most selective schools have starting salaries
+   45\% more than least selective.
+   \end{itemize}
+
+\pause
+
+\item So, only (median) WR values higher than, say 1.25, indicate a firm is
+hiring mainly the ``best and brightest'' foreign workers.
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Overall PERM Results}
+
+Median WR values (SE=sw. engineers: EE=elec. engineers):
+
+\medskip
+
+\begin{columns}
+
+  \begin{column}{0.5\textwidth}
+  \begin{tabular}{|r|r|}
+  \hline
+  group & med. WR \\ \hline 
+  \hline
+  SE & 1.01 \\ \hline 
+  EE & 1.00 \\ \hline 
+  Chinese SE & 1.02 \\ \hline 
+  Indian SE & 1.01 \\ \hline 
+  Chinese EE & 1.01 \\ \hline 
+  Indian EE & 1.01 \\ \hline 
+  \end{tabular}
+  \end{column}
+  \pause
+
+  \begin{column}{0.5\textwidth}
+
+  \begin{itemize}
+
+  \item Almost no variation.
+  \pause
+
+  \item Shows that most employers use Prev. Wg., not Actual Wg.
+  (see previous footnote).
+  \pause
+  
+  \item No overall evidence of ``best and brightest.''
+
+  \end{itemize}
+  
+  \end{column}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{PERM Results by Firm}
+\pause
+
+Median WR for some prominent firms with large numbers of PERM entries:
+\pause
+
+\bigskip
+
+\begin{columns}
+
+   \begin{column}{0.5\textwidth}
+   \begin{tabular}{|r|r|r|}
+   \hline
+   firm & WR & n \\ \hline
+   \hline
+   HP & 1.20 & 243 \\ \hline
+   Microsoft & 1.18 & 4039 \\ \hline
+   Intel & 1.14 & 1465 \\ \hline
+   Oracle & 1.13 & 830 \\ \hline
+   Google & 1.12 & 690 \\ \hline
+   eBay & 1.05 & 118 \\ \hline
+   Cisco & 1.04 & 1135 \\ \hline
+   Motorola & 1.00 & 848 \\ \hline
+   Qualcomm & 1.00 & 268 \\ \hline
+   \end{tabular}
+   \pause
+   \end{column}
+
+   \begin{column}{0.5\textwidth}
+
+   \begin{itemize}
+   
+   \item Considerable variation among firms.  \pause
+
+   \item But remember, different firms use different methods for
+   calculating prev. wg. \pause
+   
+   \item A few firms pay a 10-15\% premium.  \pause
+   
+   \item No firm has WR high enough to qualify as hiring ``best and
+   brightest.''
+   
+   \end{itemize} \end{column}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{ACM Dissertation Awards}
+
+\pause
+
+\begin{itemize}
+
+\item Assoc. for Computing Machinery, the main professional CS body
+\pause
+
+\item 58 awards since 1982
+\pause
+
+\item no direct data on foreign/domestic; names used as proxies
+\pause
+
+\item 25 of the 58 foreign, slightly underrepresented, 43\%, similar to
+42\% figure for foreign among CS PhDs overall (NSCG)
+\pause
+
+\item no evidence that the foreign students are outperforming the
+domestic ones
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{ACM Awards, contd.}
+\pause
+
+Of 58 awards, 2 from China, 8 from India.
+\pause
+
+\medskip
+
+\begin{tabular}{|r|r|r|}
+\hline
+nationality & $\%$ of awardees & $\%$ of CS PhDs \\ \hline
+\hline
+China & 3.5\% $\pm$ 4.8\% & 28.6\% $\pm$ 8.1\% \\ \hline
+India & 13.8\% $\pm$ 9.1\% & 19.0\% $\pm$ 7.0\% \\ \hline
+\end{tabular}
+
+\pause
+
+\medskip
+
+\begin{itemize}
+
+\item Chinese award rate much lower than average
+\pause
+
+\item Indian rate could be about average
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Patents:  NSCG}
+
+\pause
+
+Regression analysis; response variable is number of patent apps filed:
+\pause
+
+\medskip
+
+\begin{columns}
+
+  \begin{column}{0.5\textwidth}
+   \begin{tabular}{|r|r|}
+   \hline
+   factor & beta $\pm$ marg. err.  \\ \hline
+   \hline
+   const. & 0.11 {\small $\pm$ 0.31} \\ \hline
+   age & 0.00 {\small $\pm$ 0.01} \\ \hline
+   MS & 0.25 {\small $\pm$ 0.15} \\ \hline
+   PhD & 2.65 {\small $\pm$ 0.29} \\ \hline
+   origF1 & 0.04 {\small $\pm$ 0.19} \\ \hline
+   \end{tabular}
+  \end{column}
+  
+  \begin{column}{0.5\textwidth}
+  \pause
+  \begin{itemize}
+  \item No overall ``best and brightest'' effect.
+  \pause
+  \item PhD only major effect.
+  \end{itemize}
+  \end{column}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{NSCG patents, contd.}
+
+\pause
+
+Separate out the Indians and Chinese (``ICs''): 
+\pause
+
+\medskip
+
+\begin{columns}
+
+  \begin{column}{0.5\textwidth}
+   \begin{tabular}{|r|r|}
+   \hline
+   factor & beta $\pm$ marg. err.  \\ \hline
+   \hline
+   const. & 0.11 {\small $\pm$ 0.31} \\ \hline
+   age & 0.00 {\small $\pm$ 0.01} \\ \hline
+   MS & 0.27 {\small $\pm$ 0.15} \\ \hline
+   PhD & 2.65 {\small $\pm$ 0.29} \\ \hline
+   origF1nonIC & 0.35 {\small $\pm$ 0.25} \\ \hline
+   origF1China & -0.50 {\small $\pm$ 0.36} \\ \hline 
+   origF1India & -0.11 {\small $\pm$ 0.33} \\ \hline
+   \end{tabular}
+  \end{column}
+  
+  \begin{column}{0.5\textwidth}
+  \pause
+  \begin{itemize}
+  \item Chinese MS app count much $<$ than American Bachelor's.
+  \pause
+  \item Non-ICs' Bachelor's count higher than Americans' MS. 
+  \end{itemize}
+  \end{column}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Why Did the Chinese Workers Fare Poorly?}
+
+\pause
+
+First possible factor:  Rote-memory learning culture inhibits
+creativity.
+
+\pause
+
+\begin{itemize}
+
+\item Well recognized, with its own Chinese term,
+% \begin{CJK}{UTF8}{gbsn}填鸭\end{CJK}
+% \begin{CJK}{UTF8}{bsmi}子\end{CJK}---tian yazi, ``stuff the duck.''
+\pause
+
+\item A common complaint among prominent Chinese academics, e.g. SUNY
+Stony Brook's C.N. Yang. \pause
+
+\item Governments of China, Japan, S. Korea and Taiwan have all tried to
+remedy this.
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chinese Case, contd.}
+
+\pause
+
+Second possible factor:  The Chinese workers may be handicapped by language
+issues.
+\pause
+This seems to not be a strong factor.
+
+\pause
+
+\begin{itemize}
+
+\item Foreign students from China in the last 10-15 years have tended to
+have very good English. \pause
+
+\item The ACM Dissertation Awards go mostly to students at the elite
+schools, which have very stringent English requirements for admission.
+\pause
+
+\item E.g. MIT, Harvard and Columbia require a TOEFL minimum score of
+109/120 for admission. \pause
+
+\item The tech industry is famously meritocratic for engineering (not
+managerial) workers.  If you produce, you are rewarded.  English is not
+a major issue. \pause
+
+\item Logistic regression analysis on the PUMS census data shows that among
+immigrant Chinese, English skill has no impact on the probability of
+earning a high-level salary ($>$ \$150K). 
+% http://toeflnow.com/toefl-score
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Is There a CS/EE Labor Shortage?}
+
+\pause
+
+\begin{itemize}
+
+\item Even if the foreign workers are not especially talented, their
+large numbers might be justified if there were a labor shortage.
+\pause
+
+\item But among the many government and other studies, none (other than
+by the industry) has ever shown a shortage.  
+\pause
+
+\item Salaries (adjusted for inflation) have been flat, 
+counterindicating a shortage.  
+\pause
+
+\item Employers still very picky in hiring, again counterindicating a
+shortage.
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Internal Brain Drain}
+
+\pause
+
+A surplus of workers is causing an {\bf internal brain drain}.
+\pause
+
+\begin{itemize}
+
+\item Workers become less employable around age 35.\footnote{Nice graph
+in GAO report, BTW.} 
+\pause
+
+\item National Science Foundation advocated H-1B with explicit goal of
+holding down PhD salaries.
+\pause
+Forecast (correctly) that stagnant wages would then drive American 
+students away from PhD.  
+\pause 
+
+\item Stagnant CS/EE salaries at all levels discourage young people from
+entering the field.
+\pause
+
+\item Post doc program, fueled by H-1B, makes lab science careers
+\underline{extremely} unattractive to young people.
+\pause
+
+\item ``Innovation'' is the buzzword {\it de jour}, and it is U.S.' only
+comparative advantage.  Yet the system is wasting that advantage.
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Discussion:  Policy Implications, H-1B}
+
+\pause
+
+\begin{itemize}
+
+   \item Employer claims that H-1B visas are needed to bring in
+   outstanding talents are not borne out. \pause
+
+   \item ``We should return the H-1B visa to its original intent,
+   bringing in the best and the brightest''--Rep. Zoe Lofgren, House
+   hearing, 1998.
+   \pause
+
+   \item Should prioritize granting of H-1B requests by wage level.
+   \pause
+
+   \item Should adopt Durbin-Grassley definition of prevaling wage.
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Discussion:  Policy Implications, Green Cards}
+
+\pause
+
+\begin{itemize}
+
+   \item No best/brightest trend was found here among
+   foreign students. \pause  
+   
+   \item Thus a blanket green card program for STEM foreign students
+   would be unwarranted.  \pause
+
+   \item Currently have long waits for green cards in EB-3 category---the
+   wrong group to offer a remedy, as it is exactly the one for the least
+   talented workers.  \pause
+
+   \item Should transfer much of the EB-3 quota to EB-2.
+
+\end{itemize}
+
+\end{frame}
+
+\end{document} 
+
+\begin{frame}
+\frametitle{Final Remarks}
+\pause
+
+\begin{itemize}
+
+\item Most of the sponsored foreign workers appear to be of ordinary
+talent.
+\pause
+
+\item But again, some are indeed truly outstanding talents. 
+\pause
+
+\item We should facilitate the immigration of such talents.
+\pause
+
+\item Recently there has been some concern about long green card waits
+for employer-sponsored workers.  However, for PhDs, who have their own
+category, the wait continues to be short.
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Resources}
+
+These slides, and the R programming code used to compile the statistics,
+are available at \url{http://heather.cs.ucdavis.edu/BGIT.html}
+
+\end{frame}

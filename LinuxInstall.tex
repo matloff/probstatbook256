@@ -1,0 +1,1922 @@
+\documentclass[11pt]{article}  
+
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{0.0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9.0in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{0.1in}
+
+\usepackage{times}
+\usepackage{hyperref}
+\usepackage{fancyvrb}
+\usepackage{relsize}  
+\usepackage{graphicx}
+
+\begin{document}
+
+\title{Professor Norm Matloff's Beginner's Guide to Installing and
+Using Linux
+\thanks{The information contained here is accurate, to the author's
+knowledge.  However, no guarantee is made in this regard.}
+}
+
+\author{
+Dr. Norm Matloff \\
+Department of Computer Science \\
+University of California at Davis \\
+matloff@cs.ucdavis.edu \\
+\copyright{1999-2008} }
+\date{September 19, 2008} 
+
+\maketitle
+
+\tableofcontents{}
+
+\newpage
+
+\section{Overview}
+
+\subsection{Background Needed}
+
+I have tailored the material here to beginners. No special
+sophistication in computers is needed. Any typical Microsoft Windows
+user should be able to understand the instructions here and install
+Linux in less than an hour's time. (Do not be intimidated by the length
+of this document; you probably will not have to use most of it.)
+
+\subsection{What Is Linux?}
+
+Linux is a form of the Unix operating system.  Though originally Unix
+was used mainly by engineers and scientists and thus was not very
+familiar to the general public, a lot of what you take for granted on
+computer systems today began in Unix.  A notable example is the
+Internet---the first major operating system to implement the
+TCP/IP protocol at the heart of the Internet was Unix, and that led to
+the general acceptance of the protocol.
+
+In the early 1990s, computer science student Linus Torvalds decided to
+write his own version of Unix, which he called Linux.  Other
+``homegrown'' versions of Unix had been written, such as MINIX, but what
+distinguished Linux was the scale of worldwide participation involved.
+Torvalds innocently put a message on the Internet asking if anyone
+wanted to help, and he got a torrent of responses.
+
+There are a several reasons why Linux is mainstream today.  First, it
+became known as a very reliable, stable operating system, with one
+result being that Linux has become a major platform for large corporate
+Web servers.  Another reason is that it, and the vast majority of the
+software associated with it developed elsewhere, is free.  Many
+companies have found that it is cheaper to run Linux on their PCs, both
+for this reason and because of reduced maintenance costs.
+
+There are several good reasons for you to use Linux:
+
+\begin{itemize}
+
+\item As mentioned, Linux is becoming one of the ``hottest'' software
+systems. Virtually all of the major companies---IBM, HP, Sun
+Microsystems, etc.---are promoting it, and as mentioned Linux is a
+leading corporate choice for Web servers.  Linux is the main operating
+system used at \raisebox{-0.08in}{
+\includegraphics[width=0.6in]{Google.jpg}}. 
+
+\item Linux is also starting to make inroads in large desktop markets,
+such as businesses, schools and so on, due to its high reliability, far
+lower rate of infection by viruses compared to Windows, and its low
+cost.
+
+\item The Linux community shares.  That means that people online are
+much more willing to help you (see Section \ref{help}), and more open
+source software is available.
+
+\end{itemize}
+
+If you are a university computer science student, there are some very
+important additional advantages: 
+
+\begin{itemize}
+
+\item Many CS courses make specific use of Unix, and thus their work
+cannot be done on Windows platforms. Since it is a full Unix system,
+Linux allows students to do their homework in the comfort of their own
+homes. If you are new to Unix, click here for my Unix tutorial Web page
+at \url{http://heather.cs.ucdavis.edu/~matloff/unix.html}, which will
+introduce you to Unix file and directory commands, and so on.
+
+\item In installing and using Linux, students learn many practical
+things about computers which they do not learn in coursework. This
+practical experience can also help you in job interviews, both for
+permanent jobs after graduation and for summer jobs and
+internships/co-ops during your college years. Even if the job you
+interview for does not involve Linux, you will definitely impress the
+interviewer if, for example, you discuss various things you have done to
+use and customize your Linux system.
+
+\end{itemize}
+
+\section{Linux Distributions}
+
+Linux comes in various {\it distributions}, called {\it distros} by
+Linux afficionados---but they are all Linux in terms of functionality.
+Some of the most popular are Ubuntu, Red Hat, Fedora, SuSE, MEPIS,
+PCLinuxOS and so on.
+
+\subsection{Which One Is Best?}
+
+Remember, there are tons of good distros out there.  Any of the above
+would be fine, as would many others, but here is the short answer:  {\bf
+\large Use Ubuntu.}  It is arguably one of the most user-friendly of the
+distros, and it has a large user community you can access in the Ubuntu
+forum on the Web, probably the most active one out there.  
+
+I now use Ubuntu myself on my home computers, as well as on my office
+computer, after years of using the Fedora/Red Hat Linux distros.  I find
+that Ubuntu's package installation works much better, for example.
+
+If you have an old machine, especially one with limited memory (i.e.
+RAM), you may wish to give Puppy Linux or Damn Small Linux a try.  I
+installed them (one at a time) on an old 1998 laptop with only 64M of
+memory!  And they take as little as 50M of disk space.  See Section
+\ref{ancient} for details.
+
+\subsection{Obtaining Linux}
+
+You can obtain your desired distro (assuming it's one of the free
+distros, such as Ubuntu)
+by downloading from the Web and burning a CD (its
+basic installation form is small enough to fit on a CD).
+
+Or you can buy a book devoted to the distro, or buy a  Linux magazine
+that includes a CD for it.  
+
+Important note:  If you download Linux from the Web and burn it to a CD
+or DVD, make sure that you burn the ISO image, as opposed to copying
+the ISO file as you would in, say, a backup operation.  Your burner
+software should have a choice in its menu for this.  
+
+\subsection{Live-CD Linux Distributions}
+\label{live}
+
+A more recent concept in Linux distributions is that of {\it live CD}
+distribution.  Here the Linux package is on a bootable CD-ROM.  The user
+inserts the CD in the drive, reboots, and then Linux boots up.
+
+The advantage of this approach is that one does not have to get involved
+in disk partitioning, a sometimes difficult process.  One is using Linux
+without actually installing it, thus without changing the disk
+partitioning.
+
+A disadvantage is that it may not allow one's application programs to
+save files to the hard drive, unless one has already split the Windows
+partition, defeating much of the purpose.  However, one can save files
+to a USB key. 
+
+So, the approach ideal for those who wish to just try Linux for a short
+period of time, but not so useful for long-term use. 
+
+The first well-known live-CD distribution was Knoppix, but there are
+many others today, including Ubuntu, whose CD you can use either as a
+live-CD or for permanent installation.  
+
+If you use the live-CD approach, you may of course skip Section
+\ref{install} of this tutorial.
+
+\subsection{Live CDs As Rescue Tools}
+
+Among other things, Knoppix has developed a reputation as being useful
+as an OS rescue/repair tool, including for Windows!  And now, most of
+the live CDs can be used this way.  For details, see a Knoppix book or
+search on the Web.
+
+\section{Installing Linux}
+\label{install}
+
+\subsection{Assumptions}
+
+\subsubsection{Generality/Specificity of Coverage}
+
+This part of the tutorial will not go into the details for installing
+one particular distribution.  That would be impractical, since the
+details for any one distribution often change substantially from one
+release to the next.  So instead, this section on installation will
+discuss the major points you should watch for during the procedure.  It
+will sometimes use Ubuntu as an example for concreteness, but the
+principles should be similar for most other distributions.
+
+\subsubsection{Your Machine}
+
+It is assumed that you have an Intel-compatible desktop or notebook,
+with a bootable CD-ROM or DVD drive.
+% \footnote{The latter condition
+% should hold for almost any machine bought in the last five or six years.
+% One other point, though, is that the boot priority should be set so that
+% the machine tries to boot from CD-ROM or DVD before trying to boot from
+% the hard drive.  Your machine probably already does this, but if not,
+% you can reset the BIOS to do so.  Consult your manual on this, or ask at
+% any computer store.}
+You should have at least 128M of RAM.  I recommend that you have at
+least 10G of disk space available for Linux, though 5G would probably be
+enough.  If you have a smaller machine, try one of the distros designed
+specifically for that purpose, discussed in Section \ref{ancient}.
+
+\subsection{Determine Your Hardware Details}
+
+The Linux installation program will be able to sense most of your
+hardware information.  So, you can probably skip our section here.  But
+if you want to take about five minutes extra time here, it could be
+helpful later if you write down some of your hardware types before
+beginning installation.
+
+You could download the free program {\bf Hardinfo}, and run it to record
+a list of your hardware.  Or to check your hardware from Windows XP,
+select My Computer $|$ Control Panel $|$ System $|$ Hardware $|$ Device
+Manager.  Click General to get the amount of RAM and CPU type. Then go
+to Device Manager, and click on the `+' next to each component, e.g.
+"Disk drives,'' "Display adapters'' and so on.  Write down the
+information, including your hard drive type, such as IDE; your video
+card make and model; your monitor make and model; the type of connection
+used for your mouse, such as PS/2; the make and model of your printer;
+etc. 
+
+Do you still have the manual which came with your monitor?  If so, check
+the specs in the back, and write down the horizontal sync and vertical
+refresh rate, and the make and model.
+
+\subsection{Partioning Your Hard Drive}
+\label{part}
+
+Today most Linux distros, such as Mandriva, SuSE and Ubuntu, do the disk
+partitioning for you.  This is a major advantage, as partitioning is a
+vital but delicate operation.  Later in this section, I'll give you some
+advice for the Ubuntu case, and also give you some options to use if you
+have a distro that does not do automatic partitioning.  
+
+But I do suggest that even if you will have automatic partitioning done,
+it would still be worthwhile for  you to read Section \ref{whatispart}.
+This would be useful both for the installation process and later on in
+your role as an ``informed consumer.''
+
+\subsubsection{What Is Partitioning?}
+\label{whatispart} 
+
+Again, it is probably not necessary for you to know the material here,
+and it is rather detailed, but you may find it useful at some point.  I
+do recommend that you take a few minutes and read this section.
+
+A hard drive will consist of one or more {\it partitions}.  A partition
+is a set of contiguous space (sequential blocks) on the disk, and is
+treated as an independent disk.  
+
+So, assuming you want your system to include both Windows and Linux
+(termed a {\it dual boot} situation, since you can boot either system),
+you will need at least one partition for Windows and one (actually two)
+for Linux.
+
+It's important to understand how the naming works: In Linux systems, all
+I/O devices are treated as ``files.''  If your first hard drive is of
+the IDE type, the entire drive is probably called {\bf /dev/hda}, i.e.
+the ``file'' {\bf hda} within the directory {\bf /dev}.  In the case of
+SATA-type hard drives, the notation is {\bf /dev/sda} etc.
+
+Your first CD-ROM/DVD drive is likely {\bf /dev/hdc} (your third ``hard
+drive''), your first USB port is likely {\bf /dev/sdf1} and so on.
+
+Partitions within your first drive are called {\bf /dev/hda1}, {\bf
+/dev/hda2} and so on.  Your original Windows single partition was
+probably {\bf /dev/hda1}.  
+
+Within a partition you'll have some type of file system.  The disk
+consists simply of a long stream of bytes, with no structure, so the OS
+needs to have a way of organizing them into files, recording where in
+that stream each file has its bytes.  But you don't need to know the
+details.  Windows XP and Vista use the {\bf NTFS} file system.  The
+standard Linux file system is {\bf ext2} (number 0x83, sometimes called
+{\it Linux native}), or possibly {\bf ext3}, for your main Linux
+partition and of type {\bf swap} for your swap partition (number 0x82,
+used for temporary storage during the time the OS is running).
+
+PCs were originally designed to have up to four ``real'' partitions,
+called {\it primary} partitions.  After people found that to be too
+constraining, {\it logical} or {\it extended} partitions were invented.
+You should install Linux in a primary partition, for recovery reasons,
+but it is not necessary.
+
+\subsubsection{Before You Do the Partitioning}
+
+Before you start, give some thought as to how much of the original
+partition you want to keep for Windows and how much you want to leave
+for Linux.  If you plan to become a serious Linux user,\footnote{And as
+mentioned in Section \ref{useit}, if you want to learn Linux, the only
+way to do it is to become a serious, every day user.} you'll want to
+allocate at least half of the space for Linux. 
+
+You really ought to run Windows' {\bf chkdsk} command first, in case you
+have any bad sectors on your hard drive.  You may also wish to
+defragment.
+
+% \subsubsection{``Exploding cold door''!---Windows Vista Can Do the
+% Partitioning for You}
+% 
+% The Cantonese phrase, {\it bau laang muhn}, literally ``exploding cold
+% door,'' means the speaker is surprised to see the least-expected event
+% occur.  Given that Linux cuts a bit into Microsoft's business and there
+% has been long-held suspicion that Microsoft has tried to put roadblocks
+% against Linux and other OSs in its system, it is a pleasant surprise
+% that the Windows Vista OS can actually do the repartitioning for you.
+% 
+% So, instead of some of the methods given below, if you have Vista on
+% your system, you might take this route.
+% See \url{http://nighthacker.net/how-to-dual-boot-vista-and-ubuntu-gutsy710/}
+% for details.
+% 
+% That will only free up the space.  You then must create your Linux
+% partitions within your Linux distro, as discussed below.
+
+\subsubsection{Partitioning Using GParted}
+
+Today most distros will invoke a partitioning program to do your
+partitioning.  This could be the famous GParted program, or one that the
+authors of your distro wrote themselves.
+
+You can use GParted on your own by downloading and booting a GParted
+live CD before you install Linux, but I'll assume here that your Linux
+installation program invokes either GParted or another program written
+specifically for your distro.
+
+Since every distro will handle this a bit differently, what I will do
+here is just give you an understanding of what operations need to be
+done, with the specific mouse clicks needed varying from one distro to
+another.
+
+I'll assume that you want your Windows and Linux systems to coexist on
+the same hard drive.  So when your distro's installer program asks you
+whether you want to use the entire disk, be sure to say no!  Of course,
+if you do want to erase Windows, or if you are installing Linux on a
+separate drive from Windows, you can go ahead and use the whole drive.
+
+% When I installed Ubuntu in place of my existing Fedora system, I chose
+% manual partitioning.  Ubuntu said my swap space wasn't large enough, so
+% I told Ubuntu to remove my Fedora partitions, and then to create new
+% root and swap partitions from the freed space.  I chose the {\bf ext3} 
+% filesystem type for the root partition and specified that it should be
+% mounted at {\bf /}.
+
+Here are the main steps in GParted, roughly stated (you may see some
+variation):
+
+\begin{itemize}
+
+\item Select the disk you wish to repartition.  If you have only one
+disk, it will be something like {\bf /dev/hda}.  (See Section
+\ref{whatispart}.)
+
+\item Select the partition where Windows resides.  This will typically
+be the largest one, and almost certainly of file system type
+NTFS.
+
+\item Note how much space is remaining, and decide how much of it you
+want to remove from the Windows partition in order to make a partition
+for Linux.
+
+\item Now resize, in this case shrink, the Windows partition.  The
+partioner will ask you how much room to make.
+
+\item Adjust the partition size according to your desired value.
+
+\item You'll need to make the main Linux partition {\bf primary}, of
+type {\bf ext2} or {\bf ext3}, and set to be bootable.
+
+\item You'll need a smaller partition of type {\bf linux-swap}.  This is
+not used for files, but rather as ``scratch space'' by the
+OS.\footnote{Most modern operating systems, including Windows and Linux,
+use {\it virtual memory}.  This allows situations in which the total
+memory, i.e. RAM, needed for all of the programs we are currently
+running, exceeds the amount of physical memory we have.  This is
+accomplished by temporarily placing some of the memory contents on disk,
+in the swap partition.  Virtual memory also enables certain safety
+features, such as preventing one program from writing to the data of
+another.} 
+
+\item You'll then have to commit, i.e. save, the changes to the
+partitions.  This might take a few minutes, so be patient.
+
+\item The next time you boot Windows, you will be asked if you want a
+disk consistency check.  Definitely say yes.
+
+\end{itemize}
+
+\subsection{The Installation Process} 
+
+\subsubsection{To Begin}
+
+By the way, if you are upgrading or replacing another version or
+distribution of Linux, see Section \ref{upgrade} before beginning.
+
+Put your Linux CD-ROM or DVD in the drive, and reboot.  The installation
+program should begin.\footnote{\label{bios} If not, you must change the
+BIOS settings to make the CD-ROM bootable (and the first device checked
+during the boot process); see your computer's manual on how to do this.}
+
+\subsubsection{Questions You \underline{May} Be Asked During the
+Installation Process}
+
+The trend in time is for the installation programs to actually ask you
+fewer and fewer questions, i.e. the process has become more and more
+automated.  Most of the questions discussed in this section will NOT be
+asked---Ubuntu will probably ask none of them---but the information here
+will give you an idea of how to answer if they are asked.
+
+\begin{itemize}
+
+\item Some distributions will give you a choice of several installation
+types, which vary in terms of what kinds of application software will be
+installed.  If you are a CS student, you need to make sure your
+installation will include compilers, editors, debuggers and so on.  Note
+that you can always add more applications later on.  But since most
+people now have plenty of disk space, it is easier to simply ask for
+everything.  
+
+\item Assuming you'll want a {\it dual-boot system}, i.e. you'll be
+having both Windows and Linux available for booting, you need some sort
+of {\it boot loader}.  This is a program which upon powerup of your
+computer will ask you which OS you wish to boot at that time.  Your
+distribution will probably use the GRUB boot loader, or possibly LILO.
+It doesn't matter that much for a beginner, but if asked, definitely
+indicate that you want to be able to boot both OSs.  (If you are not
+asked, the distro should make it dual-boot by default.)  Take the
+defaults for everything else, e.g. the choice of bootloader program. 
+
+\item If you're asked whether you want 3-button mouse emulation, say
+yes.  If you have only a 2-button mouse (the wheel does count as a
+button), this emulation will enable cut-and-paste window operations.
+
+\item You'll need a GUI (``graphical user intrface'') desktop manager.
+The two most widely-used GUI desktop managers for Linux are KDE and
+GNOME.  Each has its band of devoted followers.  I generally use GNOME
+these days, but both are good.  It really doesn't matter which one you
+choose for new users, and you can always switch later if desired.
+Choose one (or both).
+
+\item I mentioned earlier that disk partitioning has over the years been
+one of the two major issues in Linux installation.  The other has been
+configuring for the video card and monitor.
+
+With today's modern Linux installation programs, this is typically not a
+problem.  They are pretty good at identifying your video card, and
+guessing good settings to use.  Typically they will give you a chance to
+test those settings out before continuing with the installation process,
+with a test image.  My experience has generally been that that is
+sufficient.
+
+If that image does not turn out well, the installation program will
+typically give you a chance to state the make and model of your video
+card, and horizontal sync, vertical refresh rate, and make and model of
+your monitor.  That is why I asked earlier if you still have the manual
+for your monitor.  (On a laptop, though, you often don't have this
+information, since its monitor is built in.)
+
+By the way, once a configuration has been decided on, it will be saved
+to a file, such as {\bf /etc/X11/xorg.conf}.  You can look at this later
+if you are curious as to what configuration the installer has chosen for
+you, and can modify it if you know what needs to be tweaked. 
+
+\item You may be asked if your machine has a static Internet address.
+In most cases, the answer should be no; for a home machine or wireless
+use you probably get a dynamic Internet address, using a protocol named
+DHCP.
+
+\end{itemize}
+
+\subsection{Installing Tiny Linuxes}
+\label{ancient}
+
+\section{Post-Installation Configuration}
+
+This section describes some further steps I recommend taking after your
+installation is finished. 
+
+\subsection{Help in Hardware Configuration}
+
+Having trouble getting some hardware component to work under Linux?
+I'll have some tips on that below, but keep in mind that a great source
+is the Web.  Plug something like ``Linux install XXXX,'' where XXXX is
+the type of machine you own) into Google.  Actually, it would be better
+to specify your distro, e.g. ``Ubuntu install XXXX.'' You'll find a
+number of reports of experiences by other people with your
+machine/distro.  
+
+\subsection{Configuring Your Search Path (``Why can't I run my a.out?'')}
+
+Most Linux distros do not include your current directory, `.',
+in the PATH variable. Thus if for example you compile a program and then
+type
+
+\begin{verbatim}
+a.out
+\end{verbatim}
+
+the shell may tell you that {\bf a.out} is not found. You are expected
+to explicitly specify the current directory:
+
+\begin{verbatim}
+./a.out
+\end{verbatim}
+
+If you consider this a problem, as I do, to remedy it in the case of the
+BASH shell (the default shell for most distros), edit the file {\bf
+~/.bash\_profile} In the line which sets PATH, append ``:.'' (a colon
+and a dot) at the end of the line, with no intervening spaces.  Then log
+out and log in again, or do
+
+\begin{verbatim}
+source ~/.bash_profile
+\end{verbatim}
+
+\subsection{Configuring a Printer}
+
+Your Linux distribution should have some program to help you configure
+your printer if something went wrong during installation.  For example,
+if you are running the GNOME GUI, select System $|$ Administration $|$
+Printing.
+
+\subsection{Wireless Networking}
+\label{wifi}
+
+\subsubsection{Connecting}
+
+If you are running the GNOME windows manager, select System $|$
+Administration $|$ Network.  In KDE, it's System $|$ Network Device
+Control.  
+
+Highlight the entry for your wireless device.  Your WiFi device is
+probably {\bf eth1}.  Make sure the box is checked.  Then you'll
+probably have to click on Properties or something like that.
+
+The names of wireless access points are called {\bf ESSID}s.  You can
+determine which ESSIDs are within range of you by typing the command 
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+$ iwlist scanning
+\end{Verbatim}
+
+into a terminal window.  State the ESSID you want.  (Note that some of
+the ones listed might be private.)
+
+If you are connected to a router or a wireless access point, you
+probably get your IP address via DHCP, rather than statically.
+
+The network managers included with most Linux distros are rather
+primitive.  An excellent alternative is WiFi Radar.  In Ubuntu, install
+via
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+sudo apt-get install wifi-radar
+\end{Verbatim}
+
+\subsubsection{Other Tools}
+
+Your Linux system will provide various tools to configure and monitor
+your network:
+
+Useful commands from a terminal window are:
+
+\begin{itemize}
+
+\item {\bf iwconfig}:  
+Shows information about all your wireless connections.
+
+\item {\bf ifconfig}
+Shows information about all your network connections.
+
+\item {\bf iwlist} (with the {\bf scanning} option):
+Shows information about all detected wireless access points.
+
+\item {\bf dmesg}:
+Shows a record of your last bootup.  This may show error messages
+regarding your WiFi card.
+
+\end{itemize}
+
+% For example, to select a particular wireless access point named
+% X, type
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% iwconfig wlan0 essid "X"
+% \end{Verbatim}
+
+% (Do this BEFORE running {\bf dhclient}.)
+
+You can activate/deactivate your netword card during a session.  In
+GNOME, this is done via System $|$ Administration $|$ Network.
+
+\subsubsection{If You Have a Problem}
+
+WiFi might work for you ``right out of the box,'' with no configuration
+on your part.  If not, this section is for you.
+
+Some wireless network cards typically sold with PCs today do not have
+direct Linux drivers available.  A common example is the Broadcom
+BCM43XX series.  However, you can still operate as usual after some
+preparation:  
+
+\textbf{Know Your WiFi Card}
+
+You first need to determine which wireless card you have.  On the laptop
+I use now, I determined this by running {\bf dmesg} and {\bf lspci}
+under Linux, and by exploring under Windows.  Sure enough, it turned out
+to be a Broadcom BCM43XX series card.
+
+I then obtained the driver files for my Broadcom wireless card.  Windows
+said that it was using {\bf bcmwl5.sys} for this card.  I got it from my
+Windows partition, which on my machine is at
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+c:\windows\system32\drivers\bcmwl5.sys 
+\end{Verbatim}
+
+(As noted in Section \ref{access}, this may not be easy to do directly.
+If you have trouble, boot Windows and copy the file to a USB key, then
+go back to Linux and read from the key.)  Or, I could have downloaded it
+from the Web.
+
+\textbf{BCM43XX Series}
+
+As mentioned, many laptops come with this card.  If your version of
+Linux uses kernel 2.6.15 or newer, then things will be pretty easy, as
+the kernel does include a driver for your card.
+
+In Ubuntu, you merely need to request that the driver be downloaded and
+installed, as follows:\footnote{This is for Ubuntu 8.04; 7.10 is very
+similar)}  Select System $|$ Administration $|$ Hardware Drivers.  Check
+the Enable box for Firmware for Broadcom 43 Wireless Driver.  You will
+be asked whether you want the firmware to be downloaded from the net;
+say yes.  Then check Enabled after the download.
+
+\textbf{Other Cards/Kernels}
+
+For other machines, go to the {\bf ndiswrapper} home
+page, \url{http://ndiswrapper.sourceforge.net/}.  The program {\bf
+ndiswrapper} allows Linux to use Windows drivers.
+
+% Here is how I got my wireless card working under Fedora 3 and 4:
+% 
+% \begin{itemize}
+% 
+% \item You'll need to have the kernel sources installed.  The {\bf
+% ndiswrapper} file {\bf INSTALL} suggests running
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% ls /lib/modules/`uname -r`/build
+% \end{Verbatim}
+% 
+% to check whether the proper files are there.\footnote{Note the reverse
+% apostrophes, which run the command {\bf uname -r}, which returns the
+% version of the kernel.}
+% 
+% If you don't have the files, you'll need to either get them from the CDs
+% or DVD that you installed Linux from, or download them.  Either way, put
+% them in the proper subdirectory of {\bf /usr/src} and then make a link,
+% as described in the Wiki cited below.
+% 
+% \item I downloaded the source of {\bf ndiswrapper} from the home page,
+% \url{http://ndiswrapper.sourceforge.net/}.  I then followed the
+% instructions on installation at that page (click on Wiki $|$
+% Installation).
+% 
+% \item I installed it, following the simple instructions.
+% 
+% (that's an ``ell,'' not a ``one,'' before the 5) and found that it was
+% different from the one I had downloaded.  It later turned out that the
+% downloaded one was wrong, though {\bf bcmwl5.inf} was all right. 
+% 
+% \item I put the various {\bf .sys} and {\bf .inf} files into the same directory,
+% as requested.
+% 
+% \item I installed the driver, by typing 
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% ndiswrapper -i bcmwl5.inf
+% \end{Verbatim}
+% 
+% in that directory.
+% 
+% This created the directory {\bf /etc/ndiswrapper/bcmwl5}, with the {\bf
+% .inf}, {\bf .sys} and other files there.\footnote{If I ever want to
+% delete it, I will type
+% 
+% ndiswrapper -e bcmwl5
+% 
+% }
+% 
+% \item As a check that the driver was installed, I typed
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% ndiswrapper -l
+% \end{Verbatim}
+% 
+% \end{itemize}
+% 
+% That got everything installed.  Now, each time I boot up,\footnote{I can
+% automate this if I wish.}, I will type
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% modprobe ndiswrapper
+% dhclient
+% \end{Verbatim}
+% 
+% The first command automatically sets up a {\bf wlan0}, and the wireless
+% card starts working, e.g. scanning for wireless access points.  The
+% second command starts up the DHCP client, so that my machine will accept
+% an IP address assigned by a wireless access point.
+
+% \textbf{Kernel Problems}
+% 
+% As of September 2007, in using Fedora 7 I ran into troubles.  I was
+% getting an error message ``SET failed on device wlan0:  operation not
+% supported'' upon bootup, and WiFi wouldn't work.  In fact, the pilot
+% light for my wireless card did not go on.  This was remedied by
+% downloading the latest version of the kernel.  The error message still
+% appeared, but I was able to use WiFi by running {\bf modprobe bcm43xx}
+% by hand.
+
+\textbf{Other Considerations}
+
+I found in one wireless site that there seemed to be a problem with DNS,
+the system that translates ``English'' addresses like {\bf
+wwww.google.com} to their numerical counterparts, e.g.
+{\bf 66.102.7.104}.  If you find that the former fails but the latter
+works, you probably have a DNS problem.  
+
+One way to handle this would be to configure your machine to have a
+secondary DNS site.  You can use one given to you by your ISP, for
+instance.  To add it, use the network configuration tool in your Linux
+distro.  For example, under the GNOME GUI, select System $|$
+Administration $|$ Networking $|$ DNS.
+
+\subsubsection{Encryption}
+
+For information on how to deal with WPA encryption, go to
+\url{http://computerbits.wordpress.com/2006/10/27/fedora-core-6-installation-notes/}
+or plug something like ``Fedora BCM43XX fwcutter'' into Google.
+
+\subsection{Configuring KDE/GNOME for Convenient Window Operations}
+\label{config}
+
+\subsubsection{Autoraise Etc.}
+
+You should find that windowing operations are generally easier in Linux
+systems than in Windows, in the sense of requiring fewer mouse clicks,
+if you set things up that way.  Personally, I find it annoying in
+Windows that, when I switch from one window to another, I need to click
+on that second window.  In most Linux windowing systems, I can arrange
+things so that all I have to do is simply move the mouse to the second
+window, without clicking on it.  The term for this is {\it focus follows
+mouse}, and we can configure most Linux windowing systems to do this.
+
+Also when I move from one window to another, I want the second one to
+``come out of hiding'' and be fully exposed on the screen.  This is
+called {\it autoraise}, and can be configured too.
+
+You can arrange this configuration in less than one minute's time.
+Again, the exact configuration steps will vary from GNOME to KDE, and
+from one version to another within those systems, so I can't give you
+the general steps here but here is how it works on a GNOME
+system:  click System $|$ Preferences $|$ Windows, and check Select
+Windows When the Mouse Moves Over Them (this may be referred to as {\it
+focus} on your system) and Raise Selected Windows After an Interval
+(this may be referred as {\it autoraise}).  I move the slider for the
+latter all the way to the left, for 0.0 seconds.  For KDE, as of
+September 2007 the sequence is K $|$ Control Center $|$ Desktop $|$
+Window Behavior; after that, the choices are similar to those described
+for GNOME above:  at Policy, choose Focus Follows Mouse and Auto Raise.
+
+\subsubsection{Saving Window Places Between Sessions}
+
+If upon bootup you'd like to have the same windows in the same places 
+as in your last session, you can arrange this to occur automatically in
+GNOME by System $|$ Preferences $|$  Sessions $|$ Session Options and
+then checking the proper box.
+
+\section{Some Points on Linux Usage}
+
+To log out in GNOME, select System  $|$ Shutdown.  It is similar
+for other desktop managers.
+
+\subsection{More on Shells/Terminal Windows}
+\label{shells}
+
+In Microsoft Windows, most work done by most users is through a
+Graphical User Interface (GUI), rather than in a command window (Start
+$|$ Run $|$ cmd).  In Linux, a lot of work is done via GUIs but also it
+is frequently handier to use a command window, called a {\it terminal}
+window.  You should always keep two or three terminal windows on your
+screen for various tasks that might arise.  
+
+You can start a terminal window in GNOME by selecting Applications $|$
+Accessories $|$ Terminal; the other desktop managers are similar.
+
+You may be given a choice of several terminal types, say {\bf
+gnome-term}, {\bf xterm} etc., but it doesn't much matter which one you
+choose.\footnote{You may like {\bf gnome-term} because it is more easily
+configurable, as to colors, size, etc.}  If you are using {\bf
+gnome-term}, you may wish to reduce the font size, by holding down the
+Control key and hitting the - key twice.
+
+When you type commands in a terminal window, the program which reads and
+acts on those commands is called a {\it shell}.  (Thus a terminal window
+is sometimes called a ``shell window.'')
+
+I have an introduction to Unix shells, based on the T C-shell, {\bf tcsh}
+at \url{http://heather.cs.ucdavis.edu/~matloff/UnixAndC/Unix/ShellIntro.html}
+and \url{http://heather.cs.ucdavis.edu/~matloff/UnixAndC/Unix/CShellII.html}.
+
+The default shell in Linux is {\bf bash}. It is very good, but if you
+are used to using, say, {\bf tcsh},\footnote{Or if you want to use my
+shell tutorials, mentioned above.} you can use the {\bf chsh} command in
+any terminal window to change your login shell.
+
+\subsection{Cut-and-Paste Window Operations}
+
+The X11 windowing system used in Linux has its roots in 3-button mice.
+Today, most people have such mice (the middle wheel counts as a button),
+but if you don't, that's no problem, because Linux does 3-button
+emulation for you.  The middle button is emulated by simultaneously
+clicking both left and right buttons.
+
+To do a cut-and-paste operations, hold down the left mouse button and
+drag it to highlight the text you wish to copy.  Then go to the place
+you wish to copy that text, and simultaneously push both the left and
+right buttons.  Generally, more things are cut-and-pastable in Linux
+than Windows, so this is a big convenience.
+
+\subsection{Mounting Other Peripheral Devices}
+
+This section explains how to use DVDs, USB devices and so on under
+Linux.
+
+\subsubsection{Mount Points}
+
+Each I/O device that contains a file system must be {\it mounted}, i.e.
+associated with some directory.  That directory is called a {\it mount
+point}.  The files then appear in that directory.
+
+These days most Linux distributions have a designated directory for
+mount points for DVD/CD-ROMs, USB devices, floppy disks, etc.  This will
+vary from one distribution to another, but typical directory names are
+{\bf /mnt}, {\bf /media} etc.
+
+You can check what is currently mounted by running the {\bf df} command
+from a shell window (another good Linux learning experience).  The mount
+points are listed along with the {\bf /dev} files.\footnote{Recall from
+Section \ref{whatispart} that every I/O device is viewed by Linux as
+some {\bf /dev} file.}  Also, to list the {\bf /dev} files for all your
+operating drives including USB flash drives, type {\bf fdisk -l}.
+
+For more detailed information, such as file system types, just run {\bf
+mount} without any arguments.
+
+Your machine's internal hard drives, and possibly other devices, will be
+mounted automatically at boot time.  Many, but not all, such devices and
+their mount directories is maintained in the file {\bf /etc/fstab}.  The
+details are an advanced topic, but even without understanding
+everything, you might find it worthwhile to take a quick look at that
+file.  
+
+When you attach a device to your machine {\it after} bootup, your system
+will probably recognize it immediately, and maybe pop up a window
+showing the device's contents.  If you have trouble, you can use the
+Unix {\bf mount} command.  This is an advanced command, but just to give
+you an idea, a typical usage would be
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+mount -t iso9660 /dev/hdc /mnt/yyy
+\end{Verbatim}
+
+This tells Linux that the I/O device corresponding to {\bf /dev/hdc},
+our CD-ROM, should be mounted at the directory {\bf /mnt/yyy}.
+If that directory doesn't exist, you must create it first, using {\bf
+mkdir}.  The field {\bf -t iso9660} says that the file system type is
+ISO9660.  This is standard for CD-ROMs, and you can probably omit it.
+
+\subsubsection{Reading Your DVD/CD-ROM and Floppy Drive from Linux}
+\label{dvd}
+
+The files are available under the mount point, as explained above.
+If they contain music or video, you of course will need a program to
+access them; see Section \ref{mplayer}.
+
+\subsubsection{CD/DVD Burning}
+
+You can use the shell-based {\bf cdrecord} and {\bf dvdrecord} programs,
+but it is much easier to use one of the GUI-based programs.  I use {\bf
+gnomebaker}.
+
+If you do not have that program, you can download it from the Web.
+Under Ubunta, for instance, simply type
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+sudo apt-get install gnomebaker
+\end{Verbatim}
+
+Run the program by typing
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+gnomebaker
+\end{Verbatim}
+
+in a shell window.  The GUI will come up.  
+
+In the bottom right-hand corner, set the size of the CD/DVD (a typical
+DVD has capacity 4.7G), then click Create Data Disk.
+
+Then go to the Filesystem section in the upper-right portion of the
+window, and choose your directory.  Then for each file you want to burn,
+click and drag it from the File section at the upper-right to the Data
+Disk (or Audio Disk) section at the bottom of the window.  If you wish
+to copy an entire directory, just drag the directory name.
+
+To burn an ISO image, select Actions $|$ Burn CD/DVD Image, then 
+select the {\bf .iso} file, and burn.
+
+% I prefer to use the plain {\bf cdrecord} command, included with most
+% Linux distributions.
+% 
+% To burn a data CD, you'll need it to be in ISO form.  In some cases,
+% e.g. where you download material from the Web which you want to burn
+% into a CD, you may already have an ISO file, i.e. with {\bf .iso}
+% suffix in its name.  
+% 
+% If not, then first put all your data in some directory, say {\bf x}.
+% Then make an ISO file from it, say named {\bf y.iso}:
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% mkisofs -r -o y.iso x
+% \end{Verbatim}
+% 
+% Put a blank CD in the tray.  (Do NOT mount it, as it has no file system
+% to mount.) Then log in as root. 
+% 
+% Your CD device number might not be 0,0 (or 0,0,0; the first 0 may be
+% omitted in certain cases).  Type
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% cdrecord -scanbus
+% \end{Verbatim}
+% 
+% to find out.
+% 
+% Now burn the file:
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% cdrecord -eject -v -isosize speed=2 dev=0,0 y.iso
+% \end{Verbatim}
+% 
+% A speed of 2 is very conservative, maximizing the chance that the burn
+% has no errors.  If you wish, try omitting the {\tt speed} field in your
+% command, and {\bf cdrecord} may choose a higher speed.
+% 
+% A similar {\bf dvdrecord} command exists for burning DVDs.
+
+\subsubsection{Using USB Devices}
+
+USB drives, including memory sticks, should have their filesystems
+mounted automatically when you attach them.  Use the {\bf df} command to
+check where they've been mounted (it could be in the directory {\bf
+/mnt/} {\bf /media} etc.). 
+
+USB mice should become automatically usable when you attach them.
+
+\subsection{A Note on Ubuntu}
+
+\subsubsection{Root Operations}
+\label{sudo}
+
+Ubuntu works like any other Linux distro, except for one important
+point:  Ubuntu does not have a root user account in the classic Unix
+sense.  Instead, whenever executing a command which requires root
+privileges, one precedes the command by the term {\bf sudo} (``superuser
+do'').  One is then prompted for a password, which is the password for
+the first user account created at the time of installation.
+
+If you have a lot of root-type work to do in a session, type
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+$ sudo -s
+\end{Verbatim}
+
+to create a new superuser shell, and do your work there.
+
+\section{Linux Applications Software}
+
+\subsection{GUI Vs. Text-Based}
+
+Most people prefer to use GUI-based applications.  If you are one of
+them, rest assured that there are tons of them available for Linux.
+
+I do wish to mention, though, that the ``super hard core'' Linux users
+prefer to use text-based applications, rather than GUI ones.  For
+instance, I and many others like the {\bf mutt} e-mail utility (Section
+\ref{email}), which is text-based.  Here's why, at least in my view:
+
+\begin{itemize}
+
+\item I often access my Linux machine remotely, while
+traveling.\footnote{Which is in fact exactly the case as I write this
+paragraph.}  I might be at a university library, for instance, or at the
+business center in a hotel, and be ``stuck'' with a Windows machine, and
+logging in to my Linux machine via an SSH connection.\footnote{Though I
+sometimes use VNC to access a remote image of my Linux desktop.  See
+\url{http://heather.cs.ucdavis.edu/~matloff/vnc.html}.}  This limits me
+to text.
+
+\item It's very important to me that I use the same text editor for all
+my computer applications---e-mail, programming, word processing,
+etc.---so that I can take advantage of all the abbreviations, shortcuts
+and so on which I have built up over the years.  This saves me huge
+amounts of typing.  But most GUI applications, e.g. e-mail utilities,
+have their own built-in text editors, so I can't use mine.
+
+\item I find that text-based applications often have more features, are
+better documented, etc.  For example, I often wish to automate certain
+processes, such as uploading files to another machine, and typically
+text-based programs do this better.
+
+\end{itemize}
+
+However, in listing my favorite applications in Section \ref{favorites}
+below, I've made sure to list both text-based and GUI programs.
+
+\subsection{My Favorite Unix/Linux Utilities and Applications} 
+\label{favorites}
+
+\subsubsection{Text Editing}
+
+I use a modern extension to the {\bf vi} editor, {\bf vim}.  This is
+the version of {\bf vi} which is built in to most Linux distros.  See my
+tutorial at \url{http://heather.cs.ucdavis.edu/~matloff/vim.html}.   
+
+Note:  In the Fedora distro, somehow the version of {\bf vim} that is
+linked to {\bf vi} isn't configured fully correctly.  I suggest using
+{\bf /usr/bin/vim} directly.
+
+Even though {\bf vim} is text-based, it does have a GUI version too,
+{\bf gvim}.  This comes with nice icons, allows you to do mouse
+operations, etc.  Unfortunately, most Linux distros seem to have only
+the text-based program.  To get the GUI, you can download it yourself.
+In Ubuntu, do
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+sudo apt-get install vim-gnome
+\end{Verbatim}
+
+For this, you may need to edit {\bf /etc/apt/sources.list} and
+uncommented the lines for Canonical's 'partner' repository
+
+\subsubsection{Web Browsing}
+\label{yessometimesiuselynx}
+
+Your Linux distro will come with a Web browser, probably Firefox, and
+possibly Konqueror in addition.
+
+I almost always use Firefox.  But believe it or not, sometimes I use the
+famous text-based browser, {\bf lynx}.  In some cases, it is just plain
+quicker and easier.  Moreover, you can do cool tricks, such as recording
+keystrokes for later playback, thus enabling one to do certain Web
+operations automatically.
+
+If you use Fedora, your Firefox system may not be configured for Java.
+If so, see
+\url{http://www.mjmwired.net/resources/mjm-fedora-fc6.html#java}.  NOTE
+CAREFULLY:  This site has some very long shell commands, which will not
+be completely displayed unless you make the browser window quite wide.
+
+If you are short on memory (i.e. RAM), you may wish to use a lightweight
+browser, such as Galeon (related to Firefox but somewhat fewer features)
+or Dillo (really bare-bones).
+
+\subsubsection{E-Mail}
+\label{email}
+
+I use the {\bf mutt} e-mail utility. It is very flexible and
+customizable, and excellent features.  For example, it has great search
+capabilities, important if you are a heavy e-mail user.  I like its
+ability to record the fact that one has already replied to a message,
+and the fact that it allows you to save partially-written message for a
+later time when you can finish writing it.  It is text-based, not GUI,
+but the functionality it gives is what really counts, in my view.  See
+my tutorial at \url{http://heather.cs.ucdavis.edu/~matloff/mutt.html}. 
+
+In Ubuntu, download it by typing
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+sudo apt-get install mutt
+\end{Verbatim}
+
+If you prefer a GUI-based mail utility, many nice ones exist for Linux.
+Check the Web for these, or use the Thunderbird e-mail utility in the
+Firefox Web browser suite.
+ 
+\subsubsection{HTML Editing}
+
+I usually use Vim, along with some macros I've written for HTML editing,
+but I sometimes use Amaya, which is a full-featured GUI HTML editor,
+written by the Web policy consortium.  One nice feature is that you can
+actually use the embedded Web links, good for testing them.  See my
+tutorial at \url{http://heather.cs.ucdavis.edu/~matloff/amaya.html}. 
+
+There are many newer and more powerful packages, such as Quanta+,
+Bluefish and NVu.
+
+\subsubsection{Integrated Software Development (IDE)}
+
+For C/C++ work, I actually don't use an IDE.  I find that the {\bf vim}
+editor (cited above) and the {\bf ddd} GUI interface to the {\bf gdb}
+debugging tool, work great together.  For example in {\bf vim} I can
+type {\tt :make} (which I have aliased to just {\tt M}, or with {\bf
+gvim} click on the make icon, and the source code I'm debugging will be
+recompiled.  And as I've mentioned, it's important to me that I use the
+same text editor for all applications, which most IDE would not allow me
+to do.  I use either GDB (try CGDB!) or DDD for my debugging tool.  See
+my tutorials at \url{http://heather.cs.ucdavis.edu/~matloff/vim.html}
+and \url{http://heather.cs.ucdavis.edu/~matloff/debug.html}. 
+
+DDD is also usable with my favorite programming language, Python.
+
+However, if you love IDEs, try Eclipse.  I've got a tutorial that is
+more complete than most, at
+\url{http://heather.cs.ucdavis.edu/~matloff/eclipse.html}.   It can be
+used with C, C++, Java, Perl, Python and many others.
+
+Also, for KDE users, there is a very well-received IDE named KDevelop.
+I lean toward Eclipse, though, as it is easier to learn, is
+cross-platform, and can be used with more programming languages. 
+
+\subsubsection{Word Processing}
+
+I use \LaTeX\, because of its flexibility, its beautiful output, and its
+outstanding ability to do math. You may like Lyx, which is a great
+GUI interface to \LaTeX\ which is especially good for math work.
+See my tutorials at
+\url{http://heather.cs.ucdavis.edu/~matloff/latex.html} and
+\url{http://heather.cs.ucdavis.edu/~matloff/lyx.html}. 
+
+If you wish to work with files compatible with the Microsoft Office
+environment, there is a free suite of programs, OpenOffice, which
+provide Microsoft compatibility.  It is packaged with most Linux
+distributions.
+
+If you would like something that quickly converts an Office file to
+rough text form, say to use with e-mail attacments, try Antiword.
+In Ubuntu, install via
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+sudo apt-get install antiword 
+\end{Verbatim}
+
+\subsubsection{Playing Movies, Music, Etc.}
+\label{mplayer}
+
+MPlayer is free and very good.  Its capabilities are amazingly broad.
+
+The documentation is extensive, and hard to navigate, but here are a
+couple of things to get you started:
+
+{\bf Installation:}
+
+It's easy in Ubuntu:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+sudo apt-get install mplayer 
+sudo apt-get install mencoder 
+\end{Verbatim}
+
+Otherwise, build it yourself, as follows.
+
+One downloads the source code, {\bf MPlayer-1.0pre7try2.tar.bz2} and the
+codecs, {\bf essential-20041107.tar.bz2}, from
+\url{www.mplayerhq.hu/design7/dload.html}.  
+
+Unpack the codecs file first, 
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+tar xfj essential-20041107.tar.bz2
+\end{Verbatim}
+
+This creates a new directory.  Copy the contents of that directory to
+the directory {\bf /usr/local/lib/codecs} (use {\bf mkdir} to create it
+if necessary).  (Note:  There may be legality issues with some codecs.
+When in doubt about a particular codec, you should obtain it from a site
+like Fluendo that offers it for a nominal fee,  See a discussion at
+\url{http://fedoraproject.org/wiki/CodecBuddy}.
+
+Now, unpack the source code file, and go into the directory it creates.
+Then go through the usual sequence for building open-source software
+from source:
+
+\begin{verbatim}
+configure
+make
+make install
+\end{verbatim}
+
+Note that if you want to use the GUI, the {\bf configure} command should
+be
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+configure --enable-gui
+\end{Verbatim}
+
+After {\bf make install} is done, you will probably get a message
+something like
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+ *** Download font at http://www.mplayerhq.hu/dload.html
+*** for OSD/Subtitles support and extract to
+/usr/local/share/mplayer/font/
+*** Download skin(s) at http://www.mplayerhq.hu/dload.html
+*** for GUI, and extract to /usr/local/share/mplayer/skins/
+\end{Verbatim}
+
+The fonts are needed for the subtitles (and for the GUI, if you use it).
+Just the {\bf iso1} font is needed.  Download the font package, go to
+the indicated directory ({\bf /usr/local/share/mplayer/font/} in the
+above example), and then do the unpack operation.  This will produce a
+subdirectory, e.g. {\bf font-arial-iso-8859-1}.
+
+{\bf Viewing a video:}
+
+To play a video or audio file, say {\bf x.avi}, type
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+mplayer x.avi
+\end{Verbatim}
+
+If you specify several files, as a playlist, it will play them all.  Hit
+the Enter key if you want to skip the rest of the current file and go to
+the next one.
+
+To play a DVD, put the disk in the tray (see Section \ref{dvd}).  Then
+type
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+mplayer dvd://1 -dvd-device /mnt/cdrom
+\end{Verbatim}
+
+where you will have to substitute a different mount point if it is not
+{\bf /mnt/cdrom} (try running {\bf df} or rummaging around in {\bf
+/media}).
+
+You have the following controls:
+
+\begin{itemize}
+
+\item right and left arrow keys to go back or forward 10 seconds
+
+\item down and up arrow keys to go back or forward 1 minutes
+
+\item PgDown and PgUp keys to go back or forward 10 min
+
+\item left- and right-bracket keys to decrease/increase speed by 10\%,
+or left- and right-brace for 50\%; Backspace key to return to normal
+speed
+
+\item Space bar to pause, then . to go forward frame by frame, Space bar
+to resume play
+
+\item f to go full screen
+
+\item q to quit
+
+\end{itemize}
+
+You can use {\bf mplayer}, actually {\bf mencoder}, which comes with the
+package, to do format conversion, e.g. AVI to MPG, change aspect ratio, 
+and even do some primitive editing.
+
+There are many, MANY, {\Large \bf MANY} different options.
+
+You may wish to try other players, e.g. VLC.
+
+\subsubsection{Video Editing}
+
+Try Kino, Cinelerra, LiVES and many others.
+
+\subsubsection{Image Viewing, Manipulation and Drawing}
+
+I use {\bf xpdf} to view PDF files, though Acroread for Linux is
+available.  I like the fact that {\bf xpdf} allows me to copy ASCII text
+from the file.
+
+For collections of JPEG files and the like, I use {\bf xzgv}; for
+viewing a single image, I use {\bf qiv}.
+
+Want something like Adobe Photoshop?  The GIMP program is quite
+powerful, and free.  It's included with most Linux distributions.
+
+You can use GIMP to draw, but for ``quick and dirty'' tasks, I would
+suggest Dia, at \url{http://www.gnome.org/projects/dia/}.
+
+\subsubsection{Accessing Usenet Newsgroups}
+
+Linux distros generally come a text-based newsreader, either {\bf slrn}
+or {\bf tin}.  I generally use {\bf slrn}, but am not that happy with
+any known newsreader.
+
+In the GUI arena, I sometimes use {\bf pan}.  You can download it from
+\url{pan.rebelbase.com}.  
+
+Firefox's Thunderbird program includes a newsreader too.
+
+\subsubsection{FTP}
+
+I usually use the text-based {\bf ftp} and {\bf sftp}, the latter being
+an SSH version for security.  
+
+If you do frequent uploads/downloads to/from a particular site and wish
+to automate them, another text-based program, {\bf yafc}, is excellent.
+
+A very nice GUI program, though, is {\bf gftp}, which you can download
+from the Web if your Linux system doesn't already have it.  In addition
+to the GUI, this program also has some functionality which ordinary FTP
+programs don't have.
+
+\subsubsection{Statistical Analysis}
+
+Use the statistical package that the professional statisticians use---R!
+
+In my opinion from the point of view of someone with a ``foot in both
+camps''---I'm a computer science professor who used to be a statistics
+professor---the R statistical package is the best one around, whether
+open source or commercial.\footnote{In some respects, it's even better
+than S, the commercial product it is based on.} It is statistically
+modern and correct, and it also is a general-purpose programming
+language.  
+
+I have a tutorial on R at \url{http://heather.cs.ucdavis.edu/~matloff/r.html}.
+
+\subsection{Downloading New Software}
+
+There is a vast wealth of free software for Linux on the Web.  Here's
+how to obtain and install it.
+
+\subsubsection{How to Find It}
+
+These days most downloads and installs are done automatically, say with
+{\bf yum} or {\bf apt-get}, as seen in Section \ref{yum} below.  That
+helps you find it too.  If you want to find application Z, instead of
+plugging ``Z'' into Google, plug ``yum install Z'' or ``apt-get install
+Z'' so as to narrow down the volume of response.
+
+\subsubsection{Automatic Download/Installation}
+\label{yum}
+
+In recent years, most Linux distros have made it very easy to download
+and install new software.  In Fedora, for instance, one uses the {\bf
+yum} command.
+
+For example, to download the program {\bf yafc} mentioned above, one
+simply types
+
+\begin{verbatim}
+yum install yafc
+\end{verbatim}
+
+In Ubuntu, there is the {\bf apt-get} command, which works similarly.
+For instance, to download the {\bf xpdf} PDF viewer, I typed
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+sudo apt-get install xpdf
+\end{Verbatim}
+
+(Note:  Ubuntu may ask you to install from your CD-ROM, but yours may be
+incomplete.  If so, comment out the first line of {\bf
+/etc/apt/sources.list}; this is the line telling Ubuntu to install from
+the CD-ROM.)
+
+(See Section \ref{sudo} for an explanation of {\bf sudo}.)
+
+With both {\bf yum} and {\bf apt-get}, one can direct where to download
+from, by making the proper entries in the file {\bf
+etc/apt/sources.list}.  For instance, for the R statistical package
+above, {\bf apt-get} may not find it on its own, in which case we can
+add a line
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+deb http://cran.stat.ucla.edu/bin/linux/ubuntu gutsy/ 
+\end{Verbatim}
+
+to {\bf etc/apt/sources.list}, telling {\bf apt-get} that here is an
+alternative place it can look.  (This is for the Gutsy edition of
+Ubuntu.)
+
+By default {\bf apt-get} will try to retrieve your requested program
+from your installation CD/DVD.  You can change this by commenting-out
+the line in {\bf etc/apt/sources.list} that begins with
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+deb cdrom:
+\end{Verbatim}
+
+Sometimes it may not be clear which package name to use with {\bf yum}
+or {\bf apt-get}.  For instance, to install the GCC compiler, C library
+and so on, the command is
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+sudo apt-get install build-essential
+\end{Verbatim}
+
+How did I learn this?  I did a Web search for ``apt-get GCC.''  
+
+To install the {\bf curses} library (and include file), do
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+sudo apt-get install libncurses5-dev
+\end{Verbatim}
+
+\subsubsection{Using RPMs}
+
+Though the methods in Section \ref{yum} have now made RPMs less
+important, you may find that the software you want comes in an RPM
+package, with a {\bf .rpm} suffix in its name.  To install such a
+package, type
+
+\begin{verbatim}
+
+rpm -i package_file_name
+\end{verbatim}
+
+If you later wish to remove, i.e. uninstall a package, you can use {\bf
+rpm -e} (`e' stands for ``erase''). You do NOT have to have the RPM file
+present to do this.
+
+Some packages will have different versions for different C libraries.
+Red Hat uses {\bf glibc}. Type
+
+\begin{verbatim}
+ls -l /lib/libc*
+\end{verbatim}
+
+to see which version you have.
+
+You may find that you need some library files for a program you
+download, and that you are missing those files. You can usually get
+these from the Web too. If a program complains about a missing file, try
+the {\bf ldd} command (e.g. {\bf ldd x} if the name of the program which
+needs the library is {\bf x}); this will tell you which libraries are
+needed, where they were found on your system, and which ones, if any,
+were not found.
+
+\section{Dual-Boot Issues}
+
+You may wish to change some parameters of your dual-boot process, e.g.
+change the default OS.  You can do this by editing the configuration
+file for your bootloader.
+
+Most distros today use GRUB as their bootloader.  Its configuration
+file is {\bf /boot/grub/menu.lst}.  By the way, note that GRUB's
+notation for partitions is (drive ID, partition number), so that for
+instance (hd0,1) means the second partition in the first hard drive.
+
+\section{Learning More About Linux}
+
+\subsection{Wanna Get Good at Linux?  Use It for Everything!}  
+\label{useit}
+
+The only way to really learn Linux is to use it on a daily basis for all
+your computer work---e-mail, word processing, Web work, programming, etc.
+
+As you do this, the expertise you'll want to pick up includes:  file,
+directory and mount operations; process operations; roles of system
+directories ({\bf /usr}, {\bf /etc}, {\bf /dev}, {\bf /sbin} and their
+various subdirectories, e.g. {\bf /usr/lib}; search paths; network
+operation and utilities such as {\bf netstat}; and so on.  
+
+Don't try to do this all at once.  Instead, take your time, and learn
+these naturally, as the need arises.  As you use Linux more and more in
+your daily computer application work (e-mail, word processing, etc.),
+the needs will arise as you go along.
+
+And remember, there's lots of help available if you need it.
+
+\subsection{Getting Help}
+\label{help}
+
+\subsubsection{Newsgroups}
+
+There are various Usenet newsgroups devoted to Linux, a few of which
+are:
+
+\begin{verbatim}
+
+comp.os.linux.setup
+comp.os.linux.hardware
+comp.os.linux.answers
+comp.os.linux.announce (excellent for news of new programs, mostly
+                     free, that run under Linux)
+\end{verbatim}
+
+By the way, if you have a problem with hardware and post a query about
+it to a newsgroup, it is a good idea to include the output from the
+{\bf dmesg} command. It gives a record of what occurred during bootup.
+
+\subsubsection{The Web}
+
+\begin{itemize}
+
+\item If you are running Ubuntu or one of its offshoots, the Ubuntu
+Forums, \url{http://ubuntuforums.org/} is an excellent resource.
+
+\item Linux home page, at http://www.linux.org/ Lots and lots of
+information is available here.
+
+\item \url{www.linux.com}.  Chock full of information and links.
+
+\item Google's excellent set of links to various Linux sites,
+\url{http://directory.google.com/Top/Computers/Software/Operating_Systems/Linux}
+
+\item Another good set of Linux links, 
+\url{http://www.linuxjunior.org/resources.shtml}
+
+\item If you are having trouble with specific hardware in your Linux
+installation, an excellent place to go for detailed information is the
+Linux HOW-TO documentation. (For the same reason, if you are about to
+purchase a machine and suspect that some of the hardware is nonstandard,
+you can check the corresponding Linux HOW-TO to see if there are any
+problems with that hardware.
+
+The HOW-TO documents are available at many sites, such as the one at
+linux.org.
+
+\end{itemize}
+
+\subsubsection{LUGs}
+
+There are Linux Users Groups (LUGs) in virtually every city.  You can
+join if you wish, or just get to know them casually.  They are great
+sources of help!  And by the way, many of them hold monthly Linux
+Installfests, where you can see Linux being installed or have it
+installed on your own machine.  
+
+\section{Troubleshooting}
+
+One of Linux's biggest strengths is its stability.  If you are tired of
+getting Windows' infamous ``blue screen of death,'' then Linux is the OS
+for you.  (It is also subject to far fewer virus and other attacks than
+Windows.)  So emergencies are rare, but they can happen.  Here are some
+tips for such cases.
+
+\subsection{Tools}
+
+Here are some commands you can run in a terminal window that you can use
+to investigate:
+
+\begin{itemize}
+
+\item {\bf ps}:  Tells you what processes are running.  Typically
+one uses this with something like the {\bf ax} option.
+
+\item {\bf dmesg}:  Tells you the major events that have occurred
+on your machine ever since it was last booted up.
+
+\item {\bf lsmod}:  This tells you what OS modules are installed, i.e.
+device drivers and the like.
+
+\item {\bf lpq}:  Lists the current printer queue.
+
+\item {\bf lsusb}:  Lists what USB devices are currently plugged in.
+
+\item {\bf ifconfig}:  Lists network interfaces.
+
+\item {\bf iwconfig}:  Lists currently operating wireless devices.
+
+\item {\bf iwlist}:  Lists wireless access points in range.
+
+\item {\bf netstat}:  Lists current network connections.
+
+\end{itemize}
+
+\subsection{A Program Freezes}
+
+If an application program freezes up and you invoked it from the command
+line within a shell, you can in most cases kill it by hitting Ctrl-c in
+the terminal window from which invoked it.  If this doesn't work, run
+the ``processes'' command by typing
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+ps ax
+\end{Verbatim}
+
+in another terminal window, and noting the process number of your
+program.  Say for concreteness that that number is 2398.  Then type
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+kill -9 2398
+\end{Verbatim}
+
+to kill the program.
+
+If you have a program named, say, {\bf xyz}, the command
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+pkill -9 xyz
+\end{Verbatim}
+
+kills all running instances of the program.
+
+\subsection{Screen Freezes}
+What if your entire screen freezes up?  Again, this should be quite
+rare, but it is possible.  I recommend the following remedies, in order:
+
+\begin{itemize}
+
+\item Hit Alt F2, which will bring up a little window in which you can
+run a command, say {\bf pkill} as above.  
+
+\item Try going to another screen!  Linux allows you to switch among
+multiple screens.  You can switch to the second screen via Alt F2 or
+Ctrl 2, depending on your window manager.  Then open a terminal window in the
+new screen, find the process number of the program and kill the program,
+as described above.
+
+\item Try hitting Ctrl Alt Backspace (all keys simultaneously).  This
+should cause an exit from Linux's X11 windowing system but not an exit
+from Linux itself.  You would then get an opportunity to log in again.
+
+\end{itemize}
+
+Try NOT to simply poweroff the machine, as that may do damage to your files.
+It may not be permanent damage, as the OS will try to fix the problems
+when you next reboot, but don't just pull the plug unless you have no
+other recourse.
+
+\subsection{Inaccessible Partition}
+
+Suppose you reinstall or upgrade your Windows OS.  This will probably
+restore the original boot procedure, rendering your Linux files
+inaccessible.
+
+You can easily access the files by booting one of the live CD distros
+(Section \ref{live} above).  Do the following after booting:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+$ cd /
+$ mkdir mylinfiles
+$ mount /dev/hda2 mylinfiles
+$ cd mylinfiles
+$ ls
+\end{Verbatim}
+
+(Of course, you may need to type a different {\bf /dev} file name here;
+see Section \ref{whatispart} above.)
+
+At this point, you will be in your Linux file system!  You can then go
+down to your Linux home directory, via {\bf cd home} or something like
+that.
+
+You can then run GRUB from your live CD.  Please check the Web for
+instructions.
+
+\section{If You Are Upgrading or Replacing Another Version or
+Distribution of Linux}
+\label{upgrade} 
+
+(If you are installing Linux from scratch, skip this section.) 
+
+Suppose you already have Linux installed but are upgrading to a newer
+version of the same distribution or changing to a different
+distribution.  First of course you will want to make sure you back up your
+old files, just in case sometimes goes wrong. 
+
+Note that in addition to any ``personal'' files you have, you may also
+have added some downloaded packages, whose files are now in places like
+{\bf /usr/local/}.  You may also have modified files in {\bf /etc}, such as
+{\bf /etc/resolv.conf}.  You may wish to tar these into a save file too.
+(Don't copy the Linux system files, e.g in {\bf /usr/bin}, though, since you
+want them to be replaced by their counterparts in the new version of
+Linux.)
+
+% \section{Making an MS-DOS Boot Disk}
+% \label{making}
+% 
+% Insert a 3.5" floppy disk. Go to My Computer, then Control Panel, then
+% Add/Remove Programs, then Startup Disk.
+% 
+% \section{Winmodems}
+% 
+% Currently virtually all mass-produced PCs and laptops use {\it
+% Winmodems}.  These are only ``partial'' modems, in the sense that the
+% hardware is incomplete.  The missing hardware is replaced by software --
+% Windows software, which presents a problem for Linux users.
+% 
+% Here are your choices for solving the problem:
+% 
+% \begin{itemize}
+% 
+% \item Install another modem. Check the Linux modem Web page, at
+% http://www.grapevine.net/~gromitkc/winmodem.html before you buy.  Or you
+% may wish to avoid the problem entirely by purchasing an external modem
+% which connects to your serial port; most external modems are fine,
+% according to the modem Web page above. (You can probably even leave your
+% old internal modem inside the machine, as long as you unplug the phone
+% wire from it.) Plug your modem into your serial port, and rerun {\bf
+% modemtool}.
+% 
+% \item Try to find a Linux driver for your Winmodem.  There is a lot of
+% activity in this regard; see www.linmodems.org
+% 
+% \item Or do all your Internet access from Windows, transferring your
+% downloaded/uploaded files to and from Linux via Windows. To do this, see
+% page \ref{access}.
+% 
+% \end{itemize}
+% 
+% \section{Who Does NOT Need to Run fips}
+% \label{nofips}
+% 
+% The main types of people who do NOT need to run {\bf fips} are:
+% 
+% \begin{itemize}
+% 
+% 
+% \item Those who have already have two or more partitions on their 
+%     hard drive. 
+% 
+% \item Those who have two hard drives, and will be installing Linux on
+%     the second one. (Make sure you have formatted the second drive
+%     using Windows, even though you will be installing Linux there.)
+% 
+% \item Those who have a new machine and possess the CD-ROMs with all its
+%     software, and are willing to rebuild their Windows system from
+%     scratch from those CD-ROMs. In this case, you would re-format C:
+%     then run DOS' (not Linux's) fdisk program to make two partitions
+%     on C:, then reload all your Windows software onto the first
+%     partition.
+% 
+% \end{itemize}
+% 
+% In these cases, skip the {\bf fips} material in this Web document, and go
+% directly to the main Linux installation section.
+% 
+% \section{How to Change LILO Parameters}
+% \label{changelilo}
+% 
+% You can change LILO's parameters by editing LILO's startup file,
+% /etc/lilo.conf and then running /sbin/lilo without command-line
+% arguments. (The changes to the startup file won't take effect unless
+% you then run lilo.)
+% 
+% For example, LILO has a parameter named ``timeout", which specifies the
+% number of tenths of seconds LILO will wait for your response after it
+% issues its ``LILO boot:" prompt. For instance, if you edit the timeout
+% line in the startup file to read
+% 
+% \begin{verbatim}
+% 
+% timeout=150
+% \end{verbatim}
+% 
+% then your default OS will automatically be booted if we don't type
+% anything within 15 seconds of the appearance of the ``Lilo boot:"
+% prompt.
+% 
+% The installation process sets Linux as the default OS. If you wish to
+% change this to Windows (called ``dos" in LILO), use your editor to
+% change the ``default" line in /etc/lilo.conf
+
+\section{Accessing Your Windows Files from Linux}  
+\label{access}
+
+At this point, most Linux distributions, except Fedora/Red Hat, give you
+access (at least read access) to your Windows partition from Linux.  For
+some of them, they may do this automatically, in which case your Windows
+partition, say {\bf /dev/hda1} should be visible in the file {\bf
+/etc/fstab}.  If not, mount it yourself:  
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+mkdir /dosc
+mount /dev/hda1 /dosc
+cd /dosc
+\end{Verbatim}
+
+You should now see your Windows files, and should be able to access them
+on at least a read basis.
+
+For more information, including concerning write access, ss the
+Linux-NTFS Project, \url{http://www.linux-ntfs.org/}.
+
+% First, determine the exact kernel your Linux system has, say by running
+% the {\bf dmesg} command, mentioned in the first few lines of the output.
+% Then go to the above Web page, click on your distribution, say Fedora 3,
+% and download the RPM with the same kernel number.  Then follow the
+% directions given at the Web page, running {\bf rpm} to install the
+% Linux-NTFS package, and then running {\bf modprobe} and {\bf mount}.  
+% 
+% All of that is the first time.  On subsequent when you wish to access
+% your Windows partition, you need run only the {\bf mount}.
+
+\section{If You Wish to Remove Linux}
+
+If you wish to remove Linux from your machine, first remove LILO/GRUB as
+follows.  Boot from your the Windows recovery CD that came with your
+machine.  (Make sure you have the boot order set for your machine so
+that it tries to boot from CD or DVD before a hard drive.)
+When asked whether you want setup or recovery, hit R for the
+latter.  Choose whichever disk your Windows system is on, probably C:.
+Change directories to WINDOWS if you are not already there, and issue
+the FIXMBR command.  It will warn you that you will be restoring the
+Master Boot Record (MBR), which is what you want.  Then hit EXIT to
+finish, and reboot without the CD.
+
+Subsequently Windows will boot up as it did before you installed
+Linux.  
+
+Finally, use GParted to recover the former Linux space into your Windows
+partitions.  Typically, this means deleting your Linux partitions (the
+ones that are not of type FAT32 or NTFS), and then expanding your NTFS
+partition.  Don't forget that the next time you boot Windows, it will
+ask you if you want a disk check, which you should definitely answer Yes
+to.
+
+% \section{How to Use wvdial}
+% \label{wvdial}
+% 
+% The {\bf wvdial} program does a great job of automating the setup of a PPP
+% connection to the Internet.  It is already there in your Red Hat
+% distribution.
+% 
+% Create a configuration file by typing
+% 
+% \begin{verbatim}
+% 
+% wvdialconf /etc/wvdial.conf
+% \end{verbatim}
+% 
+% or by simply modifying the example in the {\bf wvdial} man page.
+% 
+% You are now ready to try it out! Just type
+% 
+% \begin{verbatim}
+% 
+% wvdial &
+% \end{verbatim}
+% 
+% The program should dial out for you, sense when the user and password
+% prompts come from your ISP, automatically send them, and then start {\bf
+% pppd}.  You now can run {\bf telnet}, {\bf netscape} or whatever.
+% 
+% To quit your PPP connection, first bring {\bf wvdial} back to the foreground
+% by typing ``fg", and then hit ctrl-c to kill it.
+% 
+% (Do not use the Unix {\bf kill} command for this; ctrl-c gives {\bf wvdial} a
+% chance to end gracefully. Otherwise, the OS kernel's routing table
+% will not revert to its original setting, and if you use {\bf wvdial} again
+% without rebooting, {\bf wvdial} won't work properly. If you are curious
+% about this, try running the {\bf route} command before, during and after
+% running {\bf wvdial}. 
+% 
+% \section{Making a Linux Rescue Disk}
+% 
+% If you ever have a disk crash or similar problem, you'll be thankful
+% that you had previously made a Linux rescue disk.  If you did nto do so
+% during your Linux install process, put a floppy diskette into the drive
+% and run the {\bf mkbootdisk} command.
+% 
+% \section{Dial-Up Networking from Linux}
+% 
+% Important note: Beware of ``Winmodems,'' which will not work with Linux.
+% See our section on this elsewhere in this document, titled
+% ``Winmodems.''
+% 
+% To use your modem (if not a Winmodem), first find out which COM port
+% your modem is on. (See the material above on how to determine your
+% hardware properties in Windows.) Then run the Linux program {\bf
+% modemtool}.
+% 
+% Then edit the file {\bf /etc/resolv.conf} (create it if it is not there),
+% adding the line
+% 
+% \begin{verbatim}
+% nameserver x.x.x.x
+% \end{verbatim}
+% 
+% to it, where x.x.x.x is the DNS address used by your Internet service
+% provider. (You can have up to three such lines.)
+% 
+% I strongly recommend using {\bf wvdial}, It probably is already included in
+% your Linux system, but if not, obtain it from
+% http://www.worldvisions.ca/wvdial/. 
+% 
+% You need to create the {\bf wvdial} startup file /etc/wvdial.conf.  You
+% could do this simply by using the sample in the man page as a model.
+% (Red Hat's {\bf wvdial} configuration tool is rp3; you may wish to run
+% this instead.) Or you can use {\bf wvdial}'s own configuration tool; see
+% Appendix \ref{wvdial} for details.
+
+
+ 
+\end{document} 
+

@@ -1,0 +1,851 @@
+\chapter{Factors and Tables}
+\label{chap:factab}
+
+We earlier called vectors the workhorse of R.  Along these lines, we
+might call R's {\it factor} variables the unsung heroes, as they form
+the basis for many of R's powerful operations.
+
+\section{Factors}
+
+The motivation for factors comes from the notion of {\it nominal} or {\it
+categorical} variables in statistics.  These are nonnumerical in nature,
+corresponding to categories, such as Democrat, Republican and Unaffiliated,
+though they may be coded using numbers.
+
+Technically, an R factor is simply a numeric vector with a bit
+more information added (though the result is {\it not} considered a
+vector).  That extra information consists of a record of the distinct
+values in that vector.  For example:
+
+\begin{Code}
+> x <- c(5,12,13,12)
+> xf <- factor(x)
+> xf
+[1] 5  12 13 12
+Levels: 5 12 13
+\end{Code}
+
+\noindent
+The distinct values in {\tt xf}, 5, 12 and 13, are called the {\it
+levels} of {\tt xf}.  
+
+We actually can anticipate future new levels, as seen here:
+
+\begin{Code}
+> x <- c(5,12,13,12)
+> xff <- factor(x,levels=c(5,12,13,88))
+> xff
+[1] 5  12 13 12
+Levels: 5 12 13 88
+Levels: 5 12 13
+> xff[2] <- 88
+> xff
+[1] 5  88 13 12
+Levels: 5 12 13 88
+\end{Code}
+
+\noindent
+Originally {\tt xff} did not contain the value 88, but in defining it we
+allowed for that future possibility.  Later we did indeed add the value.
+
+By the same token, we cannot sneak in an ``illegal'' level:
+
+\begin{Code}
+> xff[2] <- 28
+Warning message:
+In `[<-.factor`(`*tmp*`, 2, value = 28) :
+  invalid factor level, NAs generated
+\end{Code}
+
+\section{The tapply() Function}
+\label{tapply}
+
+In typical usage, the call {\tt tapply(x,f,g)} has {\tt x} as a vector,
+{\tt f} as a factor or list of factors, and {\tt g} a function.  In any
+case, the one or more factors in {\tt f} must each have the same length
+as {\tt x}.  If {\tt f} is a vector, it will be coerced into a factor by
+applying {\tt as.factor()} to it.  
+
+The operation performed by {\tt tapply()} is to (temporarily) split {\tt
+x} into groups, each group corresponding to a level of the factor (or a
+combination of levels of the factors in the case of multiple factors),
+and then apply {\tt g()} to the resulting subvectors of {\tt x}.  
+
+For example:
+
+\begin{Code}
+> u <- c(22,8,33,6,8,29,-2)
+> tapply(u,c(5,12,13,12,13,5,13),sum)
+ 5 12 13 
+51 14 39 
+\end{Code}
+
+\noindent At first this is not intuitive at all, so note carefully what
+happened:  
+
+The function {\tt tapply()} treated {\tt c(5,12,13,12,13,5,13)} as a
+factor, with levels 5, 12 and 13.  It noted that 5 occurred in indices 1
+and 6, while 12 occurred in indices 2 and 4, and 13 occurred in index 3,
+5 and 7.   For convenience, let's refer to these three vectors, (1,6),
+(2,4) and (3,5,7) as {\tt x}, {\tt y} and {\tt z}, respectively.
+Then {\tt tapply()} computed {\tt sum(u[x])}, {\tt sum(u[y])} and {\tt
+sum(u[z])}, and returned the those sums in a three-element vector.
+
+What if we have two or more factors?  Then each factor yields a set of
+groups, as above, and the groups are then ``ANDed'' together.  That's
+pretty abstract, so let's look at a two-factor example:
+
+\begin{Code}
+> u <- c(22,8,33,6,8,29,-2)
+> fl <- list(c(5,12,13,12,13,5,13),c("a","bc","a","a","bc","a","a"))
+> tapply(u,fl,sum)
+    a bc
+5  51 NA
+12  6  8
+13 31  8
+\end{Code}
+
+Let's see how that 51 arose.  We saw above that level 5 in the first
+factor corresponded to indices 1 and 6 of that factor, while here ``a"
+in the second factor came from indices 1, 3, 4, 6 and 7.  The indices in
+common---boolean ``and'' operation---were 1 and 6.  The sum of elements
+1 and 6 in {\tt u} was 22+29, hence the 51 in the output from {\tt
+tapply()}.
+
+That 51 entry came from the first level of the first factor and the
+first level of the second.  As you can see from the two-dimensional
+nature of the output, all combinations of the two factors are processed.
+
+What about the NA, for example?  Well, that entry in the table
+corresponds to those indices in which the first factor is at level 5
+(1,6,7), {\it and} the second factor is at level ``bc'' (2,5).  There
+are no indices in common, hence the NA.
+
+Note again that the factors in {\tt f} must each have the same length as
+{\tt x}.  In our first example above, both {\tt u} and {\tt
+c(5,12,13,12,13,5,13} had length seven.  In the second example,
+c("a","bc","a","a","bc","a","a") also had length seven. 
+
+Why would anyone be interested in this kind of operation?  Typically, in
+the call
+
+\begin{Code}
+tapply(x,f,g)
+\end{Code}
+
+\noindent {\tt x} and {\tt f} correspond to different variables in the
+same data set.  Suppose for instance we have an economic data set which
+includes data on the gender, age and income.  Here, the above call might
+have {\tt x} as income and {\tt f} being a pair of factors, one for
+gender and the other coding whether the person is older or younger than
+25.  We may be interested in finding mean income, broken down by gender
+and age.  By setting {\tt g()} to be {\tt mean()}, then {\tt tapply()}
+would return the mean incomes in each of four subgroups:
+
+\begin{itemize}
+
+\item male and under 25 years old
+
+\item female and under 25 years old
+
+\item male and over 25 years old
+
+\item female and over 25 years old
+
+\end{itemize}
+
+\noindent
+Here's a toy example of that setting:
+
+\begin{Code}
+> d <- data.frame(list(gender=c("M","M","F","M","F","F"),
++    age=c(47,59,21,32,33,24),income=c(55000,88000,32450,76500,123000,45650)))
+> d
+  gender age income
+1      M  47  55000
+2      M  59  88000
+3      F  21  32450
+4      M  32  76500
+5      F  33 123000
+6      F  24  45650
+> d$over25 <- ifelse(d$age > 25,1,0)
+> d
+  gender age income over25
+1      M  47  55000      1
+2      M  59  88000      1
+3      F  21  32450      0
+4      M  32  76500      1
+5      F  33 123000      1
+6      F  24  45650      0
+> tapply(d$income,list(d$gender,d$over25),mean)
+      0         1
+F 39050 123000.00
+M    NA  73166.67
+\end{Code}
+
+\section{The split() Function}
+\label{split}
+
+The basic form for this function, without bells and whistles, is {\tt
+split(x,f)}, where {\tt x} is a vector or data frame and {\tt f} is a
+factor ({\tt split()} will call {\tt as.factor()} on {\tt f} if needed).
+The action is to split {\tt x} into groups as with {\tt tapply()}, but
+here the output is the groups themselves, returned in a list.
+
+Let's try it out with are earlier example:
+
+\begin{Code}
+> u <- c(22,8,33,6,8,29,-2)
+> fl <- list(c(5,12,13,12,13,5,13),c("a","bc","a","a","bc","a","a"))
+> split(u,fl)
+$`5.a`
+[1] 22 29
+
+$`12.a`
+[1] 6
+
+$`13.a`
+[1] 33 -2
+
+$`5.bc`
+numeric(0)
+
+$`12.bc`
+[1] 8
+
+$`13.bc`
+[1] 8
+\end{Code}
+
+\noindent
+The result was returned as a list, as promised.  Note that the names of
+the list tags were formed by combined the factor levels.
+
+As another example, consider our abalone example once again, from Section
+\ref{abalone}.  We wanted to determine the indices of the vector
+elements corresponding to Male, Female and Infant.  We can do this in a
+flash with {\tt split()}:
+
+\begin{Code}
+> g <- c("M","F","F","I","M","M","F")
+> split(1:7,g)
+$F
+[1] 2 3 7
+
+$I
+[1] 4
+
+$M
+[1] 1 5 6
+\end{Code}
+
+It's worth again dissecting this step by step.  The vector {\tt g},
+taken as a factor, has three levels, ``M'', ``F'' and ``I.''  The
+indices corresponding to the first level were 1, 5 and 6, that is {\tt
+g[1]}, {\tt g[5]} and {\tt g[6]}, all had the value ``M.''  So, R set
+the {\tt M} component of the output to elements 1, 5 and 6 of {\tt 1:7},
+that is the vector (1,5,6).
+
+\section{The by() Function}
+
+Suppose in the abalone example we wish to do regression analyses of,
+say, Diameter against Length, separately for each gender code, males,
+females and infants.  At first this seems like something tailor made for
+{\tt tapply()}, but the first argument of that function must be a
+vector, not a matrix.  The function to be applied can be multivariate,
+for example {\tt range()}, but the input must be a vector.  Yet the
+input for regression is a matrix with at least two columns, one for the
+predicted variable and at least one for predictor variables.  In our
+abalone data application, the matrix would consist of a column for the
+Diameter data and one for Length.  
+
+The {\tt by()} function can be used here.  It works like {\tt tapply()}
+(which in fact it calls internally), but is applied to objects rather
+than vectors.  Here's how to use it for the desired regression analyses:
+
+\begin{Code}
+> aba <- read.csv("abalone.data",header=TRUE)
+> by(aba,aba$Gender,function(m) lm(m[,2]~m[,3]))
+aba$Gender: F
+
+Call:
+lm(formula = m[, 2] ~ m[, 3])
+
+Coefficients:
+(Intercept)       m[, 3]  
+    0.04288      1.17918  
+
+------------------------------------------------------------ 
+aba$Gender: I
+
+Call:
+lm(formula = m[, 2] ~ m[, 3])
+
+Coefficients:
+(Intercept)       m[, 3]  
+    0.02997      1.21833  
+
+------------------------------------------------------------ 
+aba$Gender: M
+
+Call:
+lm(formula = m[, 2] ~ m[, 3])
+
+Coefficients:
+(Intercept)       m[, 3]  
+    0.03653      1.19480  
+\end{Code}
+
+Here's how that call {\tt by(aba,aba\$Gender,function(m)
+lm(m[,2]~m[,3]))} works.  Just as {\tt tapply()} forms groups of indices
+of a vector according to levels of a factor, {\tt by()} here will find
+groups of row numbers of the data frame {\tt aba}.  That creates three 
+sub-data frames, one for each gender level, M, F and I.  
+
+The anonymous function we defined regresses the second column of its
+matrix argument {\tt m} against the third column.  This function will be
+called three times, once for each of the three sub-data frames created
+earlier, thus producing the three regression analyses.
+
+\section{Tables}
+\label{tables}
+
+sLet's change our earlier example:
+
+\begin{Code}
+> u <- c(22,8,33,6,8,29,-2)
+> fl <- list(c(5,12,13,12,13,5,13),c("a","bc","a","a","bc","a","a"))
+> tapply(u,fl,length)
+   a bc
+5  2 NA
+12 1  1
+13 2  1
+
+\end{Code}
+
+Here {\tt tapply()} again temporarily broke {\tt u} into subvectors as
+we saw earlier, but in this case then applied the {\tt length()}
+function to each subvector, instead of applying {\tt sum()} as before.
+(Note that this is now independent of what's in {\tt u}.  Our focus now
+is purely on the factors.) Those subvector lengths are the counts of the
+occurrences of each of the $3 \times 2 = 6$ combinations of the two
+factors.  For instance, 5 occurred twice with ``a'' and not at all with
+``bc," hence the entries 2 and NA in the first row of the output.  In
+statistics this is called a {\it contingency table}.
+
+There is one problem in this example, the NA value.  It really ought to
+be 0, meaning that in no cases did the first factor have level 5 and
+the second have level ``bc.''  The {\tt table()} function creates
+contingency tables correctly:
+
+\begin{Code}
+> table(fl)
+    fl.2
+fl.1 a bc
+  5  2  1
+  12 1  1
+  13 1  0
+\end{Code}
+
+
+\subsection{Usage}
+\label{tableusage}
+
+The first argument in a call to {\tt table()} is either a factor or a
+list of factors, where in this case an object that is interpretable as a
+factor is counted as a ``factor.''  
+
+A typical such argument is a data frame.  Suppose the file {\tt ct.dat}
+consists of election polling data, in which Candidate X is running for
+re-election:
+
+\begin{Code}
+"Vote for X" "Voted For X Last Time"
+"Yes" "Yes"
+"Yes" "No"
+"No" "No"
+"Not Sure" "Yes"
+"No" "No"
+\end{Code}
+
+\noindent
+where in the usual statistical fashion each row represents one subject
+under study. In this case, we have asked five people (a) "Do you
+plan to vote for Candidate X?" and (b) "Did you vote for X in the last
+election?", so we have five rows in the data file.  
+
+Let's read in the file:
+
+\begin{Code}
+> ct <- read.table("ct.dat",header=T)
+> ct
+  Vote.for.X Voted.for.X.Last.Time
+1        Yes                   Yes
+2        Yes                    No
+3         No                    No
+4   Not Sure                   Yes
+5         No                    No
+\end{Code}
+
+We can use the {\tt table()} function to compute the contingency table
+for this data:
+
+\begin{Code}
+> cttab <- table(ct)
+> cttab
+          Voted.for.X.Last.Time
+Vote.for.X No Yes
+  No        2   0
+  Not Sure  0   1
+  Yes       1   1
+\end{Code}
+
+The 2 in the upper-left corner of the table shows that we had, for
+example, two people who said No to (a) and No to (b).  The 1 in the
+middle-right indicates that one person answered Not Sure to (a) and Yes
+to (b).
+
+We can get one-dimensional counts, meaning counts on a single factor as
+well:
+
+\begin{Code}
+> table(c(5,12,13,12,8,5))
+
+ 5  8 12 13 
+ 2  1  2  1 
+\end{Code}
+
+Here's a toy example of a three-dimensional table, involving voters and
+their genders, race (white, black, Asian, other) and political views
+(liberal, conservative):
+
+\begin{Code}
+> v
+  gender race pol
+1      M    W   L
+2      M    W   L
+3      F    A   C
+4      M    O   L
+5      F    B   L
+6      F    B   C
+> vt <- table(v)
+> vt
+, , pol = C
+
+      race
+gender A B O W
+     F 1 1 0 0
+     M 0 0 0 0
+
+, , pol = L
+
+      race
+gender A B O W
+     F 0 1 0 0
+     M 0 0 1 2
+\end{Code}
+
+R prints out a three-dimensional table as a series of two-dimensional
+ones, in this case a table of gender and race for conservatives, and
+then a corresponding table for liberals.
+
+\subsection{Matrix/Array-Like Operations}
+
+Just as most (nonmathematical) matrix/array operations can also be used on
+data frames, they can be applied to tables too.  (This is not
+surprising, given that the cell counts portion of a {\tt ``table''} object is
+an array.)
+
+For example, we can access the table cell counts using matrix notation.
+Let's apply it to our voting example above:
+
+\begin{Code}
+> class(cttab)
+[1] "table"
+> cttab[1,1]
+[1] 2
+> cttab[1,]
+ No Yes 
+  2   0 
+\end{Code}
+
+\noindent
+In the second command, even though the first command had shown that {\tt
+cttab} had class {\tt ``cttab''}, we treated it as a matrix and printed
+out its ``[1,1] element.''  Continuing this idea, the third command
+printed the first column of this ``matrix.''
+
+We can multiply the matrix by a scalar, for instance to change cell counts to
+proportions:
+
+\begin{Code}
+> ctt/5
+          Voted.for.X.Last.Time
+Vote.for.X  No Yes
+  No       0.4 0.0
+  Not Sure 0.0 0.2
+  Yes      0.2 0.2
+\end{Code}
+
+In statistics, the {\it marginal} values of a variable are those
+obtained when this variable is held constant while others are summed up.
+In the voting example above, the marginal values of the VoteX variable
+are 2+0 = 2, 0+1 = 1 and 1+1 = 2.  We can of course obtain these via the
+matrix {\tt apply()} function:
+
+\begin{Code}
+> apply(ctt,1,sum)
+      No Not Sure      Yes 
+       2        1        2 
+\end{Code}
+
+\noindent
+Note that the labels here, such as ``No,'' came from the row names of
+the matrix, which {\tt table()} had produced.
+
+But R supplies a function for this purpose:
+
+\begin{Code}
+> addmargins(cttab)
+          Voted.for.X.Last.Time
+Vote.for.X No Yes Sum
+  No        2   0   2
+  Not Sure  0   1   1
+  Yes       1   1   2
+  Sum       3   2   5
+\end{Code}
+
+\noindent
+Here we got the marginal data for both dimensions at once, conveniently
+superimposed onto the original table.
+
+We can get the names of the dimensions and levels through {\tt
+dimnames()}:
+
+\begin{Code}
+> dimnames(cttab)
+$Vote.for.X
+[1] "No"       "Not Sure" "Yes"     
+
+$Voted.for.X.Last.Time
+[1] "No"  "Yes"
+\end{Code}
+
+\section{Extended Example:  Extracting a Subtable}
+\label{subtable}
+
+Recall once again our voting example:
+
+\begin{Code}
+> cttab
+          Voted.for.X.Last.Time
+Vote.for.X No Yes
+  No        2   0
+  Not Sure  0   1
+  Yes       1   1
+\end{Code}
+
+\noindent
+Suppose we wish to make a presentation of this data in a meeting,
+and we want to concentrate on those respondents who knew whether they 
+will vote for X in the current election.  In other words, we wish to
+eliminate the not-sures, and wish to present a subtable that looks like
+
+\begin{Code}
+          Voted.for.X.Last.Time
+Vote.for.X No Yes
+  No        2   0
+  Yes       1   1
+\end{Code}
+
+\noindent
+I've written some code that performs such an operation.  The function
+{\tt subtable() has two arguments:
+
+\begin{itemize}
+
+\item {\tt tbl}: the table of interest, of class {\tt ``table''}
+
+\item {\tt subnames}: a list giving the specification of the desired
+subtable extraction; each component of this list has the name
+of one dimension of {\tt tbl}, and the value of that component 
+is a vector of the names of the desired levels
+
+\end{itemize}}
+
+It will be easier to understand the code if we use our motivating
+example above.  To review, note above that {\tt cttab} is a
+two-dimensional table, and its dimension names are ``Voted.for.X'' and
+``Voted.for.X.Last.Time."  Within those two dimensions, the level names
+are No, Not Sure and Yes in the first dimension, and No and Yes in the
+second.  Of those, we wish to exclude the Not Sure cases, so our actual
+argument corresponding to the formal argument {\tt subnames} will be 
+
+\begin{Code}
+list(Vote.for.X=c("No","Yes"),Voted.for.X.Last.Time=c("No","Yes"))
+\end{Code}
+
+\noindent
+We can now call the function:
+
+\begin{Code}
+> subtable(cttab,list(Vote.for.X=c("No","Yes"),
++    Voted.for.X.Last.Time=c("No","Yes")))
+          Voted.for.X.Last.Time
+Vote.for.X No Yes
+       No   2   0
+       Yes  1   1
+\end{Code}
+
+\noindent
+
+Now that we have a feel for what the function does, let's take a look at
+its innards:
+
+\begin{lstlisting}[numbers=left]
+subtable <- function(tbl,subnames) {
+   # get array of cell counts in tbl
+   tblarray <- unclass(tbl)  (*@ \label{unclasstbl} @*)
+   # we'll get the subarray of cell counts corresponding to subnames by
+   # calling do.call() on the "[" function; we need to build up a list
+   # of arguments
+   dcargs <- list(tblarray)  (*@ \label{yyy1} @*)
+   ndims <- length(subnames)  # number of dimensions 
+   for (i in 1:ndims) {
+      dcargs[[i+1]] <- subnames[[i]]
+   }
+   subarray <- do.call("[",dcargs)  (*@ \label{yyy2} @*)
+   # now we'll build the new table, consisting of the subarray, the
+   # numbers of levels in each dimension, and the dimnames() value, plus
+   # the "table" class attribute
+   dims <- lapply(subnames,length) (*@ \label{yyya} @*)
+   subtbl <- array(subarray,dims,dimnames=subnames)
+   class(subtbl) <- "table"
+   return(subtbl)
+}
+\end{lstlisting}
+
+So, how does it work?  In writing this code, I first did a little
+detective work, to determine the structure of objects of class {\tt
+``table''}, discussed in Section \ref{whatisthis}.  I found that at its
+core, an object of this class consists of an array, whose elements are
+the cell counts.  
+
+For the code here, then, my first task was to form the subarray
+corresponding to the user's desired subtable.  Toward this end, in line
+\ref{unclasstbl}, I extracted the full cell counts array, storing it in
+{\tt tblarray}.  To get the desired subarray, I needed to form a
+subsetting expression on the array {\tt tblarray}, something like 
+
+\begin{Code}
+tblarray[some index ranges here]
+\end{Code}
+
+That is a bit of a problem to do directly, since {\tt tblarray} could be
+of different dimensions, two, three or whatever.  But we can do this
+indirectly, by recalling that {\tt [} is a function:
+
+\begin{Code}
+> x <- c(5,12,13)
+> x[2]
+[1] 12
+> "["(x,2)
+[1] 12
+\end{Code}
+
+\noindent
+That reduced my problem to forming a function call.  This call will have
+a variable number of arguments, again because {\tt tblarray} can have
+different dimensions.  But that very fact makes this
+a perfect situation in which to use {\tt do.call()}; there one puts the
+arguments in a list, and since the list can have any length, then the
+number of arguments can be anything too.
+
+Thus I needed to form a list consisting first of {\tt tblarray} and then
+the user's desired levels for each dimension, something like
+
+\begin{Code}
+do.call("[",list(tblarray,levels for dimension 1,levels for dimension 2,...))
+\end{Code}
+
+\noindent
+Lines \ref{yyy1} through \ref{yyy2} construct the list I needed in that
+second argument.
+
+That's our subarray.  I then needed to attach the names, and set the
+class to {\tt ``table''}.  The former operation can be done via R's {\tt
+array()} function, whose arguments are:
+
+\begin{itemize}
+
+\item {\tt data}:  the data to be placed into the new array, in our case
+{\tt subarray}
+
+\item {\tt dim}: the dimension lengths (number of rows, number of
+columns, number of layers, and so on), in our case the value {\tt
+ndims}, computed in line {\tt yyya} 
+
+\item {\tt dimnames}:  the dimension names and the names of their
+levels, already given to us by the user as the argument {\tt subnames} 
+
+\end{itemize}
+
+\noindent
+This was a somewhat conceptually complex function to write, but not bad
+after mastering the inner structures in the {\tt ``table''} class.
+
+\section{Extended Example:  Finding the Largest Cells in a Table}
+
+It can be difficult to view a table that is very large, say with a large
+number of rows or number of dimensions.  One approach might be to focus
+on the cells with the largest frequencies.  
+
+Toward this end, I wrote a function {\tt tabdom()} to report the
+dominant frequencies in a table.  Specifically, the call
+
+\begin{Code}
+tabdom(tbl,k)
+\end{Code}
+
+\noindent
+reports the cells in the table {\tt tbl} having the {\tt k} largest 
+frequencies.  For instance:
+
+\begin{Code}
+> d <- c(5,12,13,4,3,28,12,12,9,5,5,13,5,4,12)
+> dtab <- table(d)
+> tabdom(dtab,3)
+   d Freq
+3  5    4
+5 12    4
+2  4    2
+\end{Code}
+
+\noindent
+The function tells us that the values 5 and 12 were the most frequent in
+{\tt d}, with four instances each, and the next most frequent value was
+4, with two instances.  (The 3, 5 and 2 on the left are actually extraneous
+information, to be discussed later.)
+
+As another example, consider our table {\tt cttab} in examples in the
+preceding sections:
+
+\begin{Code}
+> tabdom(cttab,2)
+  Vote.for.X Voted.For.X.Last.Time Freq
+1         No                    No    2
+3        Yes                    No    1
+\end{Code}
+
+\noindent
+So the combination No-No was most frequent, with two instances, with the
+second most frequent being Yes-No, with one instance.
+
+But didn't the Not Sure-Yes and Yes-Yes combinations also have one
+instance, and thus should be tied with Yes-No for second place?  Yes,
+definitely.  My code is cavalier regarding ties, and the reader is
+encouraged to refine it in that direction.
+
+Well, how is this accomplished?  It sounds fairly complicated, but
+actually the work is made pretty easy by a trick, exploiting the fact
+that you can present tables in data frame format.  Again using our table
+{\tt cttab} in examples in the preceding sections,
+
+\begin{Code}
+> as.data.frame(cttab)
+  Vote.for.X Voted.For.X.Last.Time Freq
+1         No                    No    2
+2   Not Sure                    No    0
+3        Yes                    No    1
+4         No                   Yes    0
+5   Not Sure                   Yes    1
+6        Yes                   Yes    1
+\end{Code}
+
+\noindent
+Note carefully that this is {\it not} the original data frame {\tt ct}
+from which the table {\tt cttab} was constructed.  It is simply a
+different presentation of the table itself.  There is one row for each
+combination of the factors, with a Freq column added to show the number
+of instances of each combination.  
+
+This latter feature makes our task quite easy:
+
+\begin{lstlisting}[numbers=left]
+# finds the cells in table tbl with the k highest frequencies; handling
+# of ties is unrefined
+tabdom <- function(tbl,k) {
+   # create a data frame representation of tbl, adding a Freq column
+   tbldf <- as.data.frame(tbl)
+   # determine the proper positions of the frequencies in a sorted order
+   freqord <- order(tbldf$Freq,decreasing=TRUE)  (*@ \label{yyy3} @*)
+   # rearrange the data frame in that order, and take the first k rows
+   dom <- tbldf[freqord,][1:k,]
+   return(dom)
+}
+\end{lstlisting}
+
+\noindent
+The comments are self-explanatory.  It is important to point out,
+though, that the sorting approach in line \ref{yyy3}, making use of 
+{\tt order()}, is the standard way to sort a data frame, worth 
+remembering since the situation arises rather frequently.
+
+The approach taken here, of converting a table to a data frame, could also 
+be used in Section \ref{subtable}.  However, care would have to be taken
+to remove levels from the factors, to avoid zeros in cells.
+
+\section{Other Related Functions}
+
+The {\tt aggregate()} function calls {\tt tapply()} once for each
+variable in a group.  For example, in the abalone data, we could find
+the median of each variable, broken down by gender:
+
+\begin{Code}
+> aggregate(aba[,-1],list(aba$Gender),median)
+  Group.1 Length Diameter Height WholeWt ShuckedWt ViscWt ShellWt Rings
+  1       F  0.590    0.465  0.160 1.03850   0.44050 0.2240   0.295 10
+  2       I  0.435    0.335  0.110 0.38400   0.16975 0.0805   0.113 8
+  3       M  0.580    0.455  0.155 0.97575   0.42175 0.2100   0.276 10
+\end{Code}
+
+\noindent
+That first argument, {\tt aba[,-1]}, is the entire data frame except for
+the first column, which is Gender itself.  The second argument, which
+must be a list, is our Gender factor as before.  Finally, the third
+argument tells R to compute the median on each column in each of the 
+data frames generated by the subrouping corresponding to our factors.
+There are three such subgroups in our example here, and thus three rows
+in the output of {\tt aggregate()} above.
+
+Hadley Wickham's {\tt reshape} package ``lets you flexibly restructure
+and aggregate data using just two functions: melt and cast.''  It may
+take a while to learn, but is extremely powerful.  You can download it
+from R's CRAN repository (Chapter \ref{chap:packages}).
+
+A common way to generate factors, especially for tables, is the {\tt
+cut()} function.  To explain what it does, first consider the call
+
+\begin{Code}
+y <- cut(x,b,labels=FALSE)
+\end{Code}
+
+\noindent
+where {\tt x} is a vector of observations, and {\tt b} defines bins,
+which are the semi-open intervals {\tt (b[1],b[2]], (b[2],b[3]],...}.
+Then {\tt y[j]} will be the index {\tt i} such that {\tt x[j]} falls
+into bin {\tt i}.
+
+For instance,
+
+\begin{Code}
+> cut(1:8,c(0,4,7,8),labels=F)
+[1] 1 1 1 1 2 2 2 3
+\end{Code}
+
+\noindent
+This returns a vector, which we can convert into a factor, possibly then
+using it to build a table.
+
+The function {\tt cut()} has many, many other options.
+

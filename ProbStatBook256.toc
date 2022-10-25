@@ -1,0 +1,692 @@
+\contentsline {chapter}{\numberline {1}Time Waste Versus Empowerment}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Basic Probability Models}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}ALOHA Network Example}{3}{section.2.1}%
+\contentsline {section}{\numberline {2.2}The Crucial Notion of a Repeatable Experiment}{5}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Our Definitions}{7}{section.2.3}%
+\contentsline {section}{\numberline {2.4}``Mailing Tubes''}{10}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Example: ALOHA Network}{10}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Bayes' Rule}{14}{section.2.6}%
+\contentsline {section}{\numberline {2.7}ALOHA in the Notebook Context}{14}{section.2.7}%
+\contentsline {section}{\numberline {2.8}A Note on Modeling}{15}{section.2.8}%
+\contentsline {section}{\numberline {2.9}Solution Strategies}{16}{section.2.9}%
+\contentsline {section}{\numberline {2.10}Example: Divisibility of Random Integers}{18}{section.2.10}%
+\contentsline {section}{\numberline {2.11}Example: A Simple Board Game}{19}{section.2.11}%
+\contentsline {section}{\numberline {2.12}Example: Bus Ridership}{20}{section.2.12}%
+\contentsline {section}{\numberline {2.13}Random Graph Models}{23}{section.2.13}%
+\contentsline {subsection}{\numberline {2.13.1}Example: Preferential Attachment Graph Model}{23}{subsection.2.13.1}%
+\contentsline {section}{\numberline {2.14}Simulation}{24}{section.2.14}%
+\contentsline {subsection}{\numberline {2.14.1}Example: Rolling Dice}{24}{subsection.2.14.1}%
+\contentsline {subsection}{\numberline {2.14.2}First Improvement}{25}{subsection.2.14.2}%
+\contentsline {subsection}{\numberline {2.14.3}Second Improvement}{26}{subsection.2.14.3}%
+\contentsline {subsection}{\numberline {2.14.4}Third Improvement}{27}{subsection.2.14.4}%
+\contentsline {subsection}{\numberline {2.14.5}Simulation of Conditional Probability in Dice Problem}{27}{subsection.2.14.5}%
+\contentsline {subsection}{\numberline {2.14.6}Simulation of the ALOHA Example}{28}{subsection.2.14.6}%
+\contentsline {subsection}{\numberline {2.14.7}Example: Bus Ridership, cont'd.}{29}{subsection.2.14.7}%
+\contentsline {subsection}{\numberline {2.14.8}Example: Board Game con'd.}{30}{subsection.2.14.8}%
+\contentsline {subsection}{\numberline {2.14.9}Example: Broken Rod}{30}{subsection.2.14.9}%
+\contentsline {subsection}{\numberline {2.14.10}How Long Should We Run the Simulation?}{31}{subsection.2.14.10}%
+\contentsline {section}{\numberline {2.15}Combinatorics-Based Probability Computation}{31}{section.2.15}%
+\contentsline {subsection}{\numberline {2.15.1}Which Is More Likely in Five Cards, One King or Two Hearts?}{31}{subsection.2.15.1}%
+\contentsline {subsection}{\numberline {2.15.2}Example: Random Groups of Students}{33}{subsection.2.15.2}%
+\contentsline {subsection}{\numberline {2.15.3}Example: Lottery Tickets}{33}{subsection.2.15.3}%
+\contentsline {subsection}{\numberline {2.15.4}``Association Rules'' in Data Mining}{34}{subsection.2.15.4}%
+\contentsline {subsection}{\numberline {2.15.5}Multinomial Coefficients}{35}{subsection.2.15.5}%
+\contentsline {subsection}{\numberline {2.15.6}Example: Probability of Getting Four Aces in a Bridge Hand}{35}{subsection.2.15.6}%
+\contentsline {chapter}{\numberline {3}Discrete Random Variables}{41}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Random Variables}{41}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Discrete Random Variables}{41}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Independent Random Variables}{42}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Example: The Monty Hall Problem}{42}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Expected Value}{44}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Generality---Not Just for \underline {Discrete} Random Variables}{44}{subsection.3.5.1}%
+\contentsline {subsubsection}{\numberline {3.5.1.1}What Is It?}{44}{subsubsection.3.5.1.1}%
+\contentsline {subsection}{\numberline {3.5.2}Definition}{45}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Existence of the Expected Value}{45}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Computation and Properties of Expected Value}{45}{subsection.3.5.4}%
+\contentsline {subsection}{\numberline {3.5.5}``Mailing Tubes''}{51}{subsection.3.5.5}%
+\contentsline {subsection}{\numberline {3.5.6}Casinos, Insurance Companies and ``Sum Users,'' Compared to Others}{52}{subsection.3.5.6}%
+\contentsline {section}{\numberline {3.6}Variance}{53}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Definition}{53}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}More Practice with the Properties of Variance}{56}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}Central Importance of the Concept of Variance}{57}{subsection.3.6.3}%
+\contentsline {subsection}{\numberline {3.6.4}Intuition Regarding the Size of Var(X)}{57}{subsection.3.6.4}%
+\contentsline {subsubsection}{\numberline {3.6.4.1}Chebychev's Inequality}{57}{subsubsection.3.6.4.1}%
+\contentsline {subsubsection}{\numberline {3.6.4.2}The Coefficient of Variation}{57}{subsubsection.3.6.4.2}%
+\contentsline {section}{\numberline {3.7}A Useful Fact}{58}{section.3.7}%
+\contentsline {section}{\numberline {3.8}Covariance}{59}{section.3.8}%
+\contentsline {section}{\numberline {3.9}Indicator Random Variables, and Their Means and Variances}{61}{section.3.9}%
+\contentsline {subsection}{\numberline {3.9.1}Example: Return Time for Library Books}{62}{subsection.3.9.1}%
+\contentsline {subsection}{\numberline {3.9.2}Example: Indicator Variables in a Committee Problem}{64}{subsection.3.9.2}%
+\contentsline {subsection}{\numberline {3.9.3}Example: Spinner Game}{65}{subsection.3.9.3}%
+\contentsline {section}{\numberline {3.10}Expected Value, Etc. in the ALOHA Example}{66}{section.3.10}%
+\contentsline {section}{\numberline {3.11}Example: Measurements at Different Ages}{67}{section.3.11}%
+\contentsline {section}{\numberline {3.12}Example: Bus Ridership Model}{67}{section.3.12}%
+\contentsline {section}{\numberline {3.13}Distributions}{68}{section.3.13}%
+\contentsline {subsection}{\numberline {3.13.1}Example: Toss Coin Until First Head}{69}{subsection.3.13.1}%
+\contentsline {subsection}{\numberline {3.13.2}Example: Sum of Two Dice}{69}{subsection.3.13.2}%
+\contentsline {subsection}{\numberline {3.13.3}Example: Watts-Strogatz Random Graph Model}{69}{subsection.3.13.3}%
+\contentsline {subsubsection}{\numberline {3.13.3.1}The Model}{70}{subsubsection.3.13.3.1}%
+\contentsline {subsubsection}{\numberline {3.13.3.2}Further Reading}{70}{subsubsection.3.13.3.2}%
+\contentsline {section}{\numberline {3.14}Proof of Chebychev's Inequality (optional section)}{71}{section.3.14}%
+\contentsline {chapter}{\numberline {4}Discrete Parametric Distribution Families}{73}{chapter.4}%
+\contentsline {section}{\numberline {4.1}The Case of Importance to Us: Parameteric Families of pmfs}{74}{section.4.1}%
+\contentsline {section}{\numberline {4.2}The Geometric Family of Distributions}{74}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}R Functions}{77}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Example: a Parking Space Problem}{78}{subsection.4.2.2}%
+\contentsline {section}{\numberline {4.3}The Binomial Family of Distributions}{79}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}R Functions}{81}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Example: Parking Space Model}{81}{subsection.4.3.2}%
+\contentsline {section}{\numberline {4.4}The Negative Binomial Family of Distributions}{82}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}R Functions}{83}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Example: Backup Batteries}{83}{subsection.4.4.2}%
+\contentsline {section}{\numberline {4.5}The Poisson Family of Distributions}{83}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}R Functions}{84}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Example: Broken Rod}{85}{subsection.4.5.2}%
+\contentsline {section}{\numberline {4.6}The Power Law Family of Distributions}{85}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}The Model}{86}{subsection.4.6.1}%
+\contentsline {subsection}{\numberline {4.6.2}Further Reading}{87}{subsection.4.6.2}%
+\contentsline {section}{\numberline {4.7}Recognizing Some Parametric Distributions When You See Them}{87}{section.4.7}%
+\contentsline {section}{\numberline {4.8}Example: a Coin Game}{88}{section.4.8}%
+\contentsline {section}{\numberline {4.9}Example: Tossing a Set of Four Coins}{89}{section.4.9}%
+\contentsline {section}{\numberline {4.10}Example: the ALOHA Example Again}{90}{section.4.10}%
+\contentsline {section}{\numberline {4.11}Example: the Bus Ridership Problem Again}{90}{section.4.11}%
+\contentsline {section}{\numberline {4.12}Example: Flipping Coins with Bonuses}{91}{section.4.12}%
+\contentsline {section}{\numberline {4.13}Example: Analysis of Social Networks}{92}{section.4.13}%
+\contentsline {section}{\numberline {4.14}Multivariate Distributions}{93}{section.4.14}%
+\contentsline {section}{\numberline {4.15}Iterated Expectations}{94}{section.4.15}%
+\contentsline {subsection}{\numberline {4.15.1}Conditional Distributions}{94}{subsection.4.15.1}%
+\contentsline {subsection}{\numberline {4.15.2}The Theorem}{95}{subsection.4.15.2}%
+\contentsline {subsection}{\numberline {4.15.3}Example: Coin and Die Game}{96}{subsection.4.15.3}%
+\contentsline {subsection}{\numberline {4.15.4}Example: Flipping Coins with Bonuses}{96}{subsection.4.15.4}%
+\contentsline {chapter}{\numberline {5}Pause to Reflect}{103}{chapter.5}%
+\contentsline {section}{\numberline {5.1}A Cautionary Tale}{103}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Trick Coins, Tricky Example}{103}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Intuition in Retrospect}{104}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}Implications for Modeling}{105}{subsection.5.1.3}%
+\contentsline {section}{\numberline {5.2}What About ``Iterated Variance''?}{105}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Why Not Just Do All Analysis by Simulation?}{105}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Reconciliation of Math and Intuition (optional section)}{106}{section.5.4}%
+\contentsline {chapter}{\numberline {6}Introduction to Discrete Markov Chains}{113}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Matrix Formulation}{114}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Example: Die Game}{115}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Long-Run State Probabilities}{115}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Stationary Distribution}{116}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Calculation of $\pi $}{117}{subsection.6.3.2}%
+\contentsline {subsubsection}{\numberline {6.3.2.1}Example: $\pi $ in Die Game}{118}{subsubsection.6.3.2.1}%
+\contentsline {subsubsection}{\numberline {6.3.2.2}Another Way to Find $\pi $}{118}{subsubsection.6.3.2.2}%
+\contentsline {section}{\numberline {6.4}Example: 3-Heads-in-a-Row Game}{119}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}Markov Analysis}{120}{subsection.6.4.1}%
+\contentsline {subsection}{\numberline {6.4.2}Back to the word ``Stationary''}{120}{subsection.6.4.2}%
+\contentsline {section}{\numberline {6.5}A Modified Notebook Analysis}{121}{section.6.5}%
+\contentsline {subsection}{\numberline {6.5.1}A Markov-Chain Notebook}{121}{subsection.6.5.1}%
+\contentsline {subsection}{\numberline {6.5.2}Example: 3-Heads-in-a-Row Game}{122}{subsection.6.5.2}%
+\contentsline {section}{\numberline {6.6}Simulation of Markov Chains}{122}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Example: ALOHA}{123}{section.6.7}%
+\contentsline {section}{\numberline {6.8}Example: Bus Ridership Problem}{124}{section.6.8}%
+\contentsline {section}{\numberline {6.9}Example: an Inventory Model}{126}{section.6.9}%
+\contentsline {section}{\numberline {6.10}Expected Hitting Times}{127}{section.6.10}%
+\contentsline {chapter}{\numberline {7}Continuous Probability Models}{129}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Running Example: a Random Dart}{129}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Individual Values Now Have Probability Zero}{130}{section.7.2}%
+\contentsline {section}{\numberline {7.3}But Now We Have a Problem}{130}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}Our Way Out of the Problem: Cumulative Distribution Functions}{131}{subsection.7.3.1}%
+\contentsline {subsection}{\numberline {7.3.2}Density Functions}{133}{subsection.7.3.2}%
+\contentsline {subsection}{\numberline {7.3.3}Properties of Densities}{134}{subsection.7.3.3}%
+\contentsline {subsection}{\numberline {7.3.4}Intuitive Meaning of Densities}{135}{subsection.7.3.4}%
+\contentsline {subsection}{\numberline {7.3.5}Expected Values}{136}{subsection.7.3.5}%
+\contentsline {section}{\numberline {7.4}A First Example}{138}{section.7.4}%
+\contentsline {section}{\numberline {7.5}The Notion of {\it Support} in the Continuous Case}{139}{section.7.5}%
+\contentsline {section}{\numberline {7.6}Famous Parametric Families of Continuous Distributions}{139}{section.7.6}%
+\contentsline {subsection}{\numberline {7.6.1}The Uniform Distributions}{139}{subsection.7.6.1}%
+\contentsline {subsubsection}{\numberline {7.6.1.1}Density and Properties}{139}{subsubsection.7.6.1.1}%
+\contentsline {subsubsection}{\numberline {7.6.1.2}R Functions}{140}{subsubsection.7.6.1.2}%
+\contentsline {subsubsection}{\numberline {7.6.1.3}Example: Modeling of Disk Performance}{140}{subsubsection.7.6.1.3}%
+\contentsline {subsubsection}{\numberline {7.6.1.4}Example: Modeling of Denial-of-Service Attack}{141}{subsubsection.7.6.1.4}%
+\contentsline {subsection}{\numberline {7.6.2}The Normal (Gaussian) Family of Continuous Distributions}{141}{subsection.7.6.2}%
+\contentsline {subsubsection}{\numberline {7.6.2.1}Density and Properties}{141}{subsubsection.7.6.2.1}%
+\contentsline {subsection}{\numberline {7.6.3}The Exponential Family of Distributions}{142}{subsection.7.6.3}%
+\contentsline {subsubsection}{\numberline {7.6.3.1}Density and Properties}{142}{subsubsection.7.6.3.1}%
+\contentsline {subsubsection}{\numberline {7.6.3.2}R Functions}{142}{subsubsection.7.6.3.2}%
+\contentsline {subsubsection}{\numberline {7.6.3.3}Example: Refunds on Failed Components}{143}{subsubsection.7.6.3.3}%
+\contentsline {subsubsection}{\numberline {7.6.3.4}Example: Garage Parking Fees}{143}{subsubsection.7.6.3.4}%
+\contentsline {subsubsection}{\numberline {7.6.3.5}Importance in Modeling}{144}{subsubsection.7.6.3.5}%
+\contentsline {subsection}{\numberline {7.6.4}The Gamma Family of Distributions}{144}{subsection.7.6.4}%
+\contentsline {subsubsection}{\numberline {7.6.4.1}Density and Properties}{144}{subsubsection.7.6.4.1}%
+\contentsline {subsubsection}{\numberline {7.6.4.2}Example: Network Buffer}{145}{subsubsection.7.6.4.2}%
+\contentsline {subsubsection}{\numberline {7.6.4.3}Importance in Modeling}{146}{subsubsection.7.6.4.3}%
+\contentsline {subsection}{\numberline {7.6.5}The Beta Family of Distributions}{146}{subsection.7.6.5}%
+\contentsline {subsubsection}{\numberline {7.6.5.1}Density Etc.}{148}{subsubsection.7.6.5.1}%
+\contentsline {subsubsection}{\numberline {7.6.5.2}Importance in Modeling}{150}{subsubsection.7.6.5.2}%
+\contentsline {section}{\numberline {7.7}Choosing a Model}{150}{section.7.7}%
+\contentsline {section}{\numberline {7.8}Finding the Density of a Function of a Random Variable}{151}{section.7.8}%
+\contentsline {section}{\numberline {7.9}Quantile Functions}{152}{section.7.9}%
+\contentsline {section}{\numberline {7.10}Using cdf Functions to Find Probabilities}{153}{section.7.10}%
+\contentsline {section}{\numberline {7.11}A General Method for Simulating a Random Variable}{153}{section.7.11}%
+\contentsline {section}{\numberline {7.12}Example: Writing a Set of R Functions for a Certain Power Family}{154}{section.7.12}%
+\contentsline {section}{\numberline {7.13}Multivariate Densities}{155}{section.7.13}%
+\contentsline {section}{\numberline {7.14}Iterated Expectations}{156}{section.7.14}%
+\contentsline {subsection}{\numberline {7.14.1}The Theorem}{156}{subsection.7.14.1}%
+\contentsline {subsection}{\numberline {7.14.2}Example: Another Coin Game}{156}{subsection.7.14.2}%
+\contentsline {section}{\numberline {7.15}Continuous Random Variables Are ``Useful Unicorns''}{157}{section.7.15}%
+\contentsline {chapter}{\numberline {8}The Normal Family of Distributions}{159}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Density and Properties}{159}{section.8.1}%
+\contentsline {subsection}{\numberline {8.1.1}Closure Under Affine Transformation}{160}{subsection.8.1.1}%
+\contentsline {subsection}{\numberline {8.1.2}Closure Under Independent Summation}{161}{subsection.8.1.2}%
+\contentsline {section}{\numberline {8.2}The Standard Normal Distribution}{162}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Evaluating Normal cdfs}{162}{section.8.3}%
+\contentsline {section}{\numberline {8.4}Example: Network Intrusion}{163}{section.8.4}%
+\contentsline {section}{\numberline {8.5}Example: Class Enrollment Size}{165}{section.8.5}%
+\contentsline {section}{\numberline {8.6}More on the Jill Example}{165}{section.8.6}%
+\contentsline {section}{\numberline {8.7}Example: River Levels}{166}{section.8.7}%
+\contentsline {section}{\numberline {8.8}Example: Upper Tail of a Light Bulb Distribution}{166}{section.8.8}%
+\contentsline {section}{\numberline {8.9}The Central Limit Theorem}{167}{section.8.9}%
+\contentsline {section}{\numberline {8.10}Example: Cumulative Roundoff Error}{167}{section.8.10}%
+\contentsline {section}{\numberline {8.11}Example: R Evaluation of a Central Limit Theorem Approximation}{168}{section.8.11}%
+\contentsline {section}{\numberline {8.12}Example: Bug Counts}{168}{section.8.12}%
+\contentsline {section}{\numberline {8.13}Example: Coin Tosses}{168}{section.8.13}%
+\contentsline {section}{\numberline {8.14}Example: Normal Approximation to Gamma Family}{170}{section.8.14}%
+\contentsline {section}{\numberline {8.15}Example: Museum Demonstration}{170}{section.8.15}%
+\contentsline {section}{\numberline {8.16}Importance in Modeling}{171}{section.8.16}%
+\contentsline {section}{\numberline {8.17}The Chi-Squared Family of Distributions}{171}{section.8.17}%
+\contentsline {subsection}{\numberline {8.17.1}Density and Properties}{171}{subsection.8.17.1}%
+\contentsline {subsection}{\numberline {8.17.2}Example: Error in Pin Placement}{172}{subsection.8.17.2}%
+\contentsline {subsection}{\numberline {8.17.3}Example: Generating Normal Random Numbers}{173}{subsection.8.17.3}%
+\contentsline {subsection}{\numberline {8.17.4}Importance in Modeling}{174}{subsection.8.17.4}%
+\contentsline {subsection}{\numberline {8.17.5}Relation to Gamma Family}{174}{subsection.8.17.5}%
+\contentsline {section}{\numberline {8.18}The Multivariate Normal Family}{174}{section.8.18}%
+\contentsline {section}{\numberline {8.19}Optional Topic: Precise Statement of the CLT}{175}{section.8.19}%
+\contentsline {subsection}{\numberline {8.19.1}Convergence in Distribution, and the Precisely-Stated CLT}{175}{subsection.8.19.1}%
+\contentsline {chapter}{\numberline {9}The Exponential Distributions}{179}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Connection to the Poisson Distribution Family}{179}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Memoryless Property of Exponential Distributions}{181}{section.9.2}%
+\contentsline {subsection}{\numberline {9.2.1}Derivation and Intuition}{181}{subsection.9.2.1}%
+\contentsline {subsection}{\numberline {9.2.2}Uniquely Memoryless}{182}{subsection.9.2.2}%
+\contentsline {subsection}{\numberline {9.2.3}Example: ``Nonmemoryless'' Light Bulbs}{183}{subsection.9.2.3}%
+\contentsline {section}{\numberline {9.3}Example: Minima of Independent Exponentially Distributed Random Variables}{184}{section.9.3}%
+\contentsline {subsection}{\numberline {9.3.1}Example: Computer Worm}{186}{subsection.9.3.1}%
+\contentsline {subsection}{\numberline {9.3.2}Example: Electronic Components}{187}{subsection.9.3.2}%
+\contentsline {section}{\numberline {9.4}A Cautionary Tale: the Bus Paradox}{187}{section.9.4}%
+\contentsline {subsection}{\numberline {9.4.1}Length-Biased Sampling}{188}{subsection.9.4.1}%
+\contentsline {subsection}{\numberline {9.4.2}Probability Mass Functions and Densities in Length-Biased Sampling}{189}{subsection.9.4.2}%
+\contentsline {chapter}{\numberline {10}Stop and Review: Probability Structures}{191}{chapter.10}%
+\contentsline {chapter}{\numberline {11}Introduction to Continuous-Time Markov Chains}{197}{chapter.11}%
+\contentsline {section}{\numberline {11.1}Continuous-Time Markov Chains}{197}{section.11.1}%
+\contentsline {section}{\numberline {11.2}Holding-Time Distribution}{197}{section.11.2}%
+\contentsline {subsection}{\numberline {11.2.1}The Notion of ``Rates''}{198}{subsection.11.2.1}%
+\contentsline {section}{\numberline {11.3}Stationary Distribution}{198}{section.11.3}%
+\contentsline {subsection}{\numberline {11.3.1}Intuitive Derivation}{199}{subsection.11.3.1}%
+\contentsline {subsection}{\numberline {11.3.2}Computation}{199}{subsection.11.3.2}%
+\contentsline {section}{\numberline {11.4}Example: Machine Repair}{200}{section.11.4}%
+\contentsline {section}{\numberline {11.5}Example: Migration in a Social Network}{202}{section.11.5}%
+\contentsline {section}{\numberline {11.6}Birth/Death Processes}{203}{section.11.6}%
+\contentsline {section}{\numberline {11.7}Cell Communications Model}{204}{section.11.7}%
+\contentsline {subsection}{\numberline {11.7.1}Stationary Distribution}{205}{subsection.11.7.1}%
+\contentsline {subsection}{\numberline {11.7.2}Going Beyond Finding the $\pi $}{206}{subsection.11.7.2}%
+\contentsline {chapter}{\numberline {12}Advanced Markov Chains}{207}{chapter.12}%
+\contentsline {section}{\numberline {12.1}Discrete-Time Markov Chains}{207}{section.12.1}%
+\contentsline {subsection}{\numberline {12.1.1}Example: Finite Random Walk}{207}{subsection.12.1.1}%
+\contentsline {subsection}{\numberline {12.1.2}Long-Run Distribution}{208}{subsection.12.1.2}%
+\contentsline {subsubsection}{\numberline {12.1.2.1}The Balance Equations}{209}{subsubsection.12.1.2.1}%
+\contentsline {subsubsection}{\numberline {12.1.2.2}Solving the Balance Equations}{210}{subsubsection.12.1.2.2}%
+\contentsline {subsubsection}{\numberline {12.1.2.3}Periodic Chains}{212}{subsubsection.12.1.2.3}%
+\contentsline {subsubsection}{\numberline {12.1.2.4}The Meaning of the Term ``Stationary Distribution''}{212}{subsubsection.12.1.2.4}%
+\contentsline {subsection}{\numberline {12.1.3}Example: Stuck-At 0 Fault}{213}{subsection.12.1.3}%
+\contentsline {subsubsection}{\numberline {12.1.3.1}Description}{213}{subsubsection.12.1.3.1}%
+\contentsline {subsubsection}{\numberline {12.1.3.2}Initial Analysis}{214}{subsubsection.12.1.3.2}%
+\contentsline {subsubsection}{\numberline {12.1.3.3}Going Beyond Finding $\pi $}{215}{subsubsection.12.1.3.3}%
+\contentsline {subsection}{\numberline {12.1.4}Example: Shared-Memory Multiprocessor}{217}{subsection.12.1.4}%
+\contentsline {subsubsection}{\numberline {12.1.4.1}The Model}{217}{subsubsection.12.1.4.1}%
+\contentsline {subsubsection}{\numberline {12.1.4.2}Going Beyond Finding $\pi $}{219}{subsubsection.12.1.4.2}%
+\contentsline {subsection}{\numberline {12.1.5}Example: Slotted ALOHA}{220}{subsection.12.1.5}%
+\contentsline {subsubsection}{\numberline {12.1.5.1}Going Beyond Finding $\pi $}{221}{subsubsection.12.1.5.1}%
+\contentsline {section}{\numberline {12.2}Simulation of Markov Chains}{223}{section.12.2}%
+\contentsline {section}{\numberline {12.3}Some Mathematical Conditions}{225}{section.12.3}%
+\contentsline {subsection}{\numberline {12.3.1}Example: Random Walks}{226}{subsection.12.3.1}%
+\contentsline {subsection}{\numberline {12.3.2}Finding Hitting and Recurrence Times}{227}{subsection.12.3.2}%
+\contentsline {subsection}{\numberline {12.3.3}Recurrence Times and Stationary Probabiilities}{227}{subsection.12.3.3}%
+\contentsline {subsubsection}{\numberline {12.3.3.1}Hitting Times}{228}{subsubsection.12.3.3.1}%
+\contentsline {subsection}{\numberline {12.3.4}Example: Finite Random Walk}{229}{subsection.12.3.4}%
+\contentsline {subsection}{\numberline {12.3.5}Example: Tree-Searching}{230}{subsection.12.3.5}%
+\contentsline {section}{\numberline {12.4}Higher-Order Markov Chains}{231}{section.12.4}%
+\contentsline {section}{\numberline {12.5}Hidden Markov Models}{232}{section.12.5}%
+\contentsline {section}{\numberline {12.6}Further Reading}{233}{section.12.6}%
+\contentsline {chapter}{\numberline {13}Introduction to Queuing Models}{237}{chapter.13}%
+\contentsline {section}{\numberline {13.1}Introduction}{237}{section.13.1}%
+\contentsline {section}{\numberline {13.2}M/M/1}{238}{section.13.2}%
+\contentsline {subsection}{\numberline {13.2.1}Steady-State Probabilities}{238}{subsection.13.2.1}%
+\contentsline {subsection}{\numberline {13.2.2}Mean Queue Length}{239}{subsection.13.2.2}%
+\contentsline {subsection}{\numberline {13.2.3}Distribution of Residence Time/Little's Rule}{239}{subsection.13.2.3}%
+\contentsline {section}{\numberline {13.3}Multi-Server Models}{242}{section.13.3}%
+\contentsline {subsection}{\numberline {13.3.1}M/M/c}{242}{subsection.13.3.1}%
+\contentsline {subsection}{\numberline {13.3.2}M/M/2 with Heterogeneous Servers}{243}{subsection.13.3.2}%
+\contentsline {section}{\numberline {13.4}Loss Models}{245}{section.13.4}%
+\contentsline {subsection}{\numberline {13.4.1}Cell Communications Model}{245}{subsection.13.4.1}%
+\contentsline {subsubsection}{\numberline {13.4.1.1}Stationary Distribution}{246}{subsubsection.13.4.1.1}%
+\contentsline {subsubsection}{\numberline {13.4.1.2}Going Beyond Finding the $\pi $}{247}{subsubsection.13.4.1.2}%
+\contentsline {section}{\numberline {13.5}Nonexponential Service Times}{247}{section.13.5}%
+\contentsline {section}{\numberline {13.6}Reversed Markov Chains}{249}{section.13.6}%
+\contentsline {subsection}{\numberline {13.6.1}Markov Property}{249}{subsection.13.6.1}%
+\contentsline {subsection}{\numberline {13.6.2}Long-Run State Proportions}{250}{subsection.13.6.2}%
+\contentsline {subsection}{\numberline {13.6.3}Form of the Transition Rates of the Reversed Chain}{250}{subsection.13.6.3}%
+\contentsline {subsection}{\numberline {13.6.4}Reversible Markov Chains}{250}{subsection.13.6.4}%
+\contentsline {subsubsection}{\numberline {13.6.4.1}Conditions for Checking Reversibility}{251}{subsubsection.13.6.4.1}%
+\contentsline {subsubsection}{\numberline {13.6.4.2}Making New Reversible Chains from Old Ones}{251}{subsubsection.13.6.4.2}%
+\contentsline {subsubsection}{\numberline {13.6.4.3}Example: Distribution of Residual Life}{252}{subsubsection.13.6.4.3}%
+\contentsline {subsubsection}{\numberline {13.6.4.4}Example: Queues with a Common Waiting Area}{252}{subsubsection.13.6.4.4}%
+\contentsline {subsubsection}{\numberline {13.6.4.5}Closed-Form Expression for $\pi $ for Any Reversible Markov Chain}{253}{subsubsection.13.6.4.5}%
+\contentsline {section}{\numberline {13.7}Networks of Queues}{254}{section.13.7}%
+\contentsline {subsection}{\numberline {13.7.1}Tandem Queues}{254}{subsection.13.7.1}%
+\contentsline {subsection}{\numberline {13.7.2}Jackson Networks}{255}{subsection.13.7.2}%
+\contentsline {subsubsection}{\numberline {13.7.2.1}Open Networks}{256}{subsubsection.13.7.2.1}%
+\contentsline {subsection}{\numberline {13.7.3}Closed Networks}{257}{subsection.13.7.3}%
+\contentsline {chapter}{\numberline {14}Describing ``Failure''}{259}{chapter.14}%
+\contentsline {section}{\numberline {14.1}Hazard Functions}{259}{section.14.1}%
+\contentsline {subsection}{\numberline {14.1.1}Basic Concepts}{260}{subsection.14.1.1}%
+\contentsline {subsection}{\numberline {14.1.2}Example: Software Reliability Models}{261}{subsection.14.1.2}%
+\contentsline {section}{\numberline {14.2}Residual-Life Distribution}{262}{section.14.2}%
+\contentsline {subsection}{\numberline {14.2.1}Renewal Theory}{262}{subsection.14.2.1}%
+\contentsline {subsection}{\numberline {14.2.2}Intuitive Derivation of Residual Life for the Continuous Case}{263}{subsection.14.2.2}%
+\contentsline {subsection}{\numberline {14.2.3}Age Distribution}{264}{subsection.14.2.3}%
+\contentsline {subsection}{\numberline {14.2.4}Mean of the Residual and Age Distributions}{266}{subsection.14.2.4}%
+\contentsline {subsection}{\numberline {14.2.5}Example: Estimating Web Page Modification Rates}{266}{subsection.14.2.5}%
+\contentsline {subsection}{\numberline {14.2.6}Example: Disk File Model}{266}{subsection.14.2.6}%
+\contentsline {subsection}{\numberline {14.2.7}Example: Memory Paging Model}{267}{subsection.14.2.7}%
+\contentsline {chapter}{\numberline {15}Renewal Theory and Some Applications}{271}{chapter.15}%
+\contentsline {section}{\numberline {15.1}Introduction}{271}{section.15.1}%
+\contentsline {subsection}{\numberline {15.1.1}The Light Bulb Example, Generalized}{271}{subsection.15.1.1}%
+\contentsline {subsection}{\numberline {15.1.2}Duality Between ``Lifetime Domain'' and ``Counts Domain''}{272}{subsection.15.1.2}%
+\contentsline {section}{\numberline {15.2}Where We Are Going}{272}{section.15.2}%
+\contentsline {section}{\numberline {15.3}Properties of Poisson Processes}{272}{section.15.3}%
+\contentsline {subsection}{\numberline {15.3.1}Definition}{272}{subsection.15.3.1}%
+\contentsline {subsection}{\numberline {15.3.2}Alternate Characterizations of Poisson Processes}{273}{subsection.15.3.2}%
+\contentsline {subsubsection}{\numberline {15.3.2.1}Exponential Interrenewal Times}{273}{subsubsection.15.3.2.1}%
+\contentsline {subsubsection}{\numberline {15.3.2.2}Stationary, Independent Increments}{273}{subsubsection.15.3.2.2}%
+\contentsline {subsection}{\numberline {15.3.3}Conditional Distribution of Renewal Times}{274}{subsection.15.3.3}%
+\contentsline {subsubsection}{\numberline {15.3.3.1}Example: Message Buildup at a Broken Network Link}{275}{subsubsection.15.3.3.1}%
+\contentsline {subsection}{\numberline {15.3.4}Decomposition and Superposition of Poisson Processes}{276}{subsection.15.3.4}%
+\contentsline {subsection}{\numberline {15.3.5}Nonhomogeneous Poisson Processes}{276}{subsection.15.3.5}%
+\contentsline {subsubsection}{\numberline {15.3.5.1}Example: Software Reliability}{277}{subsubsection.15.3.5.1}%
+\contentsline {section}{\numberline {15.4}Properties of General Renewal Processes}{277}{section.15.4}%
+\contentsline {subsection}{\numberline {15.4.1}The Regenerative Nature of Renewal Processes}{277}{subsection.15.4.1}%
+\contentsline {subsection}{\numberline {15.4.2}Some of the Main Theorems}{278}{subsection.15.4.2}%
+\contentsline {subsubsection}{\numberline {15.4.2.1}The Functions $F_n$ Sum to m}{278}{subsubsection.15.4.2.1}%
+\contentsline {subsubsection}{\numberline {15.4.2.2}The Renewal Equation}{280}{subsubsection.15.4.2.2}%
+\contentsline {subsubsection}{\numberline {15.4.2.3}The Function m(t) Uniquely Determines F(t)}{280}{subsubsection.15.4.2.3}%
+\contentsline {subsubsection}{\numberline {15.4.2.4}Asymptotic Behavior of m(t)}{282}{subsubsection.15.4.2.4}%
+\contentsline {section}{\numberline {15.5}Alternating Renewal Processes}{282}{section.15.5}%
+\contentsline {subsection}{\numberline {15.5.1}Definition and Main Result}{282}{subsection.15.5.1}%
+\contentsline {subsection}{\numberline {15.5.2}Example: Inventory Problem (difficult)}{283}{subsection.15.5.2}%
+\contentsline {section}{\numberline {15.6}Residual-Life Distribution}{285}{section.15.6}%
+\contentsline {subsection}{\numberline {15.6.1}Residual-Life Distribution}{285}{subsection.15.6.1}%
+\contentsline {subsection}{\numberline {15.6.2}Age Distribution}{287}{subsection.15.6.2}%
+\contentsline {subsection}{\numberline {15.6.3}Mean of the Residual and Age Distributions}{289}{subsection.15.6.3}%
+\contentsline {subsection}{\numberline {15.6.4}Example: Estimating Web Page Modification Rates}{289}{subsection.15.6.4}%
+\contentsline {subsection}{\numberline {15.6.5}Example: The (S,s) Inventory Model Again}{289}{subsection.15.6.5}%
+\contentsline {subsection}{\numberline {15.6.6}Example: Disk File Model}{290}{subsection.15.6.6}%
+\contentsline {subsection}{\numberline {15.6.7}Example: Event Sets in Discrete Event Simulation (difficult)}{290}{subsection.15.6.7}%
+\contentsline {subsection}{\numberline {15.6.8}Example: Memory Paging Model}{292}{subsection.15.6.8}%
+\contentsline {chapter}{\numberline {16}Covariance and Random Vectors}{295}{chapter.16}%
+\contentsline {section}{\numberline {16.1}Measuring Co-variation of Random Variables}{295}{section.16.1}%
+\contentsline {subsection}{\numberline {16.1.1}Covariance}{295}{subsection.16.1.1}%
+\contentsline {subsection}{\numberline {16.1.2}Example: Variance of Sum of Nonindependent Variables}{297}{subsection.16.1.2}%
+\contentsline {subsection}{\numberline {16.1.3}Example: the Committee Example Again}{297}{subsection.16.1.3}%
+\contentsline {section}{\numberline {16.2}Correlation}{298}{section.16.2}%
+\contentsline {subsection}{\numberline {16.2.1}Example: a Catchup Game}{299}{subsection.16.2.1}%
+\contentsline {section}{\numberline {16.3}Sets of Independent Random Variables}{299}{section.16.3}%
+\contentsline {subsection}{\numberline {16.3.1}Properties}{300}{subsection.16.3.1}%
+\contentsline {subsubsection}{\numberline {16.3.1.1}Expected Values Factor}{300}{subsubsection.16.3.1.1}%
+\contentsline {subsubsection}{\numberline {16.3.1.2}Covariance Is 0}{300}{subsubsection.16.3.1.2}%
+\contentsline {subsubsection}{\numberline {16.3.1.3}Variances Add}{301}{subsubsection.16.3.1.3}%
+\contentsline {subsection}{\numberline {16.3.2}Examples Involving Sets of Independent Random Variables}{301}{subsection.16.3.2}%
+\contentsline {subsubsection}{\numberline {16.3.2.1}Example: Dice}{301}{subsubsection.16.3.2.1}%
+\contentsline {subsubsection}{\numberline {16.3.2.2}Example: Variance of a Product}{302}{subsubsection.16.3.2.2}%
+\contentsline {subsubsection}{\numberline {16.3.2.3}Example: Ratio of Independent Geometric Random Variables}{302}{subsubsection.16.3.2.3}%
+\contentsline {section}{\numberline {16.4}Matrix Formulations}{303}{section.16.4}%
+\contentsline {subsection}{\numberline {16.4.1}Properties of Mean Vectors}{304}{subsection.16.4.1}%
+\contentsline {subsection}{\numberline {16.4.2}Covariance Matrices}{304}{subsection.16.4.2}%
+\contentsline {subsection}{\numberline {16.4.3}Covariance Matrices Linear Combinations of Random Vectors}{305}{subsection.16.4.3}%
+\contentsline {subsection}{\numberline {16.4.4}Example: (X,S) Dice Example Again}{306}{subsection.16.4.4}%
+\contentsline {subsection}{\numberline {16.4.5}Example: Easy Sum Again}{306}{subsection.16.4.5}%
+\contentsline {section}{\numberline {16.5}The Multivariate Normal Family of Distributions}{307}{section.16.5}%
+\contentsline {subsection}{\numberline {16.5.1}R Functions}{307}{subsection.16.5.1}%
+\contentsline {subsection}{\numberline {16.5.2}Special Case: New Variable Is a Single Linear Combination of a Random Vector}{308}{subsection.16.5.2}%
+\contentsline {section}{\numberline {16.6}Indicator Random Vectors}{308}{section.16.6}%
+\contentsline {section}{\numberline {16.7}Example: Dice Game}{309}{section.16.7}%
+\contentsline {subsection}{\numberline {16.7.1}Correlation Matrices}{312}{subsection.16.7.1}%
+\contentsline {subsection}{\numberline {16.7.2}Further Reading}{312}{subsection.16.7.2}%
+\contentsline {chapter}{\numberline {17}Multivariate PMFs and Densities}{315}{chapter.17}%
+\contentsline {section}{\numberline {17.1}Multivariate Probability Mass Functions}{315}{section.17.1}%
+\contentsline {section}{\numberline {17.2}Multivariate Densities}{318}{section.17.2}%
+\contentsline {subsection}{\numberline {17.2.1}Motivation and Definition}{318}{subsection.17.2.1}%
+\contentsline {subsection}{\numberline {17.2.2}Use of Multivariate Densities in Finding Probabilities and Expected Values}{318}{subsection.17.2.2}%
+\contentsline {subsection}{\numberline {17.2.3}Example: a Triangular Distribution}{319}{subsection.17.2.3}%
+\contentsline {subsection}{\numberline {17.2.4}Example: Train Rendezvouz}{322}{subsection.17.2.4}%
+\contentsline {section}{\numberline {17.3}More on Sets of Independent Random Variables}{323}{section.17.3}%
+\contentsline {subsection}{\numberline {17.3.1}Probability Mass Functions and Densities Factor in the Independent Case}{323}{subsection.17.3.1}%
+\contentsline {subsection}{\numberline {17.3.2}Convolution}{324}{subsection.17.3.2}%
+\contentsline {subsection}{\numberline {17.3.3}Example: Ethernet}{325}{subsection.17.3.3}%
+\contentsline {subsection}{\numberline {17.3.4}Example: Analysis of Seek Time}{325}{subsection.17.3.4}%
+\contentsline {subsection}{\numberline {17.3.5}Example: Backup Battery}{327}{subsection.17.3.5}%
+\contentsline {subsection}{\numberline {17.3.6}Example: Minima of Uniformly Distributed Random Variables}{327}{subsection.17.3.6}%
+\contentsline {subsection}{\numberline {17.3.7}Example: Ethernet Again}{327}{subsection.17.3.7}%
+\contentsline {section}{\numberline {17.4}Example: Finding the Distribution of the Sum of Nonindependent Random Variables}{328}{section.17.4}%
+\contentsline {section}{\numberline {17.5}Parametric Families of Multivariate Distributions}{328}{section.17.5}%
+\contentsline {subsection}{\numberline {17.5.1}The Multinomial Family of Distributions}{329}{subsection.17.5.1}%
+\contentsline {subsubsection}{\numberline {17.5.1.1}Probability Mass Function}{329}{subsubsection.17.5.1.1}%
+\contentsline {subsubsection}{\numberline {17.5.1.2}Example: Component Lifetimes}{330}{subsubsection.17.5.1.2}%
+\contentsline {subsubsection}{\numberline {17.5.1.3}Mean Vectors and Covariance Matrices in the Multinomial Family}{331}{subsubsection.17.5.1.3}%
+\contentsline {subsubsection}{\numberline {17.5.1.4}Application: Text Mining}{334}{subsubsection.17.5.1.4}%
+\contentsline {subsection}{\numberline {17.5.2}The Multivariate Normal Family of Distributions }{334}{subsection.17.5.2}%
+\contentsline {subsubsection}{\numberline {17.5.2.1}Densities}{334}{subsubsection.17.5.2.1}%
+\contentsline {subsubsection}{\numberline {17.5.2.2}Geometric Interpretation}{335}{subsubsection.17.5.2.2}%
+\contentsline {subsubsection}{\numberline {17.5.2.3}Properties of Multivariate Normal Distributions}{338}{subsubsection.17.5.2.3}%
+\contentsline {subsubsection}{\numberline {17.5.2.4}The Multivariate Central Limit Theorem}{339}{subsubsection.17.5.2.4}%
+\contentsline {subsubsection}{\numberline {17.5.2.5}Example: Finishing the Loose Ends from the Dice Game}{340}{subsubsection.17.5.2.5}%
+\contentsline {subsubsection}{\numberline {17.5.2.6}Application: Data Mining}{340}{subsubsection.17.5.2.6}%
+\contentsline {chapter}{\numberline {18}Transform Methods}{347}{chapter.18}%
+\contentsline {section}{\numberline {18.1}Generating Functions}{347}{section.18.1}%
+\contentsline {section}{\numberline {18.2}Moment Generating Functions}{348}{section.18.2}%
+\contentsline {section}{\numberline {18.3}Transforms of Sums of Independent Random Variables}{349}{section.18.3}%
+\contentsline {section}{\numberline {18.4}Example: Network Packets}{350}{section.18.4}%
+\contentsline {subsection}{\numberline {18.4.1}Poisson Generating Function}{350}{subsection.18.4.1}%
+\contentsline {subsection}{\numberline {18.4.2}Sums of Independent Poisson Random Variables Are Poisson Distributed}{350}{subsection.18.4.2}%
+\contentsline {section}{\numberline {18.5}Other Uses of Transforms}{351}{section.18.5}%
+\contentsline {chapter}{\numberline {19}Statistics: Prologue}{353}{chapter.19}%
+\contentsline {section}{\numberline {19.1}Sampling Distributions}{354}{section.19.1}%
+\contentsline {subsection}{\numberline {19.1.1}Random Samples}{354}{subsection.19.1.1}%
+\contentsline {section}{\numberline {19.2}The Sample Mean---a Random Variable}{355}{section.19.2}%
+\contentsline {subsection}{\numberline {19.2.1}Toy Population Example}{355}{subsection.19.2.1}%
+\contentsline {subsection}{\numberline {19.2.2}Expected and Variance of $\overline {X}$}{356}{subsection.19.2.2}%
+\contentsline {subsection}{\numberline {19.2.3}Toy Population Example Again}{357}{subsection.19.2.3}%
+\contentsline {subsection}{\numberline {19.2.4}Interpretation}{358}{subsection.19.2.4}%
+\contentsline {section}{\numberline {19.3}Sample Means Are Approximately Normal---No Matter What the Population Distribution Is}{358}{section.19.3}%
+\contentsline {subsection}{\numberline {19.3.1}The Sample Variance---Another Random Variable}{359}{subsection.19.3.1}%
+\contentsline {subsubsection}{\numberline {19.3.1.1}Intuitive Estimation of $\sigma ^2$}{359}{subsubsection.19.3.1.1}%
+\contentsline {subsubsection}{\numberline {19.3.1.2}Easier Computation}{360}{subsubsection.19.3.1.2}%
+\contentsline {subsubsection}{\numberline {19.3.1.3}To Divide by n or n-1?}{360}{subsubsection.19.3.1.3}%
+\contentsline {section}{\numberline {19.4}Observational Studies}{361}{section.19.4}%
+\contentsline {section}{\numberline {19.5}A Good Time to Stop and Review!}{362}{section.19.5}%
+\contentsline {chapter}{\numberline {20}Introduction to Confidence Intervals}{363}{chapter.20}%
+\contentsline {section}{\numberline {20.1}The ``Margin of Error'' and Confidence Intervals}{363}{section.20.1}%
+\contentsline {section}{\numberline {20.2}Confidence Intervals for Means}{364}{section.20.2}%
+\contentsline {subsection}{\numberline {20.2.1}Basic Formulation}{365}{subsection.20.2.1}%
+\contentsline {subsection}{\numberline {20.2.2}Example: Simulation Output}{365}{subsection.20.2.2}%
+\contentsline {section}{\numberline {20.3}Meaning of Confidence Intervals}{366}{section.20.3}%
+\contentsline {subsection}{\numberline {20.3.1}A Weight Survey in Davis}{366}{subsection.20.3.1}%
+\contentsline {subsection}{\numberline {20.3.2}More About Interpretation}{367}{subsection.20.3.2}%
+\contentsline {section}{\numberline {20.4}Confidence Intervals for Proportions}{369}{section.20.4}%
+\contentsline {subsection}{\numberline {20.4.1}Derivation}{369}{subsection.20.4.1}%
+\contentsline {subsection}{\numberline {20.4.2}That n vs. n-1 Thing Again}{370}{subsection.20.4.2}%
+\contentsline {subsection}{\numberline {20.4.3}Simulation Example Again}{370}{subsection.20.4.3}%
+\contentsline {subsection}{\numberline {20.4.4}Example: Davis Weights}{371}{subsection.20.4.4}%
+\contentsline {subsection}{\numberline {20.4.5}Interpretation}{372}{subsection.20.4.5}%
+\contentsline {subsection}{\numberline {20.4.6}(Non-)Effect of the Population Size}{372}{subsection.20.4.6}%
+\contentsline {subsection}{\numberline {20.4.7}Inferring the Number Polled}{372}{subsection.20.4.7}%
+\contentsline {subsection}{\numberline {20.4.8}Planning Ahead}{373}{subsection.20.4.8}%
+\contentsline {section}{\numberline {20.5}General Formation of Confidence Intervals from Approximately Normal Estimators}{373}{section.20.5}%
+\contentsline {subsection}{\numberline {20.5.1}The Notion of a Standard Error}{373}{subsection.20.5.1}%
+\contentsline {subsection}{\numberline {20.5.2}Forming General Confidence Intervals}{374}{subsection.20.5.2}%
+\contentsline {subsection}{\numberline {20.5.3}Standard Errors of Combined Estimators}{375}{subsection.20.5.3}%
+\contentsline {section}{\numberline {20.6}Confidence Intervals for Differences of Means or Proportions}{376}{section.20.6}%
+\contentsline {subsection}{\numberline {20.6.1}Independent Samples}{376}{subsection.20.6.1}%
+\contentsline {subsection}{\numberline {20.6.2}Example: Network Security Application}{377}{subsection.20.6.2}%
+\contentsline {subsection}{\numberline {20.6.3}Dependent Samples}{378}{subsection.20.6.3}%
+\contentsline {subsection}{\numberline {20.6.4}Example: Machine Classification of Forest Covers}{379}{subsection.20.6.4}%
+\contentsline {section}{\numberline {20.7}And What About the Student-t Distribution?}{380}{section.20.7}%
+\contentsline {section}{\numberline {20.8}R Computation}{382}{section.20.8}%
+\contentsline {section}{\numberline {20.9}Example: Pro Baseball Data}{382}{section.20.9}%
+\contentsline {subsection}{\numberline {20.9.1}R Code}{382}{subsection.20.9.1}%
+\contentsline {subsection}{\numberline {20.9.2}Analysis}{383}{subsection.20.9.2}%
+\contentsline {section}{\numberline {20.10}Example: UCI Bank Marketing Dataset}{385}{section.20.10}%
+\contentsline {section}{\numberline {20.11}Example: Amazon Links}{386}{section.20.11}%
+\contentsline {section}{\numberline {20.12}Example: Master's Degrees in CS/EE}{387}{section.20.12}%
+\contentsline {section}{\numberline {20.13}Other Confidence Levels}{388}{section.20.13}%
+\contentsline {section}{\numberline {20.14}One More Time: Why Do We Use Confidence Intervals?}{388}{section.20.14}%
+\contentsline {chapter}{\numberline {21}Introduction to Significance Tests}{391}{chapter.21}%
+\contentsline {section}{\numberline {21.1}The Basics}{392}{section.21.1}%
+\contentsline {section}{\numberline {21.2}General Testing Based on Normally Distributed Estimators}{393}{section.21.2}%
+\contentsline {section}{\numberline {21.3}Example: Network Security}{394}{section.21.3}%
+\contentsline {section}{\numberline {21.4}The Notion of ``p-Values''}{394}{section.21.4}%
+\contentsline {section}{\numberline {21.5}Example: Bank Data}{395}{section.21.5}%
+\contentsline {section}{\numberline {21.6}One-Sided $H_A$}{396}{section.21.6}%
+\contentsline {section}{\numberline {21.7}Exact Tests}{396}{section.21.7}%
+\contentsline {subsection}{\numberline {21.7.1}Example: Test for Biased Coin}{396}{subsection.21.7.1}%
+\contentsline {subsection}{\numberline {21.7.2}Example: Improved Light Bulbs}{397}{subsection.21.7.2}%
+\contentsline {subsection}{\numberline {21.7.3}Example: Test Based on Range Data}{398}{subsection.21.7.3}%
+\contentsline {subsection}{\numberline {21.7.4}Exact Tests under a Normal Distribution Assumption}{399}{subsection.21.7.4}%
+\contentsline {section}{\numberline {21.8}Don't Speak of ``the Probability That $H_0$ Is True''}{399}{section.21.8}%
+\contentsline {section}{\numberline {21.9}R Computation}{400}{section.21.9}%
+\contentsline {section}{\numberline {21.10}The Power of a Test}{400}{section.21.10}%
+\contentsline {subsection}{\numberline {21.10.1}Example: Coin Fairness}{400}{subsection.21.10.1}%
+\contentsline {subsection}{\numberline {21.10.2}Example: Improved Light Bulbs}{401}{subsection.21.10.2}%
+\contentsline {section}{\numberline {21.11}What's Wrong with Significance Testing---and What to Do Instead}{401}{section.21.11}%
+\contentsline {subsection}{\numberline {21.11.1}History of Significance Testing, and Where We Are Today}{402}{subsection.21.11.1}%
+\contentsline {subsection}{\numberline {21.11.2}The Basic Fallacy}{402}{subsection.21.11.2}%
+\contentsline {subsection}{\numberline {21.11.3}You Be the Judge!}{404}{subsection.21.11.3}%
+\contentsline {subsection}{\numberline {21.11.4}What to Do Instead}{404}{subsection.21.11.4}%
+\contentsline {subsection}{\numberline {21.11.5}Decide on the Basis of ``the Preponderance of Evidence''}{405}{subsection.21.11.5}%
+\contentsline {subsection}{\numberline {21.11.6}Example: the Forest Cover Data}{406}{subsection.21.11.6}%
+\contentsline {subsection}{\numberline {21.11.7}Example: Assessing Your Candidate's Chances for Election}{406}{subsection.21.11.7}%
+\contentsline {chapter}{\numberline {22}General Statistical Estimation and Inference}{407}{chapter.22}%
+\contentsline {section}{\numberline {22.1}General Methods of Parametric Estimation}{407}{section.22.1}%
+\contentsline {subsection}{\numberline {22.1.1}Example: Guessing the Number of Raffle Tickets Sold}{407}{subsection.22.1.1}%
+\contentsline {subsection}{\numberline {22.1.2}Method of Moments}{408}{subsection.22.1.2}%
+\contentsline {subsubsection}{\numberline {22.1.2.1}Example: Lottery Model}{408}{subsubsection.22.1.2.1}%
+\contentsline {subsubsection}{\numberline {22.1.2.2}General Method}{409}{subsubsection.22.1.2.2}%
+\contentsline {subsection}{\numberline {22.1.3}Method of Maximum Likelihood}{409}{subsection.22.1.3}%
+\contentsline {subsubsection}{\numberline {22.1.3.1}Example: Raffle Model}{409}{subsubsection.22.1.3.1}%
+\contentsline {subsubsection}{\numberline {22.1.3.2}General Procedure}{410}{subsubsection.22.1.3.2}%
+\contentsline {subsection}{\numberline {22.1.4}Example: Estimation of the Parameters of a Gamma Distribution}{411}{subsection.22.1.4}%
+\contentsline {subsubsection}{\numberline {22.1.4.1}Method of Moments}{411}{subsubsection.22.1.4.1}%
+\contentsline {subsubsection}{\numberline {22.1.4.2}MLEs}{412}{subsubsection.22.1.4.2}%
+\contentsline {subsection}{\numberline {22.1.5}R's mle() Function}{412}{subsection.22.1.5}%
+\contentsline {subsection}{\numberline {22.1.6}R's gmm() Function}{414}{subsection.22.1.6}%
+\contentsline {subsubsection}{\numberline {22.1.6.1}Example: Bodyfat Data}{415}{subsubsection.22.1.6.1}%
+\contentsline {subsection}{\numberline {22.1.7}More Examples}{417}{subsection.22.1.7}%
+\contentsline {subsection}{\numberline {22.1.8}Asymptotic Properties}{419}{subsection.22.1.8}%
+\contentsline {subsubsection}{\numberline {22.1.8.1}Consistency}{419}{subsubsection.22.1.8.1}%
+\contentsline {subsubsection}{\numberline {22.1.8.2}Approximate Confidence Intervals}{420}{subsubsection.22.1.8.2}%
+\contentsline {section}{\numberline {22.2}Bias and Variance}{421}{section.22.2}%
+\contentsline {subsection}{\numberline {22.2.1}Bias}{421}{subsection.22.2.1}%
+\contentsline {subsection}{\numberline {22.2.2}Why Divide by n-1 in $s^2$?}{422}{subsection.22.2.2}%
+\contentsline {subsubsection}{\numberline {22.2.2.1}But in This Book, We Divide by n, not n-1 Anyway}{424}{subsubsection.22.2.2.1}%
+\contentsline {subsection}{\numberline {22.2.3}Example of Bias Calculation: Max from U(0,c)}{425}{subsection.22.2.3}%
+\contentsline {subsection}{\numberline {22.2.4}Example of Bias Calculation: Gamma Family}{426}{subsection.22.2.4}%
+\contentsline {subsection}{\numberline {22.2.5}Tradeoff Between Variance and Bias}{426}{subsection.22.2.5}%
+\contentsline {section}{\numberline {22.3}Simultaneous Inference Methods}{427}{section.22.3}%
+\contentsline {subsection}{\numberline {22.3.1}The Bonferonni Method}{428}{subsection.22.3.1}%
+\contentsline {subsection}{\numberline {22.3.2}Scheffe's Method}{429}{subsection.22.3.2}%
+\contentsline {subsection}{\numberline {22.3.3}Example}{430}{subsection.22.3.3}%
+\contentsline {subsection}{\numberline {22.3.4}Other Methods for Simultaneous Inference}{431}{subsection.22.3.4}%
+\contentsline {section}{\numberline {22.4}Bayesian Methods}{431}{section.22.4}%
+\contentsline {subsection}{\numberline {22.4.1}How It Works}{433}{subsection.22.4.1}%
+\contentsline {subsubsection}{\numberline {22.4.1.1}Empirical Bayes Methods}{434}{subsubsection.22.4.1.1}%
+\contentsline {subsection}{\numberline {22.4.2}Extent of Usage of Subjective Priors}{434}{subsection.22.4.2}%
+\contentsline {subsection}{\numberline {22.4.3}Arguments Against Use of Subjective Priors}{435}{subsection.22.4.3}%
+\contentsline {subsection}{\numberline {22.4.4}What Would You Do? A Possible Resolution}{436}{subsection.22.4.4}%
+\contentsline {subsection}{\numberline {22.4.5}The Markov Chain Monte Carlo Method}{437}{subsection.22.4.5}%
+\contentsline {subsection}{\numberline {22.4.6}Further Reading}{437}{subsection.22.4.6}%
+\contentsline {chapter}{\numberline {23}Simultaneous Inference Methods}{441}{chapter.23}%
+\contentsline {section}{\numberline {23.1}The Bonferonni Method}{442}{section.23.1}%
+\contentsline {section}{\numberline {23.2}Scheffe's Method}{443}{section.23.2}%
+\contentsline {section}{\numberline {23.3}Example}{444}{section.23.3}%
+\contentsline {section}{\numberline {23.4}Other Methods for Simultaneous Inference}{445}{section.23.4}%
+\contentsline {chapter}{\numberline {24}Mixture Distributions and Hidden Markov Models}{447}{chapter.24}%
+\contentsline {section}{\numberline {24.1}Two Motivating Examples}{447}{section.24.1}%
+\contentsline {subsection}{\numberline {24.1.1}The Old Trick Coin Example, Updated}{447}{subsection.24.1.1}%
+\contentsline {subsection}{\numberline {24.1.2}Old Faithful Geyser}{448}{subsection.24.1.2}%
+\contentsline {section}{\numberline {24.2}The Notion of ``Latent'' Variables}{449}{section.24.2}%
+\contentsline {section}{\numberline {24.3}General Mixture Distributions}{449}{section.24.3}%
+\contentsline {section}{\numberline {24.4}Generating Random Variates from a Mixture Distribution}{450}{section.24.4}%
+\contentsline {section}{\numberline {24.5}Review: the Laws of Total Expectation and Variance}{451}{section.24.5}%
+\contentsline {section}{\numberline {24.6}Estimation by Method of Maximum Likelihood and the Method of Moments}{451}{section.24.6}%
+\contentsline {section}{\numberline {24.7}The EM Algorithm}{452}{section.24.7}%
+\contentsline {subsection}{\numberline {24.7.1}Overall Idea}{452}{subsection.24.7.1}%
+\contentsline {subsection}{\numberline {24.7.2}The mixtools Package}{453}{subsection.24.7.2}%
+\contentsline {subsection}{\numberline {24.7.3}Example: Old Faithful Geyser}{454}{subsection.24.7.3}%
+\contentsline {section}{\numberline {24.8}Mean and Variance of Random Variables Having Mixture Distributions}{455}{section.24.8}%
+\contentsline {section}{\numberline {24.9}Example: Two Kinds of Batteries}{456}{section.24.9}%
+\contentsline {section}{\numberline {24.10}Example: Overdispersion Models}{457}{section.24.10}%
+\contentsline {section}{\numberline {24.11}Example: Hidden Markov Models}{459}{section.24.11}%
+\contentsline {section}{\numberline {24.12}Vector Space Interpretations (for the mathematically adventurous only)}{459}{section.24.12}%
+\contentsline {subsection}{\numberline {24.12.1}Properties of Correlation}{460}{subsection.24.12.1}%
+\contentsline {subsection}{\numberline {24.12.2}Conditional Expectation As a Projection}{460}{subsection.24.12.2}%
+\contentsline {section}{\numberline {24.13}Proof of the Law of Total Expectation}{462}{section.24.13}%
+\contentsline {chapter}{\numberline {25}Histograms and Beyond: Nonparametric Density Estimation}{467}{chapter.25}%
+\contentsline {section}{\numberline {25.1}Example: Baseball Player Data}{467}{section.25.1}%
+\contentsline {section}{\numberline {25.2}Basic Ideas in Density Estimation}{468}{section.25.2}%
+\contentsline {section}{\numberline {25.3}Histograms}{469}{section.25.3}%
+\contentsline {section}{\numberline {25.4}Kernel-Based Density Estimation}{470}{section.25.4}%
+\contentsline {section}{\numberline {25.5}Example: Baseball Player Data}{471}{section.25.5}%
+\contentsline {section}{\numberline {25.6}More on Density Estimation in ggplot2}{471}{section.25.6}%
+\contentsline {section}{\numberline {25.7}Bias, Variance and Aliasing}{471}{section.25.7}%
+\contentsline {subsection}{\numberline {25.7.1}Bias vs. Variance}{472}{subsection.25.7.1}%
+\contentsline {subsection}{\numberline {25.7.2}Aliasing}{475}{subsection.25.7.2}%
+\contentsline {section}{\numberline {25.8}Nearest-Neighbor Methods}{476}{section.25.8}%
+\contentsline {section}{\numberline {25.9}Estimating a cdf}{477}{section.25.9}%
+\contentsline {section}{\numberline {25.10}Hazard Function Estimation}{478}{section.25.10}%
+\contentsline {section}{\numberline {25.11}For Further Reading}{478}{section.25.11}%
+\contentsline {chapter}{\numberline {26}Introduction to Model Building}{479}{chapter.26}%
+\contentsline {section}{\numberline {26.1}``Desperate for Data''}{480}{section.26.1}%
+\contentsline {subsection}{\numberline {26.1.1}Known Distribution}{480}{subsection.26.1.1}%
+\contentsline {subsection}{\numberline {26.1.2}Estimated Mean}{480}{subsection.26.1.2}%
+\contentsline {subsection}{\numberline {26.1.3}The Bias/Variance Tradeoff}{481}{subsection.26.1.3}%
+\contentsline {subsection}{\numberline {26.1.4}Implications}{483}{subsection.26.1.4}%
+\contentsline {section}{\numberline {26.2}Assessing ``Goodness of Fit'' of a Model}{484}{section.26.2}%
+\contentsline {subsection}{\numberline {26.2.1}The Chi-Square Goodness of Fit Test}{484}{subsection.26.2.1}%
+\contentsline {subsection}{\numberline {26.2.2}Kolmogorov-Smirnov Confidence Bands}{485}{subsection.26.2.2}%
+\contentsline {subsection}{\numberline {26.2.3}Less Formal Methods}{487}{subsection.26.2.3}%
+\contentsline {section}{\numberline {26.3}Robustness}{487}{section.26.3}%
+\contentsline {section}{\numberline {26.4}Real Populations and Conceptual Populations}{489}{section.26.4}%
+\contentsline {chapter}{\numberline {27}Linear Regression}{491}{chapter.27}%
+\contentsline {section}{\numberline {27.1}The Goals: Prediction and Description}{491}{section.27.1}%
+\contentsline {section}{\numberline {27.2}Example Applications: Software Engineering, Networks, Text Mining}{492}{section.27.2}%
+\contentsline {section}{\numberline {27.3}Adjusting for Covariates}{493}{section.27.3}%
+\contentsline {section}{\numberline {27.4}What Does ``Relationship'' Really Mean?}{494}{section.27.4}%
+\contentsline {subsection}{\numberline {27.4.1}Precise Definition}{494}{subsection.27.4.1}%
+\contentsline {subsection}{\numberline {27.4.2}(Rather Artificial) Example: Marble Problem}{495}{subsection.27.4.2}%
+\contentsline {section}{\numberline {27.5}Estimating That Relationship from Sample Data}{496}{section.27.5}%
+\contentsline {subsection}{\numberline {27.5.1}Parametric Models for the Regression Function m()}{496}{subsection.27.5.1}%
+\contentsline {subsection}{\numberline {27.5.2}Estimation in Parametric Regression Models}{497}{subsection.27.5.2}%
+\contentsline {subsection}{\numberline {27.5.3}More on Parametric vs. Nonparametric Models}{498}{subsection.27.5.3}%
+\contentsline {section}{\numberline {27.6}Example: Baseball Data}{499}{section.27.6}%
+\contentsline {subsection}{\numberline {27.6.1}R Code}{499}{subsection.27.6.1}%
+\contentsline {subsection}{\numberline {27.6.2}A Look through the Output}{500}{subsection.27.6.2}%
+\contentsline {section}{\numberline {27.7}Multiple Regression: More Than One Predictor Variable}{502}{section.27.7}%
+\contentsline {section}{\numberline {27.8}Example: Baseball Data (cont'd.)}{503}{section.27.8}%
+\contentsline {section}{\numberline {27.9}Interaction Terms}{504}{section.27.9}%
+\contentsline {section}{\numberline {27.10}Parametric Estimation of Linear Regression Functions}{505}{section.27.10}%
+\contentsline {subsection}{\numberline {27.10.1}Meaning of ``Linear''}{505}{subsection.27.10.1}%
+\contentsline {subsection}{\numberline {27.10.2}Random-X and Fixed-X Regression}{506}{subsection.27.10.2}%
+\contentsline {subsection}{\numberline {27.10.3}Point Estimates and Matrix Formulation}{506}{subsection.27.10.3}%
+\contentsline {subsection}{\numberline {27.10.4}Approximate Confidence Intervals}{508}{subsection.27.10.4}%
+\contentsline {section}{\numberline {27.11}Example: Baseball Data (cont'd.)}{511}{section.27.11}%
+\contentsline {section}{\numberline {27.12}Dummy Variables}{512}{section.27.12}%
+\contentsline {section}{\numberline {27.13}Example: Baseball Data (cont'd.)}{512}{section.27.13}%
+\contentsline {section}{\numberline {27.14}What Does It All Mean?---Effects of Adding Predictors}{514}{section.27.14}%
+\contentsline {section}{\numberline {27.15}Model Selection}{516}{section.27.15}%
+\contentsline {subsection}{\numberline {27.15.1}The Overfitting Problem in Regression}{517}{subsection.27.15.1}%
+\contentsline {subsection}{\numberline {27.15.2}Relation to the Bias-vs.-Variance Tradefoff}{518}{subsection.27.15.2}%
+\contentsline {subsection}{\numberline {27.15.3}Multicollinearity}{518}{subsection.27.15.3}%
+\contentsline {subsection}{\numberline {27.15.4}Methods for Predictor Variable Selection}{519}{subsection.27.15.4}%
+\contentsline {subsubsection}{\numberline {27.15.4.1}Hypothesis Testing}{519}{subsubsection.27.15.4.1}%
+\contentsline {subsubsection}{\numberline {27.15.4.2}Confidence Intervals}{520}{subsubsection.27.15.4.2}%
+\contentsline {subsubsection}{\numberline {27.15.4.3}Predictive Ability Indicators}{520}{subsubsection.27.15.4.3}%
+\contentsline {subsubsection}{\numberline {27.15.4.4}The LASSO}{521}{subsubsection.27.15.4.4}%
+\contentsline {subsection}{\numberline {27.15.5}Rough Rules of Thumb}{522}{subsection.27.15.5}%
+\contentsline {section}{\numberline {27.16}Prediction}{522}{section.27.16}%
+\contentsline {subsection}{\numberline {27.16.1}Height/Weight Age Example}{522}{subsection.27.16.1}%
+\contentsline {subsection}{\numberline {27.16.2}R's predict() Function}{523}{subsection.27.16.2}%
+\contentsline {section}{\numberline {27.17}Example: Turkish Teaching Evaluation Data}{523}{section.27.17}%
+\contentsline {subsection}{\numberline {27.17.1}The Data}{523}{subsection.27.17.1}%
+\contentsline {subsection}{\numberline {27.17.2}Data Prep}{524}{subsection.27.17.2}%
+\contentsline {subsection}{\numberline {27.17.3}Analysis}{525}{subsection.27.17.3}%
+\contentsline {section}{\numberline {27.18}What About the Assumptions?}{527}{section.27.18}%
+\contentsline {subsection}{\numberline {27.18.1}Exact Confidence Intervals and Tests}{528}{subsection.27.18.1}%
+\contentsline {subsection}{\numberline {27.18.2}Is the Homoscedasticity Assumption Important?}{528}{subsection.27.18.2}%
+\contentsline {subsection}{\numberline {27.18.3}Regression Diagnostics}{528}{subsection.27.18.3}%
+\contentsline {section}{\numberline {27.19}Case Studies}{529}{section.27.19}%
+\contentsline {subsection}{\numberline {27.19.1}Example: Prediction of Network RTT}{529}{subsection.27.19.1}%
+\contentsline {subsection}{\numberline {27.19.2}Transformations}{530}{subsection.27.19.2}%
+\contentsline {subsection}{\numberline {27.19.3}Example: OOP Study}{530}{subsection.27.19.3}%
+\contentsline {chapter}{\numberline {28}Classification}{535}{chapter.28}%
+\contentsline {section}{\numberline {28.1}Classification = Regression}{536}{section.28.1}%
+\contentsline {subsection}{\numberline {28.1.1}What Happens with Regression in the Case Y = 0,1?}{536}{subsection.28.1.1}%
+\contentsline {section}{\numberline {28.2}Logistic Regression: a Common Parametric Model for the Regression Function in Classification Problems}{537}{section.28.2}%
+\contentsline {subsection}{\numberline {28.2.1}The Logistic Model: Motivations}{537}{subsection.28.2.1}%
+\contentsline {subsection}{\numberline {28.2.2}Esimation and Inference for Logit Coefficients}{539}{subsection.28.2.2}%
+\contentsline {section}{\numberline {28.3}Example: Forest Cover Data}{540}{section.28.3}%
+\contentsline {subsubsection}{\numberline {28.3.0.1}R Code}{540}{subsubsection.28.3.0.1}%
+\contentsline {subsection}{\numberline {28.3.1}Analysis of the Results}{541}{subsection.28.3.1}%
+\contentsline {section}{\numberline {28.4}The Multiclass Case}{543}{section.28.4}%
+\contentsline {subsection}{\numberline {28.4.1}One vs. All Approach}{543}{subsection.28.4.1}%
+\contentsline {subsection}{\numberline {28.4.2}Issues of Data Balance}{544}{subsection.28.4.2}%
+\contentsline {subsubsection}{\numberline {28.4.2.1}Statement of the Problem}{544}{subsubsection.28.4.2.1}%
+\contentsline {subsubsection}{\numberline {28.4.2.2}Solutions}{545}{subsubsection.28.4.2.2}%
+\contentsline {section}{\numberline {28.5}Model Selection in Classification}{546}{section.28.5}%
+\contentsline {section}{\numberline {28.6}Optimality of the Regression Function for 0-1-Valued Y (optional section)}{546}{section.28.6}%
+\contentsline {chapter}{\numberline {29}Nonparametric Estimation of Regression and Classification Functions}{549}{chapter.29}%
+\contentsline {section}{\numberline {29.1}Methods Based on Estimating $m_{Y;X}(t)$}{549}{section.29.1}%
+\contentsline {subsection}{\numberline {29.1.1}Nearest-Neighbor Methods}{550}{subsection.29.1.1}%
+\contentsline {subsection}{\numberline {29.1.2}Kernel-Based Methods}{552}{subsection.29.1.2}%
+\contentsline {subsection}{\numberline {29.1.3}The Naive Bayes Method}{553}{subsection.29.1.3}%
+\contentsline {section}{\numberline {29.2}Methods Based on Estimating Classification Boundaries}{554}{section.29.2}%
+\contentsline {subsection}{\numberline {29.2.1}Support Vector Machines (SVMs)}{554}{subsection.29.2.1}%
+\contentsline {subsection}{\numberline {29.2.2}CART}{555}{subsection.29.2.2}%
+\contentsline {section}{\numberline {29.3}Comparison of Methods}{557}{section.29.3}%
+\contentsline {chapter}{\numberline {30}Relations \underline {Among} Variables}{559}{chapter.30}%
+\contentsline {section}{\numberline {30.1}Principal Components Analysis (PCA)}{559}{section.30.1}%
+\contentsline {subsection}{\numberline {30.1.1}How to Calculate Them}{560}{subsection.30.1.1}%
+\contentsline {subsection}{\numberline {30.1.2}Example: Forest Cover Data}{561}{subsection.30.1.2}%
+\contentsline {subsection}{\numberline {30.1.3}Scaling}{562}{subsection.30.1.3}%
+\contentsline {subsection}{\numberline {30.1.4}Scope of Application}{562}{subsection.30.1.4}%
+\contentsline {subsection}{\numberline {30.1.5}Example: Turkish Teaching Evaluation Data}{563}{subsection.30.1.5}%
+\contentsline {section}{\numberline {30.2}Log-Linear Models}{565}{section.30.2}%
+\contentsline {subsection}{\numberline {30.2.1}The Setting}{565}{subsection.30.2.1}%
+\contentsline {subsection}{\numberline {30.2.2}The Data}{565}{subsection.30.2.2}%
+\contentsline {subsection}{\numberline {30.2.3}The Models}{566}{subsection.30.2.3}%
+\contentsline {subsection}{\numberline {30.2.4}Interpretation of Parameters}{568}{subsection.30.2.4}%
+\contentsline {subsection}{\numberline {30.2.5}Parameter Estimation}{569}{subsection.30.2.5}%
+\contentsline {subsection}{\numberline {30.2.6}Example: Hair, Eye Color}{570}{subsection.30.2.6}%
+\contentsline {subsubsection}{\numberline {30.2.6.1}The loglin() Function}{570}{subsubsection.30.2.6.1}%
+\contentsline {subsection}{\numberline {30.2.7}Hair/Eye Color Analysis}{571}{subsection.30.2.7}%
+\contentsline {subsection}{\numberline {30.2.8}Obtaining Standard Errors}{574}{subsection.30.2.8}%
+\contentsline {section}{\numberline {30.3}Clustering}{574}{section.30.3}%
+\contentsline {subsection}{\numberline {30.3.1}K-Means Clustering}{574}{subsection.30.3.1}%
+\contentsline {subsubsection}{\numberline {30.3.1.1}The Algorithm}{575}{subsubsection.30.3.1.1}%
+\contentsline {subsubsection}{\numberline {30.3.1.2}Example: the Baseball Player Data}{575}{subsubsection.30.3.1.2}%
+\contentsline {subsection}{\numberline {30.3.2}Mixture Models}{576}{subsection.30.3.2}%
+\contentsline {subsection}{\numberline {30.3.3}Spectral Models}{577}{subsection.30.3.3}%
+\contentsline {subsection}{\numberline {30.3.4}Other R Functions}{577}{subsection.30.3.4}%
+\contentsline {subsection}{\numberline {30.3.5}Further Reading}{577}{subsection.30.3.5}%
+\contentsline {section}{\numberline {30.4}Simpson's (Non-)Paradox}{577}{section.30.4}%
+\contentsline {subsection}{\numberline {30.4.1}Example: UC Berkeley Graduate Admission Data}{578}{subsection.30.4.1}%
+\contentsline {subsubsection}{\numberline {30.4.1.1}Overview}{578}{subsubsection.30.4.1.1}%
+\contentsline {subsubsection}{\numberline {30.4.1.2}Log-Linear Analysis}{578}{subsubsection.30.4.1.2}%
+\contentsline {subsection}{\numberline {30.4.2}Toward Making It Simpson's NON-Paradox}{581}{subsection.30.4.2}%
+\contentsline {chapter}{\numberline {31}Estimating ``Failure''}{583}{chapter.31}%
+\contentsline {chapter}{\numberline {32}Advanced Statistical Estimation and Inference}{585}{chapter.32}%
+\contentsline {section}{\numberline {32.1}Slutsky's Theorem}{585}{section.32.1}%
+\contentsline {subsection}{\numberline {32.1.1}The Theorem}{586}{subsection.32.1.1}%
+\contentsline {subsection}{\numberline {32.1.2}Why It's Valid to Substitute $s$ for $\sigma $}{586}{subsection.32.1.2}%
+\contentsline {subsection}{\numberline {32.1.3}Example: Confidence Interval for a Ratio Estimator}{587}{subsection.32.1.3}%
+\contentsline {section}{\numberline {32.2}The Delta Method: Confidence Intervals for General Functions of Means or Proportions}{587}{section.32.2}%
+\contentsline {subsection}{\numberline {32.2.1}The Theorem}{587}{subsection.32.2.1}%
+\contentsline {subsection}{\numberline {32.2.2}Example: Square Root Transformation}{590}{subsection.32.2.2}%
+\contentsline {subsection}{\numberline {32.2.3}Example: Confidence Interval for $\sigma ^2$}{591}{subsection.32.2.3}%
+\contentsline {subsection}{\numberline {32.2.4}Example: Confidence Interval for a Measurement of Prediction Ability}{594}{subsection.32.2.4}%
+\contentsline {section}{\numberline {32.3}The Bootstrap Method for Forming Confidence Intervals}{595}{section.32.3}%
+\contentsline {subsection}{\numberline {32.3.1}Basic Methodology}{595}{subsection.32.3.1}%
+\contentsline {subsection}{\numberline {32.3.2}Example: Confidence Intervals for a Population Variance}{596}{subsection.32.3.2}%
+\contentsline {subsection}{\numberline {32.3.3}Computation in R}{596}{subsection.32.3.3}%
+\contentsline {subsection}{\numberline {32.3.4}General Applicability}{597}{subsection.32.3.4}%
+\contentsline {subsection}{\numberline {32.3.5}Why It Works}{598}{subsection.32.3.5}%
+\contentsline {chapter}{\numberline {A}Introduction to the ggplot2 Graphics Package}{599}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Introduction}{599}{section.A.1}%
+\contentsline {section}{\numberline {A.2}Installation and Use}{599}{section.A.2}%
+\contentsline {section}{\numberline {A.3}Basic Structures}{600}{section.A.3}%
+\contentsline {section}{\numberline {A.4}Example: Simple Line Graphs}{601}{section.A.4}%
+\contentsline {section}{\numberline {A.5}Example: Census Data}{603}{section.A.5}%
+\contentsline {section}{\numberline {A.6}Function Plots, Density Estimates and Smoothing}{610}{section.A.6}%
+\contentsline {section}{\numberline {A.7}What's Going on Inside}{611}{section.A.7}%
+\contentsline {section}{\numberline {A.8}For Further Information}{613}{section.A.8}%

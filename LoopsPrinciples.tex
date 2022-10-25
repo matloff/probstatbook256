@@ -1,0 +1,1316 @@
+\chapter{Principles of Parallel Loop Scheduling} 
+\label{chap:loopsprinciples}  
+
+Many applications of parallel programming, both in R and in general,
+involve the parallelization of {\bf for} loops.  As will be explained
+shortly, this at first would seem to be a very easily programmed class
+of applications, but there can be serious performance issues.
+
+First, though, let's define the class under consideration.  Throughout
+this chapter, it will be assumed that the iterations of a loop are
+independent of each other, meaning that the execution of one iteration
+is does not use the results of a previous one.  
+
+Here is an example of code that does not satisfy this condition:
+
+\begin{lstlisting}
+total <- 0
+for (i in 1:n) total <- total + x[i]
+\end{lstlisting}
+
+Putting aside the fact that this computation can be done with R's {\bf
+sum()} function, the point is that for each {\bf i}, the computation
+needs the previous value of {\bf total}.
+
+With this restriction of independent iterations, it would seem that we
+have an embarrassingly parallel class of applications.  In terms of
+programmability, it is true.  Using {\bf snow}, for example in the
+mutual Web links code in Section \ref{firstcut}, we simply called {\bf
+clusterApply()} on the range of {\bf i} that we had had in our serial
+loop:  
+
+\begin{lstlisting}
+ichunks <- 1:(nr-1)
+tots <- clusterApply(cls,ichunks,jloop)
+\end{lstlisting}
+
+This distributed the various iterations for execution by the workers.
+So, isn't is equally simple for any {\bf for} loop?
+
+The answer is no, because different iterations may have widely different
+times.  If we are not careful, we can end up with a serious load
+balance issue.  In fact, this was even the case in the mutual Weblinks
+code above---for larger values of {\bf i}, the function {\bf jloop()} 
+has less work to do:  In the (serial) code on page \pageref{matrixform},
+the matrix multiplication involves a matrix with {\bf n-i} rows at
+iteration {\bf i}.
+
+This can cause big load balancing problems if we are not careful as to
+how we assign iterations to workers, i.e. how we do the loop scheduling.
+Moreover, we typically don't know the loop iteration times in advance, so the
+problem of efficient loop scheduling is even more difficult.  Methods to
+address these issues will be the thrust of this chapter.
+
+\section{General Notions of Loop Scheduling}
+\label{gensched}
+
+Suppose we have k processes and many loop iterations.  Suppose too that
+we do not know beforehand how much time each loop iteration will take.
+Key notions in loop scheduling are the following:
+
+\begin{itemize}
+
+\item {\it Static} scheduling:  The assignment of loop iterations to
+processes is arranged before execution starts.
+
+\item {\it Dynamic} scheduling:  The assignment of loop iterations to
+processes is arranged during execution.  Each time a process finishes a
+loop iteration, it picks up a new one to work on.  The pool of available
+iterations is called a {\it task farm} or {\it work queue}.
+
+\item {\it Chunking:}  Assign a group of loop iterations to a process,
+rather than a single loop iteration.  In dynamic scheduling, say, when a
+process becomes idle, it picks up a group of loop iterations to work on
+next.
+
+\end{itemize}
+
+To make this concrete, suppose we have loop iterations A, B and C. 
+Consider two loop schedules:
+
+\begin{itemize}
+\item {\bf Schedule I:}  Dole out the loop iterations in {\it Round Robin}
+order---assign A to $P_1$, B to $P_2$ and C to $P_1$, statically..  
+
+\item {\bf Schedule II:}  Dole out the loop iterations dynamically, one
+at a time.  Let us suppose we do this in reverse order, i.e. C, B and A,
+because we suspect that their loop iteration times decrease in this
+order.  (The relevance of this will be seen below.)
+
+\end{itemize}
+
+Now suppose loop iterations A, B and C have execution times of 10, 20
+and 40, respectively.  Let's see how early we would finish the full loop
+iteration set, and how much wasted idleness we would have, under both
+schedules.
+
+In Schedule I, when $P_1$ finishes loop iteration A at time 10, it starts C,
+finishing the latter at time 50.  $P_2$ finishes at time 20, and then sits
+idle during time 20-50.
+
+Under Schedule II, there may be some randomness in terms of which of
+$P_1$ and $P_2$ gets loop iteration C.  Say it is $P_1$.  $P_1$ will
+execute only loop iteration C, never having a chance to do more.  $P_2$
+will do B, then pick up A and perform that loop iteration.  The overall
+loop iteration set will be completed at time 40, with only 10 units of
+idle time.  In other words, Schedule II outperforms Schedule I, both in
+terms of how soon we complete the project and how much idle time we must
+tolerate.
+
+By the way, note that a static version of Schedule II, still using the
+(C,B,A) order, would in this case have the same poor performance as
+Schedule I.
+
+There are two aspects, though, which we must consider:
+
+\begin{itemize}
+
+\item As mentioned earlier, typically we do not know the loop iteration
+times in advance.  In the above example, we had loop iterations in
+Schedule II get their work in reverse order, due to a suspicion that C
+would take the longest etc.  That guess was correct (in this contrived
+example), and placing our work queue in reverse order like that turned
+out to be key to the superiority of Schedul II in this case.
+
+\item Schedule II, and any dynamic method, may exact a substantial
+overhead penalty.  In {\bf snow}, for instance, there would need to be
+communication between a worker and the manager, in order for the worker
+to determine which task is next assigned to it.  Static scheduling
+doesn't have this drawback.
+
+This is the motivation for chunking in the dynamic case (though it can
+be used in the static case too).  By assigning loop iterations to
+processes in groups instead of singly, processes need to go to the work
+queue less often, thus accruing less overhead.
+
+On the other hand, large chunk sizes potentially bring back the problem
+of load imbalance.  The final chunk handled by each process may begin at
+substantially different times from one process to another.  This results
+in some processes incurring idle time---exactly the problem dynamic
+scheduling was meant to ameliorate.  Thus some scheduling methods have been
+developed in which the chunk sizes decreases over time, saving overhead
+early in the computation, but reducing the possibility of substantial
+load imbalance near the end.
+
+\end{itemize}
+
+\section{Example:  All Possible Regressions}
+
+Consider linear regression analysis, one of the mainstays of statistical
+methodology.  Here one tries to predict one variable from others.
+
+A major issue is the choice of predictor variables:  On
+the one hand, one wants to include all relevant predictors in the
+regression equation.  But on the other hand, we must avoid overfitting,
+and a nice, compact, {\it parsimonious} equation is desirable.
+
+Suppose we have n observations and p predictor variables.  We could fit
+regression models to each possible subset of the p predictors, and
+choose the one we like best according to some criterion.  The one we'll
+use in our example here is {\it adjusted} $R^2$, a (nearly)
+statistically unbiased version of the traditional $R^2$ criterion.  In
+other words, we will choose for our model the predictor set for which
+adjusted $R^2$ is largest.
+
+\subsection{Parallelization Strategies}
+
+There are $2^p$ possible models, so the amount of computation could be
+quite large---a perfect place to use parallel computation.  There are
+two possibilities here:
+
+\begin{itemize}
+
+\item [(a)] For each set of predictors, we could perform the regression
+computation for that set in parallel.  For instance, all the processes
+would work in concert in computing the model using predictors 2 and 5.
+
+\item [(b)] We could assign a different collection of predictor sets to
+each process, with the process then performing the regression
+computations for those assigned sets.  So, for example, one process
+might do the entire computation for the model involving predictors 2 and
+5, another process would handle model using predictors 8, 9 and 12, and
+so on.
+
+\end{itemize}
+
+Option (a) has problems.  For a given set of m predictors, we must first
+compute various sums of squares and products.  Each sum has n summands,
+and there are $O(m^2)$ sums, making for a computational complexity of
+$O(nm^2)$.  Then a matrix inversion (or equivalent) must be done, with
+complexity $O(m^3)$.  
+
+Unfortunately, matix inversion is not an embarrassingly parallel
+operation, and though many good methods have been developed, it is much
+easier here to go the route of option (b).  The latter {\it is}
+embarrassingly parallel, and in fact involves a loop.
+
+Below is a {\bf snow} implementation of doing this in parallel.  It
+finds the adjusted $R^2$ value for all models in which the predictor set
+has size at most k.  The user can opt for either static or dynamic
+scheduling, or reverse the order of iterations, and can specify a
+(constant) chunk size.   
+
+\subsection{The Code}
+
+\begin{lstlisting}[numbers=left]
+# regresses response variable Y column against 
+# all possible subsets of the Xi predictor variables, 
+# with subset size up through k; returns the
+# adjusted R-squared value for each subset
+
+# scheduling methods:
+#
+#   static (clusterApply())
+#   dynamic (clusterApplyLB())
+#   reverse the order of the tasks
+#   varying chunk size (in dynamic case)
+
+# arguments:
+#    cls:  cluster
+#    x:  matrix of predictors, one per column
+#    y:  vector of the response variable
+#    k:  max size of predictor set
+#    reverse:  True means reverse the order of the iterations
+#    dyn:  True means dynamic scheduling
+#    chunk:  chunk size 
+# return value:
+#    R matrix, showing adjusted R-squared values, 
+#    indexed by predictor set
+
+snowapr <- function(cls,x,y,k,reverse=F,dyn=F,chunk=1) {
+   p <- ncol(x)
+   # generate matrix of predictor subsets
+   allcombs <- genallcombs(p,k)
+   ncombs <- length(allcombs)
+   clusterExport(cls,"do1pset")
+   # set up task indices 
+   tasks <- if (!reverse) seq(1,ncombs,chunk) else 
+      seq(ncombs,1,-chunk) 
+   if (!dyn) {
+      out <- clusterApply(cls,tasks,dochunk,x,y,allcombs,chunk)
+   } else {
+      out <- clusterApplyLB(cls,tasks,dochunk,x,y,allcombs,chunk)
+   }
+   Reduce(rbind,out)
+}
+
+# generate all nonempty subsets of 1..p of size <= k; 
+# returns a list, one element per predictor set
+genallcombs <- function(p,k) {
+   allcombs <- list()
+   for (i in 1:k) {
+      tmp <- combn(1:p,i)
+      allcombs <- c(allcombs,matrixtolist(tmp,rc=2))
+   }
+   allcombs
+}
+
+# extracts rows (rc=1) or columns (rc=2) of a matrix, producing a list
+matrixtolist <- function(rc,m) {
+   if (rc == 1) {
+      Map(function(rownum) m[rownum,],1:nrow(m))
+   } else Map(function(colnum) m[,colnum],1:ncol(m))
+}
+
+# process all the predictor sets in the chunk 
+# whose first index is psetstart
+dochunk <- function(psetstart,x,y,allcombs,chunk) {
+   ncombs <- length(allcombs)
+   lasttask <- min(psetstart+chunk-1,ncombs)
+   t(sapply(allcombs[psetstart:lasttask],do1pset,x,y))
+}
+
+# find the adjusted R-squared values for the given 
+# predictor set index
+do1pset <- function(onepset,x,y) {
+   slm <- summary(lm(y ~ x[,onepset]))
+   # form the report for this predictor set; need trailngs 0s so as to
+   # form matrices of uniform numbers of rows, to use rbind() in
+   # snowapr()
+   n0s <- ncol(x) - length(onepset)
+   c(slm$adj.r.squared,onepset,rep(0,n0s))
+}
+
+# predictor set seems best
+test <- function(cls,n,p,k,chunk=1,dyn=F,rvrs=F) {
+   gendata(n,p)
+   snowapr(cls,x,y,k,rvrs,dyn,chunk)
+}
+
+gendata <- function(n,p) {
+   x <<- matrix(rnorm(n*p),ncol=p)
+   y <<- x%*%c(rep(0.5,p)) + rnorm(n)
+}
+\end{lstlisting}
+
+\subsection{Sample Run}
+\label{samplerun}
+
+Here is some sample output:
+
+\begin{Verbatim}[fontsize=\relsize{-1}]
+>  test(c8,100,4,2)
+            [,1] [,2] [,3] [,4] [,5]
+ [1,] 0.21941625    1    0    0    0
+ [2,] 0.05960716    2    0    0    0
+ [3,] 0.11090411    3    0    0    0
+ [4,] 0.15092073    4    0    0    0
+ [5,] 0.26576805    1    2    0    0
+ [6,] 0.35730378    1    3    0    0
+ [7,] 0.32840075    1    4    0    0
+ [8,] 0.17534962    2    3    0    0
+ [9,] 0.20841665    2    4    0    0
+[10,] 0.27900555    3    4    0    0
+\end{Verbatim}
+
+Here simulated data of size n = 100 was generated, with p = 4 predictors
+and a maximum predictor set size of k = 2.  The adjusted $R^2$ value
+when predictors 1 and 4 were used was about 0.33.
+
+\subsection{Code Analysis}
+
+To see how the code works, continue to consider the case of p = 4, k =
+2, and suppose we have two workers.  Our main function {\bf snowapr()} will
+first call {\bf genallcombs()} which, as it name implies, will generate
+all the combinations of predictor variables:
+
+\begin{Verbatim}[fontsize=\relsize{-1}]
+> genallcombs(4,2)
+[[1]]
+[1] 1
+
+[[2]]
+[1] 2
+
+[[3]]
+[1] 3
+
+[[4]]
+[1] 4
+
+[[5]]
+[1] 1 2
+
+[[6]]
+[1] 1 3
+
+[[7]]
+[1] 1 4
+
+[[8]]
+[1] 2 3
+
+[[9]]
+[1] 2 4
+
+[[10]]
+[1] 3 4
+\end{Verbatim}
+
+For example, the last list element says that one of the combinations is
+(3,4), i.e. predictors 3 and 4.
+
+The basic idea is simple:  We distribute the predictor combinations, 10
+of them in this case, to the workers.  Each worker then runs regressions
+on each of its assigned combinations, and returns the results to the
+manager, which coalesces them.  
+
+Note that our approach here is consistent with the discussion in Section
+\ref{keypoint}.  Each worker calls the R linear model function {\bf
+lm()}.  That function in turn is a wrapper for R's {\bf lm.fit()}, which
+in turn calls the FORTRAN function {\bf dqrls()}.  (To see the code,
+use {\bf edit()}, e.g. run \lstinline{edit(lm)}.)
+
+In distributing the predictor combinations, we do so in chunks, with
+size specified by the parameter {\bf chunk}.  Here is what would occur
+for the little example above.  
+
+Say we have two workers, $P_1$ and $P_2$, and wish to use a chunk size
+of 2, with static scheduling.  The latter is the default for {\bf
+snow}, which {\bf snow} implements in a Round Robin manner.  Here for
+instance, the manager will assign combinations 1, 2, 5, 6, 9 and 10 to
+$P_1$, and the rest to $P_2$.  In our calls to {\bf snowapr()}, we would
+set {\bf chunk} to 2 and set {\bf dyn} and {\bf reverse} to False. 
+
+In the dynamic case, at first the assignment will match the static case,
+with $P_1$ getting combinations 1 and 2, and $P_2$ being assigned 3 and
+4.  After that, though, things are unpredictable.  The manager could
+assign combinations 5 and 6 to either $P_1$ or $P_2$, depending on which
+worker finishes its initial combinations first.  It's a ``first come,
+first served'' kind of setup.  The {\bf snow} library includes a variant
+of {\bf clusterApply()} that does dynamic scheduling, named {\bf
+clusterApplyLB()} (``LB'' for ``load balance'').
+
+All this is accomplished in the code in {\bf snowapr()}, 
+
+\begin{lstlisting}
+tasks <- seq(1,ncombs,chunk)
+if (!dyn) {
+   out <- clusterApply(cls,tasks,dochunk,x,y,allcombs,chunk)
+} else {
+   out <- clusterApplyLB(cls,tasks,dochunk,x,y,allcombs,chunk)
+}
+\end{lstlisting}
+
+
+
+The {\bf snow} library itself doesn't provide a chunking
+capability.  This is easily handled on one's own, though, which we've
+done here with the line
+
+\begin{lstlisting}
+tasks <- seq(1,ncombs,chunk)
+\end{lstlisting}
+
+In the above example, {\bf tasks} will be (1,3,5,7,9).  We've written
+our code elsewhere to interpret these numbers as the starting indices
+of the various chunks.  Here are the details.
+
+In the call
+
+\begin{lstlisting}
+out <- clusterApply(cls,tasks,dochunk,x,y,allcombs,chunk)
+\end{lstlisting}
+
+{\bf tasks} will be (1,3,5,7,9), each element of which will be fed into
+the function {\bf dochunk()} by a worker.  $P_1$, as noted, will do this
+for the elements 1, 5 and 9.
+
+In particular, $P_1$ will call {\bf dochunk()} on the 1 element, i.e.
+with {\bf psetstart} set to 1:  
+
+\begin{lstlisting}
+dochunk <- function(psetstart,x,y,allcombs,chunk) {
+   ncombs <- nrow(allcombs)
+   lasttask <- min(psetstart+chunk-1,ncombs)
+   t(sapply(allcombs[psetstart:lasttask],do1pset,x,y))
+}
+\end{lstlisting}
+
+The name {\bf psetstart} is meant to evoke ``predictor set start,''
+alluding to the fact that our predictor set here starts at 1.  That set
+is (1,2), signified here by {\bf lasttask} having the value 2, computed
+in the call to {\bf min()}.  
+
+The call to {\bf sapply()} then means that each predictor set is handled
+by the function {\bf do1pset()}, so that function will be called with
+{\bf psetidx} (``predictor set index'') equal to 1, then 2.   Note that
+since the return value from {\bf do1pset()} has a vector type, the
+results of {\bf sapply()} will be arranged in columns.  Thus in the end a
+call to the matrix transpose function {\bf t()} is needed.
+
+That's quite a bit to digest!  But the end result will be that the call
+to {\bf dochunk()} with {\bf psetstart} equal to 1 will return rows 1 and
+2 of the final output seen in Section \ref{samplerun}.  Thus chunking is
+handled in this manner, in spite of the lack of a chunking capability in
+{\bf snow} itself.
+
+Back in {\bf snowapr(),} we use {\bf Reduce()} to amalgamate the results
+returned by the workers (which, as before, will be in list form):
+
+\begin{lstlisting}
+Reduce(rbind,out)
+\end{lstlisting}
+
+The function {\bf do1pset()} itself is fairly straightforward.  Note
+that one of the components of the object returned by the call to the
+regression function {\bf lm()} and then {\bf summary()} is {\bf
+adj.r.squared}, the adjusted $R^2$ value.
+
+As seen in the toy example in Section \ref{gensched}, it may be
+advantageous to schedule iterations in reverse order.  This is requested
+by setting {\bf reverse} to True.  Since iteration times are clearly
+increasing in this application, we should probably use this option.
+
+\subsection{Timing Experiments}
+
+No attempt will be made here to do an exhaustive analysis, varying all
+the factors---n, p, the scheduling methods, chunk size, number of
+processes and so on.  But let's explore a little.
+
+Here are some timings with n = 10000 and p = 20 on a 32-core machine,
+though only eight cores were used here.  As a baseline, let's see how
+long a run takes with just one core, (without using {\bf snow}.  A
+modified version of the code (not shown), yields the following:
+
+\begin{Verbatim}[fontsize=\relsize{-1}]
+> system.time(apr(x,y,3))
+   user  system elapsed
+ 35.070   0.132  35.295
+\end{Verbatim}
+
+Now let's try it on an two-process cluster:
+
+\begin{Verbatim}[fontsize=\relsize{-1}]
+> system.time(snowapr(c2,x,y,3))
+   user  system elapsed
+ 31.006   5.028  77.447
+\end{Verbatim}
+
+This is awful!  Instead of cutting the run time in half, using two
+processes actually doubled the time.  This is a great example of the
+problems that overhead can bring.
+
+Let's see if dynamic scheduling helps:
+
+\begin{Verbatim}[fontsize=\relsize{-1}]
+> system.time(snowapr(c2,x,y,3,dyn=T))
+   user  system elapsed
+ 33.370   4.844  64.543
+\end{Verbatim}
+
+A little better, but still slower than the serial version.
+Maybe chunking will help?
+
+\begin{Verbatim}[fontsize=\relsize{-1}]
+> system.time(snowapr(c2,x,y,3,dyn=T,chunk=10))
+   user  system elapsed
+  2.904   0.572  22.753
+> system.time(snowapr(c2,x,y,3,dyn=T,chunk=25))
+   user  system elapsed
+  1.340   0.240  19.677
+> system.time(snowapr(c2,x,y,3,dyn=T,chunk=50))
+   user  system elapsed
+  0.652   0.128  19.692
+\end{Verbatim}
+
+Ah!  That's more like it.  It's not quite clear from this limited
+experiment what chunk size is best, but all of the above sizes worked
+well.
+
+How about an eight-process cluster?
+
+\begin{Verbatim}[fontsize=\relsize{-1}]
+> system.time(snowapr(c8,x,y,3,dyn=T))
+   user  system elapsed
+ 33.538   5.193  39.810
+> system.time(snowapr(c8,x,y,3,dyn=T,chunk=10))
+   user  system elapsed
+  3.861   0.568   7.542
+> system.time(snowapr(c8,x,y,3,dyn=T,chunk=15))
+   user  system elapsed
+  2.592   0.284   6.828
+> system.time(snowapr(c8,x,y,3,dyn=T,chunk=20))
+   user  system elapsed
+  1.808   0.316   6.740
+> system.time(snowapr(c8,x,y,3,dyn=T,chunk=25))
+   user  system elapsed
+  1.452   0.232   7.082
+\end{Verbatim}
+
+This is approximately a five-fold speedup over the serial version, very
+nice.  Of course, theoretically we might hope for an eight-fold speedup,
+since we have eight processes, but overhead prevents that.
+
+By the way, in thinking about the chunk size, it might be useful to
+check how many predictor sets we need to do in all:
+
+\begin{Verbatim}[fontsize=\relsize{-1}]
+> length(genallcombs(20,3))
+[1] 1350
+\end{Verbatim}
+
+\section{All Possible Regressions, Improved Version}
+\label{improvedversion}
+
+We did get good speedups above from parallelization, but at the same
+time we should have some nagging doubts.  After all, we are doing an
+awful lot of duplicate work.
+
+If you have background in the mathematics of linear models (don't worry
+about this if you don't), you know that the vector of estimated
+regression coefficients is calculated as
+
+\begin{equation}
+\widehat{\beta} = (X'X)^{-1} X'Y
+\end{equation}
+
+where $X$ is the matrix of predictor data (one column per predictor), $Y$ is
+the vector of response observed variable values, and the prime symbol
+means matrix transpose.  In each of the calls to {\bf lm()}, we are
+redoing part of this computation.
+
+In particular, Look at the quantity $X'X$.  For each set of predictors
+we use, we are forming this product for a different set of columns of X.
+Why not just do it once for all of X?  
+
+For example, say we are currently working with the predictor set
+(2,3,4).  Let $\tilde{X}$ denote the analog of $X$ for this set.  Then
+it can be shown that $\tilde{X}' \tilde{X}$ is equal to the 3x3
+submatrix of $X'X$ corresponding to rows 2-4 and columns 2-4.
+
+So it makes sense to calculate $X'X$ once and for all, and then extract
+submatrices as needed.  Moreover, it makes sense to do this in parallel.
+The following code takes this approach, computing $X'Y$ in parallel as
+well.
+
+\subsection{Code}
+
+\begin{lstlisting}[numbers=left]
+# regresses response variable Y column against 
+# all possible subsets of the Xi predictor variables, 
+# with subset size up through k; returns the
+# adjusted R-squared value for each subset
+
+# this version computes X'X and X'Y first
+
+# scheduling methods:
+#
+#   static (clusterApply())
+#   dynamic (clusterApplyLB())
+#   reverse the order of the tasks
+#   varying chunk size (in dynamic case)
+
+# arguments:
+#    cls:  cluster
+#    x:  matrix of predictors, one per column
+#    y:  vector of the response variable
+#    k:  max size of predictor set
+#    reverse:  True means reverse the order of the iterations
+#    dyn:  True means dynamic scheduling
+#    chunk:  chunk size 
+# return value:
+#    R matrix, showing adjusted R-squared values, 
+#    indexed by predictor set
+
+snowapr1 <- function(cls,x,y,k,reverse=F,dyn=F,chunk=1) {
+   # add 1s column, since ls.fit() doesn't assume it
+   x <- cbind(1,x)
+   xpx <- crossprod(x,x)
+   xpy <- crossprod(x,y)
+   p <- ncol(x) - 1
+   # generate matrix of predictor subsets
+   allcombs <- genallcombs(p,k)
+   ncombs <- length(allcombs)
+   clusterExport(cls,"do1pset1")
+   clusterExport(cls,"linregadjr2")
+   # set up task indices 
+   tasks <- if (!reverse) seq(1,ncombs,chunk) else 
+      seq(ncombs,1,-chunk) 
+   if (!dyn) {
+      out <- clusterApply(cls,tasks,dochunk1,
+         x,y,xpx,xpy,allcombs,chunk)
+   } else {
+      out <- clusterApplyLB(cls,tasks,dochunk1,
+         x,y,xpx,xpy,allcombs,chunk)
+   }
+   Reduce(rbind,out)
+}
+
+# generate all nonempty subsets of 1..p of size <= k; 
+# returns a list, one element per predictor set
+genallcombs <- function(p,k) {
+   allcombs <- list()
+   for (i in 1:k) {
+      tmp <- combn(1:p,i)
+      allcombs <- c(allcombs,matrixtolist(tmp,rc=2))
+   }
+   allcombs
+}
+
+# extracts rows (rc=1) or columns (rc=2) of a matrix, producing a list
+matrixtolist <- function(rc,m) {
+   if (rc == 1) {
+      Map(function(rownum) m[rownum,],1:nrow(m))
+   } else Map(function(colnum) m[,colnum],1:ncol(m))
+}
+
+# process all the predictor sets in the chunk 
+# whose first index is psetstart
+dochunk1 <- function(psetstart,x,y,xpx,xpy,allcombs,chunk) {
+   ncombs <- length(allcombs)
+   lasttask <- min(psetstart+chunk-1,ncombs)
+   t(sapply(allcombs[psetstart:lasttask],do1pset1,x,y,xpx,xpy))
+}
+
+# find the adjusted R-squared values for the given 
+# predictor set index
+do1pset1 <- function(onepset,x,y,xpx,xpy) {
+   ps <- c(1,onepset+1)  # account for constant term
+   x1 <- x[,ps]
+   xpx1 <- xpx[ps,ps]
+   xpy1 <- xpy[ps]
+   ar2 <- linregadjr2(x1,y,xpx1,xpy1)
+   n0s <- ncol(x) - length(ps)
+   # form the report for this predictor set; need trailngs 0s so as to
+   # form matrices of uniform numbers of rows, to use rbind() in
+   # snowapr()
+   c(ar2,onepset,rep(0,n0s))
+}
+
+linregadjr2 <- function(x,y,xpx,xpy) {
+   bhat <- solve(xpx,xpy)
+   resids <- y - x %*% bhat
+   r2 <- 1 - sum(resids^2)/sum((y-mean(y))^2)
+   n <-nrow(x); p <- ncol(x) - 1
+   1 - (1-r2) * (n-1) / (n-p-1)
+}
+
+# predictor set seems best
+test <- function(cls,n,p,k,chunk=1,dyn=F,rvrs=F) {
+   gendata(n,p)
+   snowapr1(cls,x,y,k,rvrs,dyn,chunk)
+}
+
+gendata <- function(n,p) {
+   x <<- matrix(rnorm(n*p),ncol=p)
+   y <<- x%*%c(rep(0.5,p)) + rnorm(n)
+}
+
+\end{lstlisting}
+
+\subsection{Code Analysis}
+
+One point that should be mentioned is that typically regression models
+include a constant term, i.e. the $\beta_0$ in the model
+
+\begin{equation}
+\textrm{mean response} = \beta_0 + \beta_1 \textrm{ predictor1} +
+\beta_2 \textrm{ predictor2} + ...
+\end{equation}
+
+To accommodate this, the math underpinnings of regression require that a
+column of 1s prepended to the $X$ matrix.  This is done via the line
+
+\begin{lstlisting}
+x <- cbind(1,x)
+\end{lstlisting}
+
+in {\bf snowapr1()}.  Our predictor set indices, e.g. (2,3,4) above,
+must then be shifted accordingly in {\bf do1pset()}, now named {\bf
+do1pset1()} in this new code.  
+
+\begin{lstlisting}
+ps <- c(1,onepset+1)  # account for constant term
+\end{lstlisting}
+
+Note that R's {\bf crossprod()} function is used.  Called on matrices
+$A$ and $B$, it computes $A'B$.
+
+The function {\bf linregadjr2()} computes adjusted $R^2$ from the
+mathematical definition.
+
+\subsection{Timings}
+
+Let's run {\bf snowapr1()} in the same settings we did earlier for {\bf
+snowapr}().  Again, this is for n = 10000, p = 20, all with {\bf dyn =
+T}, {\bf reverse = F} on an eight-node cluster.
+
+\begin{tabular}{|r|r|r|}
+\hline
+{\bf chunk} & {\bf snowapr()} & {\bf snowapr1()} \\ \hline 
+1 & 39.81 & 63.67 \\ \hline 
+10 & 7.54 & 6.16 \\ \hline 
+15 & 6.83 & 4.60 \\ \hline 
+20 & 6.74 & 3.39 \\ \hline 
+25 & 7.08 & 3.13 \\ \hline 
+\end{tabular}
+
+Aside from an odd increase in the nonchunked case, there was a marked
+improvement.  But there's more:  Since the times still seemed to be
+decreasing at {\bf chunk = 25}, I tried some larger sizes:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> system.time(snowapr1(c8,x,y,3,dyn=T,chunk=50))
+   user  system elapsed
+  1.260   0.080   1.632
+> system.time(snowapr1(c8,x,y,3,dyn=T,chunk=75))
+   user  system elapsed
+  0.804   0.056   1.026
+> system.time(snowapr1(c8,x,y,3,dyn=T,chunk=150))
+   user  system elapsed
+  0.432   0.020   0.726
+> system.time(snowapr1(c8,x,y,3,dyn=T,chunk=200))
+   user  system elapsed
+  0.256   0.032   0.633
+> system.time(snowapr1(c8,x,y,3,dyn=T,chunk=350))
+   user  system elapsed
+  0.112   0.020   0.683
+> system.time(snowapr1(c8,x,y,3,dyn=T,chunk=500))
+   user  system elapsed
+  0.060   0.028   0.831
+\end{Verbatim}
+
+So not only did it help to precompute $X'X$ and $X'Y$ in terms of
+improving corresponding earlier times, it also enables much better
+exploitation of chunking.
+
+The reader might wonder whether it would pay to parallelize those
+computations, i.e. of  $X'X$ and $X'Y$.  The answer is no for the
+problem sizes seen above; the time for serial computation of those two
+matrices is already quite small, so overhead would produce a net loss of
+speed.  However, it may be worthwhile on much larger problems.
+
+% \subsection{Further Improvement}
+% \label{furtherimprovement}
+% 
+% Recall that the above improvement consisted of computing the matrices
+% $X'X$ and $X'Y$ first, before farming out parallel tasks to the worker
+% processes.  That avoided doing a lot of duplicate computation across
+% predictor sets.  However, there was still duplication, because those two
+% matrices had to be shipped to the workers {\it every time} we assigned 
+% tasks:
+% 
+% \begin{lstlisting}
+% out <- clusterApply(cls,tasks,dochunk1 x,y,xpx,xpy,allcombs,chunk)
+% \end{lstlisting}
+% 
+% Remember, the default communication mechanism in {\bf snow} is to use
+% network sockets.  Even though our timing experiments were on a multicore
+% machine, so our ``network'' communication was actually within the same
+% machine, it does take time.  
+% 
+% In fact, shipping the two matrices to the works adds even more overhead.
+% The {\bf snow} library {\it serializes} communication, meaning that a
+% process converts binary data to text before sending, with the receiver
+% converting back to binary upon receptionr. the serialize/unserialize
+% operations take time too.
+% 
+% One way around this problem would be to use {\bf snow}'s {\bf
+% clusterExport()} to send the variables {\bf xpx} and {\bf xpy} to the
+% workers beforehand.  The function {\bf dochunk1()} would then access
+% these quantities as global variables instead of as function parameters.
+
+%\section{Some Analytical Evaluation of the reverse = T Option}
+%
+%T% he option {\bf reverse = T} did not help in the above timings (results
+%n% ot shown).  However, it did produce a speedup in some other case.  Here
+%a% re a couple of timings with n = 10000 and p = 15:
+%
+%\% begin{Verbatim}[fontsize=\relsize{-2}]
+%>%  system.time(snowapr1(c8,x,y,6,dyn=T,chunk=150))
+ %   user  system elapsed 
+ %  4.436   0.192   5.004 
+>%  system.time(snowapr1(c8,x,y,6,dyn=T,chunk=150,reverse=T))
+ %   user  system elapsed 
+ %  2.464   0.172   3.973 
+\% end{Verbatim}
+
+I% n this section, we'll look at this issue a little more analytically.
+N% ote that we will not be developing general guidelines on setting the
+s% cheduling parameters---which would be difficult---but acquiring more of
+a% n understand as to how those parameters affect performance.
+
+S% uppose that we have r processes working on m independent iterations of
+a%  loop, using dynamic scheduling with no overhead.  Motivated by the toy
+e% xample in Section \ref{gensched}, suppose the first c of the m
+i% terations take time 1 each, while the last m-c take time q $>$ 1.
+
+\section{Introducing Another Tool:  multicore}
+
+As explained in Section \ref{choice}, the {\bf parallel} library was
+formed from two contributed R packages, {\bf snow} and {\bf multicore}.
+Now that we've seen how the former workers, let's take a look at the
+latter.
+
+As the name implies, {\bf multicore} must be run on a multicore machine.
+Also, it's restricted to Unix-family operating systems, notably Linux
+and the Macintosh's OS X.  But if you have a suitable platform, {\bf
+multicore} may outperform {\bf snow}.
+
+\subsection{Source of the Performance Advantage}
+
+Attaining good performance gains often require a knowledge of the
+underlying platform.  You don't have to be an expert on operating
+systems (OSs) or hardware, but a basic high-level understanding can be
+quite valuable.
+
+Unix-family OSs include a {\it system call}, i.e. a function in the OS
+that application programmers can call as a service, named {\bf fork()}.
+This is {\it fork} as in ``fork in the road,'' rather than in ``knife
+and fork.'' The image the term is meant to evoke is that of a process
+splitting into two.
+
+What {\bf multicore} does is call the OS {\bf fork()}.  The result is
+that if you call one of the {\bf multicore} functions in the {\bf
+parallel} package, you will now have {\it two} instances of R running on
+your machine!  (You can verify this with the OS' {\bf ps} command.)  
+
+In fact, you may have several instances of R running after that.  The
+default in the {\bf multicore} functions is to call {\bf fork()} as many
+times as your machine has cores.  So, if you have for instance a quad
+core machine, you will now have five instances of R running---your
+original plus four copies.
+
+This in principle should fully utilize your machine in the current
+computation---four child R processes running on four cores.  (The parent
+R process is dormant, waiting for the four children to finish.)
+
+An absolutely key point is that initially the four child R processes
+will be exact copies of the parent.  They will have the same values of
+your variables, as of the time of the forks.  To see why that is so
+important, think again of the all possible regressions example earlier
+in this chapter, specifically the improved version discussed in
+Section \ref{improvedversion}; the idea there was to limit duplicate
+computation, by determining {\bf xpx} and {\bf xpy} just once, and
+sending them to the workers.
+
+But the latter is a possible problem.  It may take quite some time to
+send large objects to the workers.  In fact, shipping the two matrices
+to the workers adds even more overhead, since as noted in Section
+\ref{dataconversion}, the {\bf snow} library serializes communication. 
+
+But with {\bf multicore}, no such action is necessary.  Because {\bf
+fork()} creates exact copies of the original R process, they all already
+have the variables {\bf xpx} and {\bf xpy}!  If those variables were to
+change, they would no longer be identical, but in this application, they
+do not change, so using {\bf multicore} should be a win.  Note that the
+same gain might be made for the variable {\bf allcombs} too.
+
+\subsection{Example:  All Possible Regressions, Using multicore}
+
+The workhorse of {\bf multicore} is {\bf mclapply()}, a parallel version
+of {\bf lapply()}.  Let's convert our previous code to use this
+function.  Since it is largely similar to {\bf snow}'s {\bf
+clusterApply()}, the changes to our previous code will be pretty
+minimal.  In fact, since there are no (explicit) clusters, our code here
+will be somewhat simpler than the {\bf snow} version.
+
+Here's the code:
+
+\begin{lstlisting}[numbers=left]
+# regresses response variable Y column against 
+# all possible subsets of the Xi predictor variables, 
+# with subset size up through k; returns the
+# adjusted R-squared value for each subset
+
+# this version computes X'X and X'Y first
+
+# scheduling methods:
+#
+#   static (clusterApply())
+#   dynamic (clusterApplyLB())
+#   reverse the order of the tasks
+#   varying chunk size (in dynamic case)
+
+# arguments:
+#    x:  matrix of predictors, one per column
+#    y:  vector of the response variable
+#    k:  max size of predictor set
+#    reverse:  True means reverse the order of the iterations
+#    dyn:  True means dynamic scheduling
+#    chunk:  chunk size 
+# return value:
+#    R matrix, showing adjusted R-squared values, 
+#    indexed by predictor set
+
+library(parallel)
+
+mcapr <- function(x,y,k,
+      reverse=F,dyn=F,chunk=1, ncores=detectCores())  {
+   # add 1s column, since ls.fit() doesn't assume it
+   x <- cbind(1,x)
+   xpx <- crossprod(x,x)
+   xpy <- crossprod(x,y)
+   p <- ncol(x) - 1
+   # generate matrix of predictor subsets
+   allcombs <- genallcombs(p,k)
+   ncombs <- length(allcombs)
+   # set up task indices 
+   tasks <- if (!reverse) seq(1,ncombs,chunk) else 
+      seq(ncombs,1,-chunk) 
+   out <- mclapply(tasks,dochunk1,
+      x,y,xpx,xpy,allcombs,chunk,mc.cores=ncores,mc.preschedule=!dyn)
+   Reduce(rbind,out)
+}
+
+# generate all nonempty subsets of 1..p of size <= k; 
+# returns a list, one element per predictor set
+genallcombs <- function(p,k) {
+   allcombs <- list()
+   for (i in 1:k) {
+      tmp <- combn(1:p,i)
+      allcombs <- c(allcombs,matrixtolist(tmp,rc=2))
+   }
+   allcombs
+}
+
+# extracts rows (rc=1) or columns (rc=2) of a matrix, producing a list
+matrixtolist <- function(rc,m) {
+   if (rc == 1) {
+      Map(function(rownum) m[rownum,],1:nrow(m))
+   } else Map(function(colnum) m[,colnum],1:ncol(m))
+}
+
+# process all the predictor sets in the chunk 
+# whose first index is psetstart
+dochunk1 <- function(psetstart,x,y,xpx,xpy,allcombs,chunk) {
+   ncombs <- length(allcombs)
+   lasttask <- min(psetstart+chunk-1,ncombs)
+   t(sapply(allcombs[psetstart:lasttask],do1pset1,x,y,xpx,xpy))
+}
+
+# find the adjusted R-squared values for the given 
+# predictor set index
+do1pset1 <- function(onepset,x,y,xpx,xpy) {
+   ps <- c(1,onepset+1)  # account for constant term
+   x1 <- x[,ps]
+   xpx1 <- xpx[ps,ps]
+   xpy1 <- xpy[ps]
+   ar2 <- linregadjr2(x1,y,xpx1,xpy1)
+   n0s <- ncol(x) - length(ps)
+   # form the report for this predictor set; need trailngs 0s so as to
+   # form matrices of uniform numbers of rows, to use rbind() in
+   # snowapr()
+   c(ar2,onepset,rep(0,n0s))
+}
+
+linregadjr2 <- function(x,y,xpx,xpy) {
+   bhat <- solve(xpx,xpy)
+   resids <- y - x %*% bhat
+   r2 <- 1 - sum(resids^2)/sum((y-mean(y))^2)
+   n <-nrow(x); p <- ncol(x) - 1
+   1 - (1-r2) * (n-1) / (n-p-1)
+}
+
+gendata <- function(n,p) {
+   x <<- matrix(rnorm(n*p),ncol=p)
+   y <<- x%*%c(rep(0.5,p)) + rnorm(n)
+}
+
+\end{lstlisting}
+
+As noted, the changes from the {\bf snow} version are pretty small.
+References to clusters are gone; we no longer pass {\bf xpx} and {\bf
+xpy} as parameters; and we no longer export the functions {\bf
+do1pset1()} and {\bf linregadjr2()} to the workers, again because the
+workers already have them!  The calls to {\bf clusterApply()} have been
+replaced by {\bf mclapply()}.
+
+We do need to somehow specify the number of cores to use, though.  The
+{\bf parallel} library includes a function {\bf detectCores()} that
+senses the number of cores in the machine we're running.  Here,
+
+\begin{lstlisting}
+mcapr <- function(x,y,k,
+      reverse=F,dyn=F,chunk=1, ncores=detectCores())  {
+\end{lstlisting}
+
+we've made the default number of cores to use.  As discussed in Chapter
+\ref{chap:perfgen}, it may be advantageous to use either fewer or more cores
+than this, but it's a reasonable default.
+
+Let's look at the calls to {\bf mclapply()};
+
+\begin{lstlisting}
+out <- mclapply(tasks,dochunk1,
+   x,y,xpx,xpy,allcombs,chunk,mc.cores=ncores,mc.preschedule=!dyn)
+\end{lstlisting}
+
+The call format (at least as used here) is almost identical to that of
+{\bf clusterApply()}, with the main difference being that we
+specify the number of cores rather than specifying a cluster.
+
+As with {\bf snow}, {\bf multicore} offers both static and dynamic
+scheduling, by setting the {\bf mc.preschedule} parameter to either True
+or False, respectively.  (The default is True.)  Thus here we simply set 
+{\bf mc.preschedule} to the opposite of {\bf dyn}.
+
+In that static case, {\bf multicore} assigns loop iterations to the
+cores in a Round Robin manner as with {\bf clusterApply()}.
+
+For dynamic scheduling, {\bf mclapply()} initially creates a number of R
+child processes equal to the specified number of cores; each one will
+handle one iteration.  Then, whenever a child process returns its result
+to the original R process, the latter creates a new child, to handle
+another iteration.
+
+{\bf Timings:}
+
+So, does it work well?  Let's try it on a slightly larger problem than
+before---using eight cores again, same n and p, but with k = 5 instead
+of k = 3.
+
+Here are the better times found in runs of the improved {\bf snow}
+version we developed earlier:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> system.time(snowapr1(c8,x,y,5,dyn=T,chunk=300))
+   user  system elapsed
+  7.561   0.368   8.398
+> system.time(snowapr1(c8,x,y,5,dyn=T,chunk=450))
+   user  system elapsed
+  5.420   0.228   7.175
+> system.time(snowapr1(c8,x,y,5,dyn=T,chunk=600))
+   user  system elapsed
+  3.696   0.124   6.677
+> system.time(snowapr1(c8,x,y,5,dyn=T,chunk=800))
+   user  system elapsed
+  2.984   0.124   6.544
+> system.time(snowapr1(c8,x,y,5,dyn=T,chunk=1000))
+   user  system elapsed 
+  2.505   0.092   6.441
+> system.time(snowapr1(c8,x,y,5,dyn=T,chunk=1200))
+   user  system elapsed 
+  2.248   0.072   7.218
+\end{Verbatim}
+
+Compare to these results for the {\bf multicore} version:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> system.time(mcapr(x,y,5,dyn=T,chunk=50,ncores=8))
+   user  system elapsed
+ 35.186  14.777   7.259
+> system.time(mcapr(x,y,5,dyn=T,chunk=75,ncores=8))
+   user  system elapsed
+ 36.546  15.349   7.236
+> system.time(mcapr(x,y,5,dyn=T,chunk=100,ncores=8))
+   user  system elapsed
+ 37.218   9.949   6.606
+> system.time(mcapr(x,y,5,dyn=T,chunk=125,ncores=8))
+   user  system elapsed
+ 38.871   9.572   6.675
+> system.time(mcapr(x,y,5,dyn=T,chunk=150,ncores=8))
+   user  system elapsed
+ 34.458   8.012   5.843
+> system.time(mcapr(x,y,5,dyn=T,chunk=175,ncores=8))
+   user  system elapsed
+ 34.754   5.936   5.716
+> system.time(mcapr(x,y,5,dyn=T,chunk=200,ncores=8))
+   user  system elapsed
+ 39.834   7.389   6.440
+\end{Verbatim}
+
+There are two points worth noting here.  First, of course, we see that
+{\bf multicore} did better, by about 10\%.
+
+But also note that the {\bf snow} version required much larger chunk
+sizes in order to do well.  This should make sense, recalling the fact
+that  the whole point of chunking is to amortize the overhead.  Since
+the {\bf snow} version has more overhead, it needs a larger chunk size
+to get good performance.
+
+\section{Issues with Chunk Size}
+
+We've seen here that program performance can be quite sensitive to the
+chunk size.  So, how does one choose that value?
+
+Data science is full of such vexing questions.  Indeed, the example used
+earlier, in which we computed all possible regressions, was motivated by
+such a question:  How do we choose the predictor set?  That question has
+never been fully settled, despite a plethora of methods that have been
+developed.  The situation for the chunk size is actually worse, since
+there are not even methods proposed to deal with the problem.
+
+In many applications, one must handle a sequence of problems, not just
+one.  In such cases, one can determine a good chunk size via
+experimentation on the first one or two problems, and then use that
+chunk size from that point onward.
+
+Note too that we have not tried the approach of using time-varying chunk
+size, mentioned briefly early in this chapter.  Recall that the idea is
+to start out with large chunks for the early iterations, to reduce
+overhead, but then use smaller chunks near the end, to achieve better
+load balance.
+
+You may wonder if this is even possible in {\bf snow} or {\bf
+multicore}.  In fact, it is.  Recall that we could achive chunking with
+those two libraries, even though neither offered chunking as an option;
+we simply had to code things properly.
+
+Consider this simple example:  We have 20 iterations and two processes.
+We could, say, define our chunks to consist of iterations 1-7,
+iterations 8-14, iterations 15-17 and iterations 18-20.  In other words,
+we would have chunks of size 7, 7, 3 and 3.  
+
+Then we would make adjustments to the code accordingly.  For instance,
+in the code
+
+\begin{lstlisting}
+out <- mclapply(tasks,dochunk1,
+   x,y,xpx,xpy,allcombs,chunk,mc.cores=ncores,mc.preschedule=!dyn)
+\end{lstlisting}
+
+the variable {\bf chunk} would not become a vector, e.g. the vector
+c(7,7,3,3) in the little example above.
+
+So, we could indeed have time-varying chunk size, though at the expense
+of more complex coding.
+
+\section{Example:  Parallel Distance Computation}
+
+Say we have two data sets, with m and n observations, respectively.
+There are a number of applications in which we need to compute the mn
+pairs of distances between observations in one set and observations in
+the other.  (The two data sets will be assumed separate from each other
+here, but the code could be adjusted if the sets are the same.)
+
+Many clustering algoriths make use of distances, for example.  Another
+example is that of kernel-base nonparametric regression, to be
+illustrated later.  First, let's see how to parallelize this
+computation.
+
+\subsection{The Code}
+
+\begin{lstlisting}
+# finds distances between all possible pairs of rows in the matrix x and
+# rows in the matrix y, as with pdist() but in parallel
+
+# arguments:
+#    cls:  cluster
+#    x:  data matrix 
+#    y:  data matrix 
+#    dyn:  True means dynamic scheduling
+#    chunk:  chunk size 
+# return value:
+#    full distance matrix
+
+library(parallel)
+library(pdist)
+
+snowpdist <- function(cls,x,y,dyn=F,chunk=1) {
+   nx <- nrow(x)
+   ichunks <- npart(nx,chunk)
+   dists <- 
+      if (!dyn) { clusterApply(cls,ichunks,dochunk,x,y) 
+      } else clusterApplyLB(cls,ichunks,dochunk,x,y) 
+   tmp <- Reduce(c,dists)
+   new("pdist", dist = tmp, n = nrow(x), p = nrow(y))
+}
+
+# process all rows in ichunk 
+dochunk <- function(ichunk,x,y
+) { require(pdist)
+   nx <- nrow(x)
+   pdist(x[ichunk,],y)@dist
+}
+
+# partition 1:m into chunks of approx. size chunk
+npart <- function(m,chunk) {
+   require(parallel)
+   splitIndices(m,ceiling(m/chunk))
+}
+
+gendata <- function(n,k) {
+   x <<- matrix(sample(0:1,n*k,replace=T),ncol=k)
+}
+\end{lstlisting}
+
+Let's see how this code works.
+
+First, it builds upon the {\bf pdist} library, available from R's CRAN
+repository of contributed code.  The function {\bf pdist()}, which in
+turn calls {\bf Rpdist()}, written in C.  Once again, we are heeding the
+advice in Section \ref{keypoint}.
+
+The basic approach is simple:  We break the matrix {\bf x} into chunks,
+then find the distances from rows in each chunk to {\bf y}, calling {\bf
+pdist()} to do the latter.  However, we have some details to attend to
+in combining the results.
+
+The {\bf pdist} library defines an S4 class of the same name, the core
+of which is the distance matrix.  Here is an example of such a matrix:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> x
+     [,1] [,2]
+[1,]    2    5
+[2,]    4    3
+> y
+     [,1] [,2]
+[1,]    1    4
+[2,]    3    1
+\end{Verbatim}
+
+The distance matrix for these two data sets is
+
+\begin{equation}
+\left (
+\begin{array}{rr}
+1.414214 & 4.123106 \\
+3.162278 & 2.236068 \\
+\end{array}
+\right )
+\end{equation}
+
+The distance from row 1 of {\bf x} to row 1 of {\bf y} is $\sqrt{(1-2)^2
++ (4-5)^2} = 1.414214$, while the distance from row 1 of {\bf x} to row
+2 of {\bf y} is $\sqrt{(3-2)^2 + (1-5)^2} = 4.123106$.  These numbers
+form row 1 of the distance matrix, and row 2 is formed similarly.
+
+The function {\bf pdist()} computes the distance matrix, returning it as
+the {\bf dist} slot in an object of the class {\bf pdist}:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> pdist(x,y)
+An object of class "pdist"
+Slot "dist":
+[1] 1.414214 4.123106 3.162278 2.236068
+attr(,"Csingle")
+[1] TRUE
+
+Slot "n":
+[1] 2
+
+Slot "p":
+[1] 2
+
+Slot ".S3Class":
+[1] "pdist"
+\end{Verbatim}
+
+Note that the distance matrix is given as a one-dimensional vector,
+stringing all the rows together.  You can convert it to a matrix if you
+wish:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> d <- pdist(x,y)
+> as.matrix(d)
+         [,1]     [,2]
+[1,] 1.414214 4.123106
+[2,] 3.162278 2.236068
+\end{Verbatim}
+
+Beware, though, of doing this on matrices of the size we are talking
+about in a parallel processing context:
+

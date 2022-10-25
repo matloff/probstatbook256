@@ -1,0 +1,100 @@
+\documentclass{article}
+
+\setlength{\oddsidemargin}{-0.5in}
+\setlength{\evensidemargin}{-0.5in}
+\setlength{\topmargin}{0.0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{0.05in}
+\setlength{\columnseprule}{0.3pt}
+\usepackage{fancyvrb}
+\usepackage{hyperref}
+
+\usepackage{listings,relsize}
+
+\begin{document}
+
+\lstset{language=R,basicstyle=\smaller}
+
+{\bf 1.}  Let L denote the number of students who sit on the left, so
+that the probability in question is P(L $>$ 0.6N).
+
+\begin{itemize}
+
+\item [(a)] The conditional distribution of L given N is binomial with
+parameters N and 0.5, so use the binomial pmf.  Then follow the method
+on p.50 for the approximate case.
+
+\item [(b)] Break things down according to N:
+
+\begin{eqnarray}
+P(L > 0.6N) &=& \sum_{i=0}^{\infty} P(L > 0.6N \textrm{ and } N = i) \\ 
+&=& \sum_{i=0}^{\infty} P(L > 0.6i) \cdot P(N = i) \\ 
+\end{eqnarray}
+
+Then plug in the binomial and Poisson pmfs.
+
+\end{itemize}
+
+{\bf 2.}  Take the matrix A to have (-1,1,0,0,0) in the first row,
+(0,-1,1,0,0) in the second, etc.
+
+{\bf 3.}  For a geometrically distributed random variable M with parameter
+p, we have 
+
+\begin{equation}
+P(M > i) = P(\textrm{first i trials are failures}) = (1-p)^i 
+\end{equation}
+
+So, we hope to show that $q_i$ has that form.  Show first that $q_2$ has
+that form, then show that $q_3$ does etc. to see the pattern.  Extra
+Credit:  Formalize using math induction.
+
+{\bf A.}  Note that this is ``event-oriented'' DES.  Here are the main
+points:
+
+\begin{itemize}
+
+\item Set up event types for passenger arrival, bus arrival (specifying
+the stop), and speed change.  
+
+\item Each stop needs its own arrivals stream.  
+
+\item Set up variables for:
+
+   \begin{itemize}
+
+   \item the current speed and position of the bus
+
+   \item the number of passengers currently on the bus and their destinations
+
+   \item the number of passengers currently waiting at each stop
+
+   \end{itemize}
+
+\end{itemize}
+
+Dealing with events:
+
+\begin{itemize}
+
+\item Passenger arrival:  Increment the count of those waiting at that
+stop.  Schedule the next arrival.
+
+\item Bus arrival:  Any passengers whose destination is this stop will
+alight.  Then as many as possible will board.  Update count of number
+waiting, number on the bus, and the destinations of those on the bus.
+Generate the next bus-arrival event (at the next stop).
+
+\item Speed change:  Generate new speed.  Recompute the time of the
+scheduled bus-arrival event for the next stop.  This most conveniently
+done by removing that event from the event list and then reinserting it
+with the new time.  Also schedule the time of the next speed change.
+
+\end{itemize}
+
+\end{document}
+

@@ -1,0 +1,46 @@
+\documentclass[11pt]{book}
+
+\include{Includes/Includes}
+
+\begin{document} 
+
+\thispagestyle{empty}
+\input Cover 
+\newpage
+\pagecolor{white}
+\color{black}
+
+\input ../../MiscPLN/AuthorBio 
+
+\frontmatter
+\tableofcontents
+\include{Preface}
+
+\mainmatter
+\input Intro
+\input ProbCalc
+\input DiscreteProb
+\input DisMarkovIntro
+\input ContinProb
+\input NormalFamily
+\input ExponDistr
+\input StopAndReview
+% \input Queues
+\input RandVecs
+\input StatPrologue
+\input ConfInts
+\input SigTests
+\input Est
+\input NonparDens
+\input SimultanInfer
+\input LinReg
+\input Class
+\input NonparRegClass
+
+\appendix
+\input ../../MiscPLN/R5MinIntro
+\input ../../MiscPLN/MatrixReview
+\input GGPlot2Intro
+
+\end{document}
+

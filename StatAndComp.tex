@@ -1,0 +1,415 @@
+%%%%%%%%%%%%%%%%%%%%%%% file template.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is a general template file for the LaTeX package SVJour3
+% for Springer journals.          Springer Heidelberg 2006/03/15
+%
+% Copy it to a new file with a new name and use it as the basis
+% for your article. Delete % signs as needed.
+%
+% This template includes a few options for different layouts and
+% content for various journals. Please consult a previous issue of
+% your journal as needed.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% First comes an example EPS file -- just ignore it and
+% proceed on the \documentclass line
+% your LaTeX will extract the file if required
+\begin{filecontents*}{example.eps}
+%!PS-Adobe-3.0 EPSF-3.0
+%%BoundingBox: 19 19 221 221
+%%CreationDate: Mon Sep 29 1997
+%%Creator: programmed by hand (JK)
+%%EndComments
+gsave
+newpath
+  20 20 moveto
+  20 220 lineto
+  220 220 lineto
+  220 20 lineto
+closepath
+2 setlinewidth
+gsave
+  .4 setgray fill
+grestore
+stroke
+grestore
+\end{filecontents*}
+%
+% \documentclass{svjour3}                     % onecolumn (standard format)
+%\documentclass[smallextended]{svjour3}     % onecolumn (second format)
+\documentclass[twocolumn]{svjour3}         % twocolumn
+
+\smartqed  % flush right qed marks, e.g. at end of proof
+
+\usepackage{graphicx}
+
+\usepackage{mathptmx}      % use Times fonts if available on your TeX system
+
+% insert here the call for the packages your document requires
+%\usepackage{latexsym}
+% etc.
+%
+% please place your own definitions here and don't use \def but
+% \newcommand{}{}
+
+% Insert the name of "your journal" with
+\journalname{Statistics and Computing}
+
+\begin{document}
+
+\title{Efficiency of Chunked Estimates in Cloud Computing}
+% \subtitle{Do you have a subtitle?\\ If so, write it here}
+
+%\titlerunning{Short form of title}        % if too long for running head
+
+\author{Norman Matloff}
+
+%\authorrunning{Short form of author list} % if too long for running head
+
+\institute{N. Matloff \at
+              Dept. of Computer Science \\
+              University of California, Davis  95616 \\
+              USA \\
+              Tel.: +1-530-752-1953 \\
+              \email{matloff@cs.ucdavis.edu}           
+}
+
+% \date{Received: date / Accepted: date}
+% The correct dates will be entered by the editor
+
+\maketitle
+
+\begin{abstract}
+The widespread use of distributed computing, especially in the emerging
+technology of cloud computing, enables a form of parallel computation of
+statistical estimators based on very large, distributed data sets.
+However, slowdown due to network bandwidth limitations may exceed the
+speedup accrued from parallel computation.  Accordingly, one may
+consider computing the estimators individually at each network node, and
+then averaging the individual (``chunked'') estimates to produce an 
+overall estimator.  This paper investigates the effectiveness of such 
+an approach, compared to the estimators produced from the full data.
+
+\keywords{Distributed computing\and cloud computing \and asympototically
+normal estimators}
+% \PACS{PACS code1 \and PACS code2 \and more}
+% \subclass{MSC code1 \and MSC code2 \and more}
+\end{abstract}
+
+\section{Introduction}
+\label{intro}
+
+Suppose we have i.i.d. data $W_{ij}, i = 1,r, j = 1,...,k$, in r
+chunks of size k, which will be used to estimate a population quantity
+$\theta$.  When there is no risk of ambiguity, a one-dimensional
+relabeling will be used, with the data written as $W_s, s = 1,...,n$,
+where $n = rk$ and the correspondence mapping is $s = (i-1)k+j$.  Here
+both the $W_{ij}$ and $\theta$ are possibly vector-valued.
+
+Consider two estimators of $\theta$, both defined via a family of
+functions $b_d(t_1,...,t_d)$, d = 1,2,...:
+
+\begin{equation}
+\widehat{\theta} = b_n(W_1,...,W_n)
+\end{equation}
+
+\begin{equation}
+\label{chunked}
+\overline{\theta} = \frac{1}{r} 
+\sum_{i=1}^r
+\tilde{\theta}_{ik}
+= \frac{1}{r} 
+\sum_{i=1}^r
+\left [ b_k(W_{i1},...,W_{ik}) \right ]
+\end{equation}
+
+The estimator $\overline{\theta}$ may be attractive in distributed
+computing settings.  If one's data set is extremely large and is widely
+dispersed geographically, transmitting the data over the network might
+take hours or even days.  Computation of $\overline{\theta}$ instead of
+$\widehat{\theta}$ would use far less network bandwidth, as only means
+would be transmitted, rather than large data sets.
+
+I first became interested in this problem while attending a talk by
+Nagiza Samatova in 2007.  The speaker was working with enormous, very
+dispersed data sets, computing principal components and so on.  She
+lamented that due to size of the data and network delay, computation was
+extremely slow.  I suggested computing the principal components at each
+node, and then averaging all the per-node estimates, as with
+$\overline{\theta}$ above.
+
+Recently this problem has arisen again, in a more widely-used context,
+that of cloud computing.  A package for the R statistical language,
+RHIPE, has been developed by S. Guha for chunked computation in cloud
+computing environments.
+
+Let's call the scheme in (\ref{chunked}) {\it chunked} estimation,
+reflecting the fact that an estimator is calculated on each of many
+chunks of data, with the chunked estimates then being averaged to form
+an estimate based on the full data set.
+
+A chunked scheme was also considered for the special case of linear
+regression with one predictor, in (Fan, 2007).  The authors there
+allowed the the chunk averaging to be weighted, and derived the optimal
+weights.  They also showed that certain statistics would be
+t-distributed.
+
+A natural question to ask is how effective chunked estimators are
+compared to their nonchunked counterparts.  This paper will address this
+question, with its central result being that  chunked estimators are
+asymptotically efficient.  The paper will then analyze the finite-sample
+behavior of chunked estimators in multiple linear regression settings,
+and finally will present the results of simulation experiments that
+further explore the finite-sample properties of chunking.
+
+\section{Asymptotic Behavior}
+
+Many of the widely-used parametric estimators in statistics are
+asympototically normally distributed.  This is generally true for
+estimators derived from the method of maximum likelihood, the method of
+moments, nonlinear regression, the delta method and so on.
+
+The theorem below will be motivated by cases in which $\widehat{\theta}$
+has an asympototically normal distribution, that is there is 
+some $\sigma$ for which
+
+\begin{equation}
+\label{anorm}
+\lim_{n \rightarrow \infty} P 
+\left [
+\frac
+{\sqrt{n}(\widehat{\theta} - \theta)} {\sigma}
+\leq t
+\right ] = \Phi(t)
+\end{equation}
+
+\noindent for all t, where $\Phi$ is the cdf for the N(0,1)
+distribution.  We will show that $\overline{\theta}$ does just as well,
+in the sense that $\sqrt{rk}(\overline{\theta} - \theta)/\sigma$
+converges in distribution to N(0,1), under conditions on the manner in
+which r and k go to infinity.  
+
+In (\ref{anorm}) it is customary to refer to $\sigma/\sqrt{n}$ as the
+asymptotic standard deviation of of $\widehat{\theta}$.  Though this
+does not mean that 
+
+\begin{equation}
+\label{avar}
+\lim_{n \rightarrow \infty} n Var(\widehat{\theta}) = \sigma^2
+\end{equation}
+
+\noindent
+we will assume that stronger condition in the theorem.
+
+\begin{theorem} Let $E(\tilde{\theta}_{1k}) = \mu_k$ and
+$Var(\tilde{\theta}_{1k}) = \nu_k$.  Assume that 
+
+\begin{itemize}
+
+\item [(a)]
+
+\begin{equation}
+\lim_{k \rightarrow \infty} \mu_k = \theta, 
+\end{equation}
+
+\item [(b)] 
+
+\begin{equation}
+\lim_{k \rightarrow \infty} \nu_k = \sigma^2 ~~ \textrm{and}
+\end{equation}
+
+\item [(c)]
+
+\begin{equation}
+\lim_{r,k \rightarrow \infty} \frac{k}{r} = 0. 
+\end{equation}
+
+\end{itemize}
+
+\noindent
+Then $\overline{\theta}$ and $\widehat{\theta}$ have the same asymptotic
+distribution.
+
+\end{theorem}
+
+\begin{proof}
+
+For simplicity, consider the case of scalar $\theta$.  Borrowing from
+the classic proof of the Central Limit Theorem, let's proceed as
+follows.  
+
+Let $g_k$ be the characteristic function of $\sqrt{k}
+(\tilde{\theta}_{ik} - \mu_k)$, and let $h_{rk}$ denote the
+characteristic function of $\sqrt{rk} (\overline{\theta}- \mu_k)$, where
+$\mu_k = E(\tilde{\theta}_i)$.  Then
+
+\begin{eqnarray}
+h_{rk}(t) &=&
+E \left [
+e^{it \sqrt{rk} (\overline{\theta} - \mu_k)}
+\right ] \\ 
+&=& 
+E \left [
+e^{it \sqrt{k/r} \sum_{m=1}^r (\tilde{\theta}_{mk} - \mu_k)}
+\right ] \\ 
+&=& 
+\Pi_{m=1}^r
+E \left [
+e^{it \sqrt{k/r} (\tilde{\theta}_{mk} - \mu_k)}
+\right ] \\ 
+&=& 
+\Pi_{m=1}^r
+g_k(t \sqrt{k/r}) \\
+&=& 
+\left [
+g_k(t \sqrt{k/r})
+\right ]^r
+\label{hrkeqn}
+\end{eqnarray}
+
+Since $E(\tilde{\theta}_{mk} - \mu_k) = 0$, we have $g_k'(0) = 0$.
+Also, $g_k''(0) = k Var(\tilde{\theta}_{mk}^2) = \nu_k$.  This yields the
+Taylor expansion
+
+\begin{equation}
+\label{gkeqn}
+g_k(t \sqrt{k/r})
+=
+1 - \frac{1}{2r} \cdot t^2 \nu_k + o( \frac{k}{r} \cdot t^2)
+\end{equation}
+
+Then (\ref{hrkeqn}) and (\ref{gkeqn}) imply that
+
+\begin{equation}
+\lim_{r,k \rightarrow \infty} h_{rk}(t) = e^{-0.5 \sigma^2 t^2}
+\end{equation}
+
+\noindent
+i.e. the asymptotic distribution of $\sqrt{rk} (\overline{\theta}-
+\mu_k)$ is $N(0,\sigma^2)$.
+
+Finally, let $q_{rk}$ denote the characteristic function of 
+$\sqrt{rk} (\overline{\theta} - \theta)$.  Then
+
+\begin{eqnarray}
+|h_{rk}(t) - q_{rk}(t)| \\
+&=&
+| E \left [
+e^{it \sqrt{rk} (\overline{\theta} - \mu_k)}
+\right ] -
+E \left [
+e^{it \sqrt{rk} (\overline{\theta} - \mu)}
+\right ]| \\
+&=&
+| E \left [
+e^{it \sqrt{rk} \overline{\theta}} (e^{-\mu_k} - e^{-\mu})
+\right ]| \\
+&\leq& |e^{-\mu_k} - e^{-\mu}| \rightarrow 0,
+\end{eqnarray}
+
+\noindent
+thus giving the desired result.
+
+\end{proof}
+\qed
+
+\section{Finite-Sample Behavior in the Multiple Linear Regression Case}
+
+Consider i.i.d. observations $(Y_i,X_i)$, with
+$X_i = (X_i^{(1)},...,X_i^{(p)})$, $i = 1,2,...$, for which
+
+\begin{equation}
+\label{linmodel}
+E(Y_i | X_i) = \beta_0 + \beta_1 X_i^{(1)} +...+ \beta_r X_i^{(p)}
+\end{equation}
+
+Set $Y = (Y_1,...,Y_n)'$ and let X be the matrix whose i$^{th}$ row is
+$1(,X_i^{(1)},...,X_i^{p}$.  Then in matrix terms (\ref{linmodel}) is 
+
+\begin{equation}
+E(Y | X) = X \beta
+\end{equation}
+
+\noindent
+where $\beta = (\beta_0,\beta_1,...,\beta_p)'$.
+
+To define the chunked estimator, first partition X:
+
+\begin{equation}
+X = 
+\left (
+   \begin{array}{c}
+      A_1 \\
+      ... \\
+      A_r
+   \end{array}
+\right )     
+\end{equation}
+
+\noindent
+where $A_j$ is the j$^{th}$ chunk of X, i.e. rows (j-1)k+1 through
+jk.  Break Y into chunks too: 
+
+\begin{equation}
+Y = (Z_1,...,Z_r)
+\end{equation}
+
+\noindent
+where $Z_j$ consists of elements (j-1)k+1 through jk of Y.
+
+The full estimator of $\beta$ is
+
+\begin{equation}
+\widehat{\beta} = (X'X)^{-1} X'Y
+\end{equation}
+
+\noindent
+while the (unweighted) chunked one is
+
+\begin{equation}
+\overline{\beta} = \frac{1}{r} \sum_{i=1}^r (A_i'A_i)^{-1} A_i'Z_i
+\end{equation}
+
+The Gauss-Markov Theorem shows that $\widehat{\beta}$ gives the
+minimum-variance estimate of any linear combination of $\beta$, among
+all unbiased linear combinations of Y.  The proof of the theorem can be
+modified to show that $\widehat{\beta}$ is the unique such estimator.
+Thus $\widehat{\beta}$, which is another unbiased linear combination of
+Y, must not in general attain minimum variance.
+
+Thus there are some $c = (c_0,c_1,...,c_p)$ such that
+
+\begin{equation}
+Var(c \overline{\beta}) > Var(c \widehat{\beta}) 
+\end{equation}
+
+\noindent
+In other words, in spite of the fact, established in the preceding
+section, that chunked estimators are asympototically efficient, their
+finite-sample behavior is in some linear regression cases not as good at
+that of the full estimator.
+
+% BibTeX users please use one of %\bibliographystyle{spbasic}      % basic style, author-year citations
+%\bibliographystyle{spmpsci}      % mathematics and physical sciences
+%\bibliographystyle{spphys}       % APS-like style for physics
+%\bibliography{}   % name your BibTeX data base
+
+% Non-BibTeX users please use
+\begin{thebibliography}{}
+%
+% and use \bibitem to create references. Consult the Instructions
+% for authors for reference list style.
+%
+\bibitem{RefJ}
+% Format for Journal Reference
+Author, Article title, Journal, Volume, page numbers (year)
+% Format for books
+\bibitem{RefB}
+Author, Book title, page numbers. Publisher, place (year)
+% etc
+\end{thebibliography}
+
+\end{document}
+% end of file template.tex
+

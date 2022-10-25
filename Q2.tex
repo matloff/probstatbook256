@@ -1,0 +1,109 @@
+\documentclass[twocolumn]{article}
+
+\setlength{\oddsidemargin}{-0.5in}
+\setlength{\evensidemargin}{-0.5in}
+\setlength{\topmargin}{0.0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{0.05in}
+\setlength{\columnseprule}{0.3pt}
+\usepackage{fancyvrb}
+\usepackage{relsize}
+\usepackage{hyperref}
+
+\begin{document}
+
+Name: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+Directions: {\bf Work only on this sheet} (on both sides, if needed); do not
+turn in any supplementary sheets of paper. There is actually plenty of room
+for your answers, as long as you organize yourself BEFORE starting writing.
+
+{\bf 1.} (20) Consider the output of the code on p.29.  Suppose we had a
+64-bit system.  Assuming the address of {\bf X} did not
+change, what would be the address of {\bf Y}?
+
+{\bf 2.} (20)  Consider the declaration
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+char q[8][3];
+\end{Verbatim}
+
+If {\bf q[0][2]} happens to be stored at address 0x20c, at what address
+will {\bf q[2][1]} be stored?
+
+{\bf 3.} (15) Consider the code
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+unsigned int *f,*g; char *s1 = "gr88", *s2 = "bb99";
+f = s1; g = s2;
+printf("%u\n",f-g);
+\end{Verbatim}
+
+Fill in the blank:  The number printed out will be negative if and only
+if the machine 
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_.
+
+{\bf 4.}  The function {\bf print5()} below prints out an {\bf
+unsigned int} in base-5.  So,
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+unsigned int x = 39;
+print5(x);
+\end{Verbatim}
+
+would output 124  (actually 0124, since leading 0s aren't suppressed
+here).  Assume we have 8-bit words.
+
+\begin{itemize}
+
+\item [(a)] (30) Fill in the blanks in the code:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+int print5(unsigned int x) {
+   unsigned int i,d, power5=_____________________, r=x;
+   for (i = 0; i < 4; i++) {
+      d = r / power5;
+      r = r % power5;
+      printf(________________________________);
+      power5 /= 5;
+   }
+   printf("\n");
+}
+\end{Verbatim}
+
+\item [(b)] (15) What impact, if any, did the assumption of an 8-bit word
+size have on the code?
+
+\end{itemize}
+
+{\bf Solutions:}
+
+{\bf 1.}  0xbffffb7c 
+
+{\bf 2 }  0x211
+
+{\bf 3.} is little-endian
+
+{\bf 4a}
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+int print5(int x) {
+   int i,d, power5=125, r=x;
+   for (i = 0; i < 4; i++) {
+      d = r / power5;
+      r = r % power5;
+      printf("%c",d+48);
+      power5 /= 5;
+   }
+   printf("\n");
+}
+\end{Verbatim}
+
+{\bf 4b} the initial value of {\tt power5} was 125
+
+\end{document}
+

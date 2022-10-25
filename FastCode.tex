@@ -1,0 +1,674 @@
+\chapter{Time and Space} 
+\label{chap:fastcode}
+
+{\it Space and time are not conditions in which we live; they are simply
+modes in which we think}---Albert Einstein
+
+{\it The biggest difference between time and space is that you can't
+reuse time}---Merrick Furst, Georgia Tech College of Computing
+
+In computer science curricula, a common theme is the tradeoff between
+time and space:  In order to have a fast-running program, we may have to
+use more memory space.  Or, in order to conserve memory space, we may
+need to settle for slower code.  In the R language, this tradeoff is of
+particular interest:
+
+\begin{itemize}
+
+\item R is an interpreted language.  Many of the commands are written in
+C and thus do run in fast machine code, but other commands, and of course
+your own R code, are pure R, thus interpreted.  Thus there is the risk
+that your R application may run more slowly than you need.  
+
+\item All objects in an R session are stored in memory.\footnote{More
+precisely, all objects are stored in R's memory address space.  The
+operating system may temporarily store some on disk, bringing them back
+into memory when needed, transparently to R.}  R places a limit of
+$2^{31}-1$ bytes on the size of any object, even on 64-bit machines.
+Yet some applications do encounter larger objects.
+
+\end{itemize}
+
+\noindent
+This chapter will deal with time and space issues.
+
+\section{Writing Fast R Code}
+
+What can be done to make R code faster?  Here are the main tools
+available to you:
+
+\begin{itemize}
+
+\item [(a)] Optimize your R code, through vectorization and other
+approaches.
+
+\item [(b)] Write the key, CPU-intensive parts of your code in a compiled
+language such as C/C++.
+
+\item [(c)] Write your code in some form of parallel R.
+
+\end{itemize}
+
+\noindent
+Approach (a) will be covered in this chapter, while (b) and (c) are
+covered in Chapters \ref{chap:otherlang} and \ref{chap:parr}.
+
+Optimizing R code involves the following and more:
+
+\begin{itemize}
+
+\item Vectorization. 
+
+\item Understanding R's functional programming nature, and the way R
+uses memory.
+
+\item Making use of some of R's optimized utility functions, such as
+{\tt outer()}. 
+
+\end{itemize}
+
+\section{The Dreaded for Loop}
+
+In the {\tt r-help} R discussion listserve, one often hears questions as
+to how to accomplish various tasks without loops.  There seems to be a
+feeling that one should avoid loops at all costs.  Since often those who
+pose the queries have the goal of speeding up their code, it's important
+to understand that simply rewriting code to avoid loops will not
+necessarily make the code faster.  However, in some cases dramatic
+speedup may be attained.
+
+A major source of such speedup, when it is attained, is vectorization.
+For example, if {\tt x} and {\tt y} are vectors of equal lengths, then
+writing
+
+\begin{Code}
+z <- x + y
+\end{Code}
+
+\noindent
+will be not only more compact, but also more importantly, it will be
+faster than
+
+\begin{Code}
+for (i in 1:length(x)) z[i] <- x[i] + y[i]
+\end{Code}
+
+Let's do a quick timing comparison:
+
+\begin{Code}
+> x <- runif(1000000)
+> y <- runif(1000000)
+> system.time(z <- x + y)
+   user  system elapsed 
+  0.056   0.012   0.071 
+> system.time(for (i in 1:length(x)) z[i] <- x[i] + y[i])
+   user  system elapsed 
+ 23.305   0.040  23.498 
+\end{Code}
+
+\noindent
+What a difference!  The nonloop version was over 300 times faster in
+elapsed time.  While it must be noted that timings may vary from one run
+to another---a second run of the loop version had elapsed time of
+22.958---it is clear that in some cases ``de-looping'' R code can really
+pay off.
+
+It's worth discussing some of the sources of slowdown in the loop
+version.  What may not be obvious to programmers coming to R from other
+languages is that there are numerous function calls involved here:
+
+\begin{itemize}
+
+\item Though syntactically the loop looks innocuous, {\tt for()} is in
+fact a function.
+
+\item The colon, {\tt ``:''} looks even more innocuous, but it's a function
+too.  For instance, {\tt 1:10} is actually {\tt ``:''(1,10)}.
+
+\item Likewise, each of vector subscript operations represents a
+function call, with calls to {\tt ``[''} for the two reads and to {\tt
+``\verb+[<-+''} in the case of the write.
+
+\end{itemize}
+
+\noindent
+Function calls can be time-consuming, as they involve setting up 
+stack frames and the like.  Undergoing that time penalty at every 
+iteration of the loop adds up to a big slowdown.
+
+By contrast, if we were to write this in C, there would be no function
+calls,  Indeed that is essentially what happens in our first code
+snippet above.  There are function calls there as well, namely a call to
+{\tt ``+''} and one to {\tt -}$>$, but each is called only once, not
+1000000 times as in the loop version.  Thus the first version of the
+code is much faster.
+
+One type of vectorization is vector filtering.  For instance, let's
+rewrite our function {\tt oddcount()} in Section \ref{writefun}:
+
+\begin{Code}
+> oddcount <- function(x) return(length(which(x%%2==1)))
+\end{Code}
+
+\noindent
+There is no explicit loop here, and even though R will internally loop
+through the array, this will be done in native machine code.  Again, the
+anticipated speedup does occur:
+
+\begin{Code}
+> x <- sample(1:1000000,100000,replace=T)
+> system.time(oddcount(x))
+   user  system elapsed
+  0.020   0.008   0.026
+> system.time(
++    {
++    c <- 0
++    for (i in 1:length(x))
++       if (x[i] %% 2 == 1) c <- c+1
++    return(c)
++ }
++ )
+   user  system elapsed 
+  0.368   0.000   0.368 
+\end{Code}
+
+You might wonder whether it matters in this case, since even the loop
+version of the code took much less than a second to run.  But if this
+code had been part of an enclosing loop, with many iterations, the
+difference could be quite important indeed.
+
+Examples of other vectorized function that may be useful good speedup
+are {\tt ifelse()}, {\tt which()}, {\tt where()}, {\tt any()} and {\tt
+all()}, and in the matrix case, {\tt rowSums()}, {\tt colSums()} and the
+like.  In ``all possible combinations'' types of settings, {\tt
+outer()}, {\tt lower.tri()}, {\tt upper.tri()} or {\tt expand.grid()}
+may be just what you need.
+
+Though {\tt apply()} eliminates an explicit loop, it is actually
+implemented in R rather than C, and thus will usually not speed up your
+code.  However, the other ``apply'' functions, e.g. {\tt lapply()} can
+be very helpful.
+
+\section{Extended Example:  Achieving Better Speed in Monte Carlo Simulation}
+
+In some applications, simulation code can run for hours, days or even
+months, so speedup methods are of high interest.
+
+To start, let's consider the code in Section \ref{sim}:
+
+\begin{Code}
+sum <- 0
+nreps <- 100000
+for (i in 1:nreps) {
+   xy <- rnorm(2)  # generate 2 N(0,1)s
+   sum <- sum + max(xy)
+}
+print(sum/nreps)
+\end{Code}
+
+\noindent
+Here's a revision, hopefully faster:
+
+\begin{Code}
+nreps <- 100000
+xymat <- matrix(rnorm(2*nreps),ncol=2)
+maxs <- pmax(xymat[,1],xymat[,2])
+print(mean(maxs))
+\end{Code}
+
+\noindent
+In this code, we generate all the random variates at once, storing them
+in a matrix {\tt xymat}, with one (X,Y) pair per row:
+
+\begin{Code}
+xymat <- matrix(rnorm(2*nreps),ncol=2)
+\end{Code}
+
+\noindent
+We then find all the max(X,Y) values, storing those values in {\tt
+maxs}, and then simply call {\tt mean()}.  It's easier to program, and
+we believe it will be faster.  Let's check that:
+
+\begin{Code}
+> system.time(source("MaxNorm.r"))
+[1] 0.5667599
+   user  system elapsed
+  1.700   0.004   1.722
+> system.time(source("MaxNorm2.r"))
+[1] 0.5649281
+   user  system elapsed
+  0.132   0.008   0.143
+\end{Code}
+
+\noindent
+The speedup is dramatic.  
+
+Note by the way that we achieved an increase in speed at the expense of
+using more memory, by keeping our random numbers in an array instead of
+generating and discarding them one pair at a time.  As mentioned
+earlier, the time/space tradeoff is a common one in the computing world,
+and in the R world in particular.
+
+We attained an excellent speedup in the example above, but it was
+misleadingly easy.  Let us look at a slightly more complicated example,
+though still a rather simple problem, a classical exercise from
+elementary probability courses. Urn 1 contains 10 blue marbles and eight
+yellow ones. In Urn 2 the mixture is six blue and six yellow. We draw a
+marble at random from Urn 1 and transfer it to Urn 2, and then draw a
+marble at random from Urn 2. What is the probability that that second
+marble is blue?  This quantity is easy to find analytically, but we'll
+use simulation. Here is the straightforward way:
+
+\begin{lstlisting}[numbers=left]
+# perform nreps repetitions of the marble experiment, to estimate 
+# P(pick blue from Urn 2)
+sim1 <- function(nreps)  {
+   nb1 <- 10  # 10 blue marbles in Urn 1
+   n1 <- 18  # number of marbles in Urn 1 at 1st pick
+   n2 <- 13  # number of marbles in Urn 2 at 2nd pick
+   count <- 0  # number of repetitions in which get blue from Urn 2
+   for (i in 1:nreps)  {
+      nb2 <- 6  # 6 blue marbles orig. in Urn 2
+      # pick from Urn 1 and put in Urn 2; is it blue?
+      if (runif(1) < nb1/n1) nb2 <- nb2 + 1
+      # pick from Urn 2; is it blue?
+      if (runif(1) < nb2/n2) count <- count + 1
+   }
+   return(count/nreps)  # est. P(pick blue from Urn 2)
+}
+\end{lstlisting}
+
+Here is how we can do it without loops, using {\tt apply()}:
+ 
+\begin{lstlisting}[numbers=left]
+sim2 <- function(nreps)  {
+   nb1 <- 10  
+   nb2 <- 6  
+   n1 <- 18 
+   n2 <- 13
+   # pre-generate all our random numbers, one row per repetition
+   u <- matrix(c(runif(2*nreps)),nrow=nreps,ncol=2)
+   # define simfun for use in apply(); simulates one repetition
+   simfun <- function(rw,nb1,n1,nb2,ny2,n2) {
+      # rw ("row") is a pair of random numbers
+      # choose from Urn 1
+      if (rw[1] < nb1/n1) nb2 <- nb2 + 1
+      # choose from Urn 2, and return boolean on choosing blue 
+      return (rw[2] < nb2/n2) 
+   }
+   z <- apply(u,1,simfun,nb1,n1,nb2,ny2,n2)
+   # z is a vector of booleans but they can be treated as 1s, 0s
+   return(mean(z))  
+}
+\end{lstlisting}
+
+\noindent Here we have set up a matrix {\tt u} with two columns of
+U(0,1) random variates.  The first column is used for our simulation of
+drawing from Urn 1, and the second  for the drawing from Urn 2. Our
+function {\tt simfun()} works on one repetition of the experiment, using
+random numbers in one row of {\tt u}.  We have set up the call to {\tt
+apply()} to go through all of the {\tt nreps} repetitions.  Note that a
+boolean vector will automatically be changed by R to 1s and 0s, so we
+can find the fraction of {\tt TRUEs} in the vector by simply calling
+{\tt mean()}.
+
+So, let's compare performance:
+
+\begin{Verbatim}
+> system.time(print(sim1(10000)))
+[1] 0.5086
+   user  system elapsed 
+  0.256   0.004   0.258 
+> system.time(print(sim2(10000)))
+[1] 0.5031
+   user  system elapsed 
+  0.288   0.004   0.294 
+\end{Verbatim}
+
+\noindent
+In spite of the many benefits of functional programming, this
+approach using {\tt apply()} didn't help; instead, things got worse.
+Since this could be simply due to random sampling variation, I ran the
+code several times again with much larger values of {\tt nreps}, and
+found again {\tt sim2()} does worse than {\tt sim1()}.
+
+So, let's look at vectorizing this simulation:
+
+\begin{lstlisting}[numbers=left]
+sim3 <- function(nreps)  {
+   nb1 <- 10  
+   nb2 <- 6  
+   n1 <- 18 
+   n2 <- 13
+   u <- matrix(c(runif(2*nreps)),nrow=nreps,ncol=2)
+   # set up the condition vector 
+   cndtn <- u[,1] <= nb1/n1 & u[,2] <= (nb2+1)/n2 |
+            u[,1] > nb1/n1 & u[,2] <= nb2/n2 
+   return(mean(cndtn))  
+}
+\end{lstlisting}
+
+\noindent
+The main work for this is done in the statement
+
+\begin{Code}
+cndtn <- u[,1] <= nb1/n1 & u[,2] <= (nb2+1)/n2 |
+         u[,1] > nb1/n1 & u[,2] <= nb2/n2 
+\end{Code}
+
+\noindent
+Remember, $<${\tt =} and {\tt \&} are functions, and in fact vector
+functions, so they should be fast.  Sure enough, this brings quite an 
+improvement: 
+
+\begin{Verbatim}
+> system.time(print(sim3(10000)))
+[1] 0.4987
+   user  system elapsed 
+  0.008   0.000   0.007 
+\end{Verbatim}
+
+In principle, the approach we took to speedup here could be applied to
+many other Monte Carlo simulations.  However, it's clear that the analog
+of the statement above that computes {\tt cndtn} would quickly become
+quite complex even for some seemingly simple applications.  
+
+Moreover, the approach would not work in ``infinite-stage'' situations,
+meaning an unlimited number of time steps; here we are considering the
+marble example as being two-stage, with two columns to the matrix {\tt
+u}.
+
+\section{Extended Example:  Generating a Powers Matrix}
+
+Recall in Section \ref{polyregression}, we needed to generate a matrix
+of powers of our predictor variable.  We used the code
+
+\begin{lstlisting}[numbers=left]
+# forms matrix of powers of the vector x, through degree dg
+powers1 <- function(x,dg) {
+   pw <- matrix(x,nrow=length(x))
+   prod <- x  # current product
+   for (i in 2:dg) {
+      prod <- prod * x
+      pw <- cbind(pw,prod)
+   }
+   return(pw)
+}
+\end{lstlisting}
+
+\noindent
+Here the line
+
+\begin{Code}
+prod <- prod * x
+\end{Code}
+
+\noindent
+is vectorized, so the above code should be faster than 
+
+\begin{Code}
+powers2 <- function(x,dg) {
+   pw <- matrix(x,nrow=length(x))
+   prod <- x
+   for (i in 2:dg) {
+      for (j in 1:length(x)) prod[j] <- prod[j] * x[j]
+      pw <- cbind(pw,prod)
+   }
+   return(pw)
+}
+\end{Code}
+
+\noindent
+And indeed, {\tt powers1()} is a lot faster:
+
+\begin{Code}
+> x <- runif(100000)
+> system.time(powers1(x,8))
+   user  system elapsed 
+  0.060   0.012   0.069 
+> system.time(powers2(x,8))
+   user  system elapsed 
+  5.349   0.008   5.373 
+\end{Code}
+
+And yet, {\tt powers1()} still does contain a loop.  Furthermore, the
+statement
+
+\begin{Code}
+pw <- cbind(pw,prod)
+\end{Code}
+
+\noindent
+is another red flag, as it means time-consuming reallocation of space 
+for the expanded matrix.  That may be OK to do just once, but this is 
+inside a loop, so it's a major concern.  This in fact may be the 
+reason that {\tt powers1()} used more system time than did {\tt 
+powers2()}.  Can we do better?  
+
+It would seem that this setting is perfect for {\tt outer()}:
+
+\begin{Code}
+powers3 <- function(x,dg) return(outer(x,1:dg,"^"))
+\end{Code}
+
+\noindent
+Here's what {\tt outer()} does:  For each combination of element of {\tt
+x} and element of {\tt 1:dg}, i.e. {\tt length(x) * dg} combinations in
+all, {\tt outer()} calls the exponentiation function {\tt ``\^''} on that
+combination, placing the results in an {\tt length(x) x dg} matrix.
+This is exactly what we need, and as a bonus, the code is quite compact.
+
+But does it speed things up?
+
+\begin{Verbatim}
+> system.time(powers3(x,8))
+   user  system elapsed 
+  0.180   0.004   0.186 
+\end{Verbatim}
+
+\noindent
+This is a lot better than {\tt powers2()}, of course, but still taking
+triple the time to run compared to {\tt powers1()}.
+
+The version using {\tt outer()} did better when working on a larger
+value of {\tt dg}, though:
+
+\begin{Verbatim}
+> system.time(powers1(x,18))
+   user  system elapsed 
+  0.424   0.084   0.520 
+> system.time(powers3(x,18))
+   user  system elapsed 
+  0.352   0.060   0.415 
+\end{Verbatim}
+
+The moral of the story is that performance issues can be unpredictable.
+All one can do is be armed with an understanding of the basic issues,
+vectorization and the memory aspects explained below, and then try
+various approaches.
+
+\section{Functional Programming and Memory Issues}
+\label{func}
+
+Most R operations are implemented as functions, a trait that can have
+performance implications.
+
+As an example, consider the innocuous-looking statement
+
+\begin{Code}
+z[3] <- 8
+\end{Code}
+
+\noindent
+Let's see where R has {\tt z} in memory, before and after the above
+statement is executed:
+
+\begin{Code}
+> z <- 1:10
+> tracemem(z)
+[1] "<0x8908278>"
+> z[3] <- 8
+tracemem[0x8908278 -> 0x8800eb0]: 
+> tracemem(z)
+[1] "<0x8800eb0>"
+\end{Code}
+
+\noindent
+So, {\tt z} was originally at the memory address 0x8908278, then was
+copied to 0x8800eb0, and ultimately that copy was the new {\tt z}.  What
+happened?
+
+As noted in Chapter \ref{chap:fun}, this assignment is more complex than
+it seems.  It is actually implemented via the replacement function {\tt
+``[$<$-''}, through the call and {\it assignment}
+
+\begin{Code}
+z <- "[<-"(z,3,value=8)
+\end{Code}
+
+\noindent
+In other words, even though we are ostensibly changing just one element
+of the array, {\it the entire vector is reassigned}.  This, as seen
+above, would mean that the entire vector is copied, which can take up a
+lot of time for long vectors---especially if the ostensible vector 
+element assignment is part of a loop, as in the code we saw earlier,
+Internally R may take some measures to mitigate this impact, but it is a
+key point to consider when aspiring to writing fast code.
+
+\begin{Code}
+for (i in 1:length(x)) z[i] <- x[i] + y[i]
+\end{Code}
+
+In R parlance, this illustrates that R (usually) uses a {\it
+copy-on-change} policy.  For example, if we execute
+
+\begin{Code}
+> y <- z
+\end{Code}
+
+\noindent
+then at first {\tt y} refers to the same memory location as {\tt z}.
+But if {\tt z} is changed, it is transferred to a separate location, so
+that {\tt y} doesn't change when {\tt z} does.
+
+Note, though, that ``copy on change'' really means ``copy on {\it first}
+change.''  The location is changed after the first write to the vector
+but not for subsequent writes:
+
+\begin{Code}
+> z <- 1:10
+> tracemem(z)
+[1] "<0xa22a388>"
+> z[3] <- 8
+tracemem[0xa22a388 -> 0x9a05b60]: 
+> z[4] <- 88
+> tracemem(z)
+[1] "<0x9a05b60>"
+\end{Code}
+
+And look at the times involved:
+
+\begin{Code}
+> z <- 1:10000000
+> system.time(z[3] <- 8)  
+   user  system elapsed 
+  0.180   0.084   0.265 
+> system.time(z[33] <- 88)
+   user  system elapsed 
+      0       0       0 
+\end{Code}
+
+\noindent
+That first copy took far more time.
+
+So, sources of slowdown can be subtle.  Yet, there are further
+subtleties to deal with.  Though R ``usually'' adheres to copy-on-change
+semantics, there are exceptions.  For example, R doesn't exhibit the
+location-change behavior in the following setting:
+
+\begin{Code}
+> z <- runif(10)
+> tracemem(z)
+[1] "<0x88c3258>"
+> z[3] <- 8
+> tracemem(z)
+[1] "<0x88c3258>"
+\end{Code}
+
+\noindent
+The location of {\tt z} (more accurately, the location pointed to by
+{\tt z} didn't change.  Thus though one should be vigilant about 
+location change, on the other hand we can't assume it.
+
+\section{Extended Example:  Avoiding Memory Copy}  
+
+This example, though artificial, will illustrate the memory-copy issues
+discussed in Section \ref{func}.
+
+Suppose we have a large number of unrelated vectors, and among other
+things, we wish to set the third element of each to 8.  We could store
+the vectors in a matrix, one vector per row.  But since they are
+unrelated, we may consider storing them in a list.  This would have the
+potential advantage of being apply to use {\tt lapply()}, which as was
+pointed out earlier, generally has more potential for speedup than {\tt
+apply()}, a matrix function.  
+
+But things can get very subtle when it comes to R performance issues, so
+let's try it out:
+
+\begin{Code}
+m  <- 5000
+n <- 1000
+
+z <- list()
+for (i in 1:m) z[[i]] <- sample(1:10,n,replace=T)
+system.time(for (i in 1:m) z[[i]][3] <- 8)
+
+z <- matrix(sample(1:10,m*n,replace=T),nrow=m)
+system.time(for (i in 1:m) z[i,3] <- 8)
+
+z <- matrix(sample(1:10,m*n,replace=T),nrow=m)
+system.time(z[,3] <- 8)
+\end{Code}
+
+\noindent
+Except (again) for system time, the matix formulation did better.  The
+reason is that in the list version, we were encountering the memory-copy
+problem in each iteration of the loop.  But in the matrix version, we
+encountered it only once.  (Remember, matrices are special cases of
+vectors, so that the discussion on vectors in Section \ref{func} does
+apply.)
+
+The reader has undoubtedly noticed an improvement in the matrix
+code:  vectorization!  Let's try it:
+
+\begin{Code}
+> z <- matrix(sample(1:10,m*n,replace=T),nrow=m)
+> print(system.time({
++    z[,3] <- 8
++ }))
+   user  system elapsed 
+  0.100   0.048   0.149 
+\end{Code}
+
+\noindent
+Ah yes.  But what about using {\tt lapply()} on the list version?
+
+\begin{Code}
+> 
+> set3 <- function(lv) {
++    lv[3] <- 8
++    return(lv)
++ }
+> z <- list()
+> for (i in 1:m) z[[i]] <- sample(1:10,n,replace=T)
+> print(system.time({
++    lapply(z,set3)
++ }))
+   user  system elapsed 
+  0.284   0.008   0.292 
+\end{Code}
+
+\noindent
+Nice try, and often {\tt lapply()} works, but not in this case. 
+

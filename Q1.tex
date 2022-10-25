@@ -1,0 +1,86 @@
+\documentclass{article}
+
+\setlength{\oddsidemargin}{-0.5in}
+\setlength{\evensidemargin}{-0.5in}
+\setlength{\topmargin}{0.0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{0.05in}
+\setlength{\columnseprule}{0.3pt}
+\usepackage{fancyvrb}
+\usepackage{relsize}
+\usepackage{hyperref}
+
+\begin{document}
+
+Name: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+Directions: {\bf \Large Work only on this sheet} (on both sides, if
+needed); do not turn in any supplementary sheets of paper. There is
+actually plenty of room for your answers, as long as you organize
+yourself BEFORE starting writing.
+
+% {\bf \Large Unless otherwise stated, give numerical answers as
+% expressions, e.g. $\frac{2}{3} \times 6 - 1.8$.  Do NOT use
+% calculators.}
+
+{\bf 1.} () Consider some probabilistic model in which there are events
+A and B.  For each of the following, write T if the equation or
+inequality is always true, and write F otherwise:
+
+\begin{itemize}
+
+\item [(a)] $P(A) = P(B)$
+
+\item [(b)] $P(A) \geq P(A \textrm{ and } B)$
+
+\item [(c)] $P(A \textrm{ and }  B) = P(A | B)$
+
+\item [(d)] $P(A \textrm{ and } B) \leq P(A \textrm{ or } B)$
+
+\end{itemize}
+
+{\bf 2.} () In the ALOHA example, consider each of the situations below.
+Assume that p and q are both strictly between 0 and 1, exclusive.  For
+each situation, write P if it is possible, I if it is impossible:
+
+\begin{itemize}
+
+\item [(a)] $X_1 = X_2 = 2$
+
+\item [(b)] $X_1 = 0$
+
+\item [(c)] $X_2 = 0$
+
+\item [(d)] $X_2 = 1$
+
+\end{itemize}
+
+{\bf Solutions:}
+
+{\bf 1.a} F, of course
+
+{\bf 1.b} T; within a row of the notebook, if the ``A and B'' column
+says Yes, then the ``A'' column must say yes too, so the latter column's
+long-run proportion of Yes entries will be at least that of the former
+column
+
+{\bf 1.c} F, of course; emphasized in class
+
+{\bf 1.d} T; same reasoning as for (b) above
+
+{\bf 2.a} P; the two terminal could both back off in both epochs
+
+{\bf 2.b} I; at most one message can be sent per epoch, so $X \geq 1$
+
+{\bf 2.c} P; could have one message sent in the first epoch, then no new
+messages created in the second, followed by a successful transmission of
+the remaining message in the second epoch
+
+{\bf 2.d} P; see (c) above
+
+\end{document}
+

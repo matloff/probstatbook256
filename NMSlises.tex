@@ -1,0 +1,267 @@
+\documentclass{beamer}  
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{fancyvrb}
+\usepackage[pdftex]{color}
+
+\mode<presentation>
+{ \usetheme{Darmstadt} }
+
+\title{Rdsm: Distributed (Quasi-)Threads Programming in R}
+
+\author{
+Norm Matloff 
+Department of Computer Science \\
+University of California at Davis \\
+Davis, CA 95616 USA \\
+matloff@cs.ucdavis.edu 
+}
+
+\date{}
+ 
+\begin{document} 
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Parallel R}
+
+
+\begin{columns}
+
+   \begin{column}{0.3\textwidth}
+   \includegraphics[width=1.25in]{RailwayTracks.jpg}
+   \end{column}
+
+   \begin{column}{0.7\textwidth}
+
+   \begin{itemize}
+
+   \item Many excellent packages are available.
+   \pause
+
+   \item But most use message-passing paradigm or variants, e.g. Rmpi, snow.
+   \pause
+
+   \item True shared-memory choices very limited.
+   \pause
+
+      \begin{itemize}
+      \item bigmemory
+      \item attached C (OpenMP, CUDA)
+      \end{itemize}
+
+   \end{itemize}
+
+   \end{column}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{!`{\it Arriba} sharing!}
+\pause
+
+\begin{columns}
+
+   \begin{column}{0.3\textwidth}
+   \includegraphics[width=1.5in]{Sharing.jpg}
+   \end{column}
+
+   \begin{column}{0.7\textwidth}
+   \begin{itemize}
+   \item Many in the parallel processing community consider shared-memory 
+   paradigm to be clearer, more concise, e.g. Chandra (2001), Hess 
+   (2002).
+   \pause
+   \item Conversion from sequential code easier than in message-passing
+   case.
+   % \pause
+   % \item Familiar threads model.
+   \end{itemize}
+   \end{column}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Why Threads?}
+
+\includegraphics[width=1.25in]{Spools.jpg}
+
+My definition here: Concurrent processes, communicating through shared
+memory.
+\pause
+
+\begin{itemize}
+
+\item Enable parallel computation.
+\pause
+
+   \begin{itemize}
+
+   \item Standard approach for speedup on shared-memory machines.
+   \pause
+
+   \end{itemize}
+
+\item Enable parallel {\bf I/O}!
+\pause
+
+   \begin{itemize}
+    
+   \item Perhaps less well-known, more commonly used.
+   \pause
+
+   \item E.g. Web servers.
+   \end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Rdsm:  History and Motivation}
+\pause
+
+\begin{itemize}
+
+\item Goals:
+\pause
+
+   \begin{itemize}
+
+   \item Shared-memory vehicle for R, focused on parallel programming.
+   \pause
+
+   \item Distributed computing capability, e.g. for collaborative tools.
+   \pause
+
+   \end{itemize}
+
+\item Easy to build on my previous product, PerlDSM (Matloff, 2002).
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{What Is Rdsm?}
+\pause
+
+\begin{itemize}
+
+\item Provides R programmers with a threads-like programming
+environment:
+\pause
+
+   \begin{itemize}
+
+   \item Multiple R processes.
+   \pause
+   
+   \item Read/write shared variables, accessed through ordinary R syntax.
+   \pause
+
+   \item Locks, barriers, wait/signal, etc.
+
+   \end{itemize}
+   \pause
+
+\item  Platforms:
+
+   \begin{columns}
+      \begin{column}{0.3\textwidth}
+      \includegraphics[width=1.5in]{Glob.jpg}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+      Processes can be on the same mulicore machine \underline{or} on 
+      distributed, geographically disperse machines.
+      \end{column}
+   \end{columns}
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Applications of Rdsm}
+\pause
+
+\begin{itemize}
+
+\item Performance programming, in ``embarassingly parallel''
+settings.  
+\pause
+
+(Possibly the limit for any parallel R.)
+\pause
+
+\item Parallel I/O applications, e.g. parallel collection of Web data and
+its concurrent statistical analysis.
+\pause
+
+\item Collaborative tools.
+\pause
+
+\item Even games!
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{What Does Rdsm Code Look Like?}
+\pause
+
+Answer:  Except for initialization, it looks just like---and
+IS---ordinary R code.
+\pause
+
+For example, to replace the 3rd column of a shared matrix {\bf m} by a
+vector of all 1s:
+
+\begin{verbatim}
+m[,3] <- 1  # use recycling
+\end{verbatim}
+\pause
+
+This is ordinary, garden-variety R code.
+\pause
+
+And it IS shared: If process 3 executes the above and then process 8
+does
+
+\begin{verbatim}
+x <- m[2,3]
+\end{verbatim}
+
+then {\bf x} will be 1 at process 8.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{What Does Rdsm Code Look Like? (cont'd.)}
+
+The only difference is in creating the variable:
+\pause
+
+\begin{verbatim}
+# create shared 6x6 matrix
+newdsm("m","dsmm","double",size=c(6,6))  
+\end{verbatim}
+
+Note the special {\bf "dsmm"} class for shared matrices.
+\pause
+(Also have classes for shared vectors and lists.)
+\pause
+
+Otherwise, it's ordinary R syntax, with threads.
+
+\end{frame}
+
+\end{document}
+

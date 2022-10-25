@@ -1,0 +1,145 @@
+\documentclass{article}
+
+\setlength{\oddsidemargin}{-0.5in}
+\setlength{\evensidemargin}{-0.5in}
+\setlength{\topmargin}{0.0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{0.05in}
+\setlength{\columnseprule}{0.3pt}
+\usepackage{fancyvrb}
+\usepackage{hyperref}
+
+\usepackage{listings,relsize}
+
+\begin{document}
+
+\lstset{language=R,basicstyle=\smaller}
+
+Name: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+Directions: {\bf Work only on this sheet} (on both sides, if needed); do not
+turn in any supplementary sheets of paper. There is actually plenty of room
+for your answers, as long as you organize yourself BEFORE starting writing.
+
+{\bf \Large SHOW YOUR WORK!}  
+
+{\bf 1.} 
+
+\begin{itemize}
+
+\item [(a)] States are 0..3, so the matrix is 3x3.  For example,
+
+\begin{equation}
+p_{21} = P(\textrm{1 leaves, 0 board or 2 leave, 1 board})
+= 2(0.2)(0.8)(0.5) + (0.2)^2 (0.4)
+\end{equation}
+
+\item [(b)] The function code will first form the transition matrix, and
+then call {\bf findpi1()}, as on p.58.
+
+\item [(c)] 
+
+\begin{equation}
+\sum_{i=0}^c i \pi_i
+\end{equation}
+
+\item [(e)] Per the hint, use the approach in (10.43).  One bus stop is
+analogous to one time slot in ALOHA.  We need to find
+
+\begin{equation}
+\frac
+{E(\textrm{number of passengers who can't board})}
+{E(\textrm{number of passengers at the stop})}
+\end{equation}
+
+The numerator is 
+
+\begin{equation}
+\pi_{c} (1 \cdot 0.4 + 2 \cdot 0.1)  +
+\pi_{c-1} (1 \cdot 0.1)  
+\end{equation}
+
+The denominator is (0.5) 0 + (0.4) 1 + (0.1) 2.
+
+\end{itemize}
+
+{\bf 2.}
+
+\begin{itemize}
+
+\item [(a)] We have an Erlang distribution with r = 5 and $\lambda = 1/100$.
+Use (4.59).
+
+\item [(b)] Erlang is a special case of the gamma distribution, so use
+{\bf pgamma()} with the above parameter values.
+
+\end{itemize}
+
+{\bf 3.}
+
+\begin{itemize}
+
+\item [(a)]
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+# inputs links, a 2-column matrix or data frame, and returns the degree
+# distribution, the i-th element of which is the count of the number of
+# nodes with i links; graph is assume to be directed; node ID numbers
+# are assume to be consecutive integers starting from 1
+dd <- function(links) {
+   nn <- max(links)  # number of nodes
+   # set up adjacency matrix
+   adj <- matrix(rep(0,nn^2),nrow=nn)
+   for (i in 1:nrow(links)) {
+      from <- links[i,1]
+      to <- links[i,2]
+      adj[from,to] <- 1
+   }
+   degrees <- apply(adj,1,sum)
+   # use histogram drawing ftn to get counts
+   maxd <- max(degrees)
+   brks <- seq(-0.1,maxd+0.9,1)  # define the histo bins
+   h <- hist(degrees,breaks=brks,plot=F)
+   return(h$counts)
+}
+\end{Verbatim}
+
+\item [(b)]
+
+Straightforward, following the instructions in the problem specs.  Get
+the slope from element 2 of the {\bf coef} component of the output of
+{\bf lm()}.
+
+\item [(c)] The power law seems to be very poor model.
+
+\end{itemize}
+
+{\bf 4.}  The exponential model seems to fit well here.
+
+{\bf 5.}  Let $U_1,...,U_n$ be the errors, and let T be their total.
+They are assumed i.i.d.  U(-0.5,0.5).
+
+\begin{itemize}
+
+\item [(a)] Due to the uniformity, the probability is 2(0.5-0.3) = 0.4.
+
+\item [(b)] Use the Central Limit Theorem.  T is approximately normally
+distributed with mean ET = 0 and variance equal to n times the variance
+of U(-0.5,0.5), which is 1/12 from the book.
+
+\item [(c)] This is (b) in reverse.  We want to find c such that
+
+\begin{equation}
+0.95 \approx P(-c < T < c)
+\end{equation}
+
+Again use the CLT.
+
+\end{itemize}
+
+\end{document}
+

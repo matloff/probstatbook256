@@ -1,0 +1,221 @@
+\chapter{Simultaneous Inference Methods} 
+\label{chap:simultaninfer} 
+
+{\it Events of small probability happen all the time, because there are
+so many of them}---Jim Sutton, old Cal Poly economics professor
+
+Suppose in our study of heights, weights and so on of people in Davis,
+we are interested in estimating a number of different quantities, with
+our forming a confidence interval for each one.  Though our confidence
+level for each one of them will be 95\%, our {\it overall} confidence
+level will be less than that.  In other words, we cannot say we are 95\%
+confident that all the intervals contain their respective population
+values.
+
+In some cases we may wish to construct confidence intervals in such a
+way that we can say we are 95\% confident that all the intervals are
+correct.  This branch of statistics is known as {\bf simultaneous
+inference} or {\bf multiple inference}.  
+
+(The same issues apply to significance testing, but we will focus on
+confidence intervals here.)
+
+In this age of Big Data, simultaneous inference is a major issue.  We
+may have hundreds of variables, so the chances of getting spurious
+results are quite high.
+
+Usually this kind of methodology is used in the comparison of several
+{\bf treatments}.  This term originated in the life sciences, e.g.
+comparing the effectiveness of several different medications for
+controlling hypertension, it can be applied in any context.  For
+instance, we might be interested in comparing how well programmers do in
+several different programming languages, say Python, Ruby and Perl.
+We'd form three groups of programmers, one for each language, with say
+20 programmers per group.  Then we would have them write code for a
+given application.  Our measurement could be the length of time T that
+it takes for them to develop the program to the point at which it runs
+correctly on a suite of test cases.  
+
+Let $T_{ij}$ be the value of T for the j$^{th}$ programmer in the
+i$^{th}$ group, i = 1,2,3, j = 1,2,...,20.  We would then wish to
+compare the three ``treatments,'' i.e. programming languages, by
+estimating $\mu_i = ET_{i1}$, i = 1,2,3.  Our estimators would be $U_i =
+\sum_{j=1}^{20} T_{ij}/20$, i = 1,2,3.  Since we are comparing the three
+population means, we may not be satisfied with simply forming ordinary
+95\% confidence intervals for each mean.  We may wish to form confidence
+intervals which {\it jointly} have confidence level 95\%.\footnote{The
+word {\it may} is important here.  It really is a matter of philosophy
+as to whether one uses simultaneous inference procedures.}
+
+Note very, very carefully what this means.  As usual, think of our
+notebook idea.  Each line of the notebook would contain the 60
+observations; different lines would involve different sets of 60 people.
+So, there would be 60 columns for the raw data, three columns for the
+$U_i$.  We would also have six more columns for the confidence intervals
+(lower and upper bounds) for the $\mu_i$.  Finally, imagine three more
+columns, one for each confidence interval, with the entry for each being
+either Right or Wrong.  A confidence interval is labeled Right if it
+really does contain its target population value, and otherwise is
+labeled Wrong.
+
+Now, if we construct individual 95\% confidence intervals, that means
+that in a given Right/Wrong column, in the long run 95\% of the entries
+will say Right.  But for simultaneous intervals, we hope that within a
+line we see \underline{three} Rights, and 95\% of all lines will have
+that property.
+
+In our context here, if we set up our three intervals to have individual
+confidence levels of 95\%, their simultaneous level will be $0.95^3 =
+0.86$, since the three confidence intervals are independent.
+Conversely, if we want a simultaneous level of 0.95, we could take each
+one at a 98.3\% level, since $0.95^{\frac{1}{3}} \approx 0.983$.
+
+However, in general the intervals we wish to form will not be
+independent, so the above ``cube root method'' would not work.  Here we
+will give a short introduction to more general procedures.
+
+Note that ``nothing in life is free.''  If we want simultaneous
+confidence intervals, they will be wider.
+
+Another reason to form simultaneous confidence intervals is that it
+gives you  ``license to browse,'' i.e. to rummage through the data
+looking for interesting nuggets.
+
+\section{The Bonferonni Method}
+
+One simple approach is {\bf Bonferonni's Inequality}:
+
+\begin{lemma}
+Suppose $A_1,...,A_g$ are events.  Then
+
+\begin{equation}
+\label{bonf}
+P(A_1 {\rm ~or~...~or} A_g) \leq \sum_{i=1}^{g} P(A_i)
+\end{equation}
+
+\end{lemma}
+
+You can easily see this for g = 2: 
+
+\begin{equation}
+P(A_1 \textrm{ or } A_2) = P(A_1) + P(A_2) - P(A_1 \textrm{ and } A_2)
+\leq  P(A_1) + P(A_2)
+\end{equation}
+
+One can then prove the general case by mathematical induction.
+
+Now to apply this to forming simultaneous confidence intervals, take
+$A_i$ to be the event that the $i^{th}$ confidence interval is
+incorrect, i.e. fails to include the population quantity being
+estimated.  Then (\ref{bonf}) says that if, say, we form two confidence
+intervals, each having individual confidence level (100-5/2)\%, i.e.
+97.5\%, then the overall collective confidence level for those two
+intervals is at least 95\%.  Here's why:
+Let $A_1$ be the event that the first interval is wrong, and $A_2$ is
+the corresponding event for the second interval.  Then
+
+% \checkpoint
+\begin{eqnarray}
+\textrm{overall conf. level} &=& P(\textrm{not } A_1 \textrm{ and not } A_2) \\ 
+&=& 1 - P(A_1 \textrm{ or } A_2) \\
+&\geq&  1 - P(A_1) - P(A_2) \\
+&=& 1 - 0.025 - 0.025 \\
+&=& 0.95
+\end{eqnarray}
+
+\section{Scheffe's Method}
+\label{scheffe}
+
+The Bonferonni method is unsuitable for more than a few intervals; each
+one would have to have such a high individual confidence level that the
+intervals would be very wide.  Many alternatives exist, a famous one
+being {\bf Scheffe's method}.\footnote{The name is pronounced
+``sheh-FAY.''}
+
+\begin{theorem}
+
+Suppose $R_1,...,R_k$ have an approximately multivariate normal
+distribution, with mean vector $\mu = (\mu_i)$ and covariance matrix
+$\Sigma = (\sigma_{ij})$.  Let $\widehat{\Sigma}$ be a {\bf consistent}
+estimator of $\Sigma$, meaning that it converges in probability to
+$\Sigma$ as the sample size goes to infinity.
+
+For any constants $c_1,...,c_k$, consider linear combinations of the
+$R_i$, 
+
+\begin{equation}
+\label{lincomb}
+\sum_{i=1}^{k} c_i R_i
+\end{equation}
+
+which estimate
+
+\begin{equation}
+\sum_{i=1}^{k} c_i \mu_i
+\end{equation}
+
+Form the confidence intervals 
+
+\begin{equation}
+\label{radius}
+\sum_{i=1}^{k} c_i R_i \pm 
+\sqrt{k \chi_{\alpha; k}^2} s(c_1,...,c_k)
+\end{equation}
+
+where
+
+\begin{equation}
+[s(c_1,...,c_k)]^2 = (c_1,...,c_k)^T \widehat{\Sigma} (c_1,...,c_k)
+\end{equation}
+
+and where $\chi_{\alpha; k}^2$ is the upper-$\alpha$ percentile of a
+chi-square distribution with k degrees of freedom.\footnote{Recall
+that the distribution of the sum of squares of g independent N(0,1)
+random variables is called {\bf chi-square with g degrees of freedom}.
+It is tabulated in the R statistical package's function {\bf qchisq()}.}
+
+Then all of these intervals (for infinitely many values of the $c_i$!)
+have simultaneous confidence level $1-\alpha$.
+
+\end{theorem}
+
+By the way, if we are interested in only constructing confidence
+intervals for {\bf contrasts}, i.e. $c_i$ having the property that
+$\Sigma_i c_i = 0$, we the number of degrees of freedom reduces to k-1,
+thus producing narrower intervals.
+
+Just as in Section \ref{whynot} we avoided the t-distribution, here we
+have avoided the F distribution, which is used instead of ch-square in
+the ``exact'' form of Scheffe's method.
+
+\section{Example}
+
+For example, again consider the Davis heights example in Section
+\ref{diffs}.  Suppose we want to find approximate 95\% confidence
+intervals for two population quantities, $\mu_1$ and $\mu_2$.  These
+correspond to values of $c_1,c_2$ of (1,0) and (0,1).  Since the two
+samples are independent, $\sigma_{12} = 0$.  The chi-square value is
+5.99,\footnote{Obtained from R via {\bf qchisq(0.95,2)}.} so the square
+root in (\ref{radius}) is 3.46.  So, we would compute (\ref{meanci}) for
+$\overline{X}$ and then for $\overline{Y}$, but would use 3.46 instead of 1.96.
+
+This actually is not as good as Bonferonni in this case.  For
+Bonferonni, we would find two 97.5\% confidence intervals, which would
+use 2.24 instead of 1.96.
+
+% \checkpoint
+
+Scheffe's method is too conservative if we just are forming a small
+number of intervals, but it is great if we form a lot of them.
+Moreover, it is very general, usable whenever we have a set of
+approximately normal estimators.
+
+\section{Other Methods for Simultaneous Inference}
+
+There are many other methods for simultaneous inference.  It should be
+noted, though, that many of them are limited in scope, and quite a few
+of them are oriented only toward significance testing, rather than
+confidence intervals.  In any event, they are beyond the scope of this
+book.
+
+

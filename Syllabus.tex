@@ -1,0 +1,204 @@
+\input ../GenCourseInfo/Front1.tex  
+\input TitleDate132.tex
+\input ../GenCourseInfo/Front2.tex
+
+% \section{Important Dates and Deadlines}
+
+\begin{itemize}
+
+\item formation of Homework Groups: January 8 (in disc. sec.)
+
+\item ordinary Quizzes:  weekly
+
+\item Group Quiz:  March 10
+
+\item Group Project due:  March 19
+
+\end{itemize}
+
+\section{Required Course Materials}
+
+\subsection{Textbook}
+\label{text}
+
+The textbook is my open source book, available at
+\url{http://heather.cs.ucdavis.edu/~matloff/132/PLN/ProbStatBookW16ECS132.pdf}.
+
+{\bf You are required to print your own hard copy.} It is required that
+you have a hard copy of the book, as it will be used during Quizzes.
+
+You can print the book anywhere, say at Copyland on G Street,
+but you may find it's cheaper elsewhere.  Cost,
+including binding, should be between \$20 and \$30.  One student said
+she got her book from Digital Copy Printing on 3rd St. for just \$16.  (Note:
+When you talk to a vendor on this, be sure to distinguish between {\it
+pages} and {\it sheets}.)  Just bring the store a copy of the correct
+PDF file, say on a memory stick.
+
+{\bf PLEASE NOTE:}  Pagination matters!  Quizzes (which are open book)
+will refer to specific pages in the book.  So you need
+\underline{exactly} the particular file stated above.  
+
+We will cover the entire book.  Note, though, that it is actually an
+abridged version of 
+\url{http://heather.cs.ucdavis.edu/~matloff/132/PLN/ProbStatBook.pdf},
+shortened by removing chapters on advanced material.  I continually
+revise the long version, and you may find that sometimes the revised
+material is helpful, but it is NOT required.
+
+\subsection{R Manual}
+
+This is not actually required, but unless you already know R well,
+you'll find it very useful:
+
+\url{http://heather.cs.ucdavis.edu/~matloff/132/NSPpart.pdf}.  This part
+of a VERY rough and partial draft of that my R book.\footnote{{\it The
+Art of R Programming}, NSP, 2011.} It is only about 50\% complete, has
+various errors, and presents a number of topics differently from the
+final version, but should be useful in R work for this class.  
+
+Note that there is a short R tutorial at the end of our textbook.  Read
+this first.
+
+\section{What Is This Course?}
+
+This is intended to be a course in probability and statistics similar to
+STA 131A and MAT 135A.  Like those courses, ECS 132 is mathematical in
+nature,  but with the hugely important difference that it is tailored to
+{\it computer science students and computer science applications}.  (Another
+important difference is that it covers both probability and statistics.)
+
+Starting in Fall 2009, ECS 132 has been required for CSE majors (and an
+elective for CS majors), instead of the old requirement to take STA 131A
+or MAT 135A.  This change was made (a) because some CS faculty thought
+an in-house course would be better, and (b) because ABET, the
+engineering accreditation agency also prefers that the course be
+in-house.  Most engineering CS programs at UC campuses teach such
+a course in-house.
+
+In addition to the CS applications setting, some other distinguishing
+features of this course include:
+
+\begin{itemize}
+
+\item By interweaving the theory with real-world applications, you will
+get a much better \underline{practical} understanding of probability
+and statistics.
+
+\item You will get some introduction to some methodologies that are
+``hot'' in the business world today, notably {\bf data and text mining,
+predictive analytics and machine learning}.  These and related
+techniques form the very heart of the technology in search engines like
+those of Google, and in Big Data applications.  See the excellent {\it
+New York Times} article, at
+\url{http://www.nytimes.com/2009/08/06/technology/06stats.html}.
+
+There are many other tech firms, big and small, that make extensive use
+of this material.  There are even data mining contests, with big prizes
+(thousands and even millions of dollars)---see \url{www.kaggle.com}.
+
+\item Your ability to put the theory into practice will be greatly
+enhanced by our use of the R statistical programming language.  R is the
+standard real-world statistical computational tool in use today.  (Some
+of you may have taken STA 32, which uses a bit of R; our usage will go
+much further than that level.)
+
+In fact, Google uses R extensively, and it has its own R coding style
+guidelines
+(\url{http://google-styleguide.googlecode.com/svn/trunk/google-r-style.html}).
+They're not to my taste, but you can see that R is a big deal at Google.
+
+There was a nice {\it New York Times} article on R; see
+\url{http://www.nytimes.com/2009/01/07/technology/business-computing/07program.html}.
+
+\item Probability and statistics play major roles in our daily lives, in
+everything from Lake Tahoe casinos to buying insurance to voting in
+elections.  Understanding these concepts enhances our lives.  ECS 132,
+as a more practical, data-oriented course, better achieves this goal.
+
+\end{itemize}
+
+\section{Workload}
+
+There will be approximately four assignments, consisting of mathematical
+work plus some light programming work.  The math will be
+intellectually similar in spirit to ``word problems'' in calculus 
+(``Water is flowing into a conical tank with a 30 degree angle from the
+vertical, at a rate of...with leakage rate of...'').
+
+{\bf IN ORDER TO ACHIEVE A DECENT GRADE, PLAN TO SPEND SIGNIFICANT TIME
+ON CAREFUL READING OF THE TEXT, SEVERAL HOURS PER WEEK.}
+
+All in all, the number of hours per week you'll put in should be similar
+to something like ECS 60.  Note, though, that much of this will be Group
+work.
+
+\section{Prerequisites}
+
+The required background is:
+
+\begin{itemize}
+
+\item 
+$\frac{d}{dt} \sin^2(t) = 2 \sin(t) \cos(t)$, 
+\hspace{0.25in}
+$\int_{0}^{\infty} \lambda e^{-\lambda t} ~ dt$ = 1,
+\hspace{0.25in}
+$\sum_{i=0}^{\infty} p^i = \frac{1}{1-p} ~~ (|p| < 1)$
+
+Derivatives, integrals, infinite series.
+
+\item 
+$
+\left (         
+\begin{array}{cc}
+a & b \\
+c & d
+\end{array}
+\right )^{-1}     
+\left (         
+\begin{array}{c}
+e \\
+f
+\end{array}
+\right )
+$
+
+Basic matrix operations, i.e. addition, multiplication and inverse.
+
+\item {\tt if (n > x+y) z = 168;}
+
+Reasonable programming and debugging skill; basic awareness of the
+concepts of bits/bytes, memory addresses and data structures; experience
+in writing code to read and write files.
+
+{\bf PLEASE NOTE:}  This is primarily a {\bf MATH} course,  Though we
+will do R programming throughout the course, especially in the Quizzes,
+{\bf you cannot do the R well without strong insight and intuition into
+the math,} no matter how good you are at programming and no matter how
+well you know R.  
+
+\end{itemize}
+
+The R language and \LaTeX word processing software that we will use in
+this class are available for every major platform---Linux, Macs and
+Windows.  However, {\bf I strongly prefer to that you run on a
+Unix-family system, either Linux or a Mac.  as that would make it easier
+for me to help you fix your bugs}.  So, a basic background in Unix at
+the level of usage of ECS 40 would be helpful but not required.  (See
+also Section \ref{machines} below.)
+
+{\bf Prior background in R and \LaTeX themselves is NOT required, nor is
+any background in probability and statistics.}
+
+\section{Post-STA 131A Courses}
+
+After successfully completing this course, you will be qualified to take
+any course which has STA 131A as a prerequisite, such as STA 131B
+(mathematical statistics) or MAT 135B (stochastic processes).
+
+\input ../GenCourseInfo/Machines.tex
+\input ../GenCourseInfo/LaTeX.tex
+\input ../GenCourseInfo/SyllabusCore.tex
+
+

@@ -1,0 +1,103 @@
+\documentclass[twocolumn]{article}
+
+\setlength{\oddsidemargin}{-0.5in}
+\setlength{\evensidemargin}{-0.5in}
+\setlength{\topmargin}{0.0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{0.05in}
+\setlength{\columnseprule}{0.3pt}
+\usepackage{fancyvrb}
+\usepackage{relsize}
+\usepackage{hyperref}
+
+\begin{document}
+
+Name: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+Directions: {\bf Work only on this sheet} (on both sides, if needed); do not
+turn in any supplementary sheets of paper. There is actually plenty of room
+for your answers, as long as you organize yourself BEFORE starting writing.
+
+{\bf 1.} (20) The code below subtracts 1 from EAX if the contents of that
+register are negative, but leaves EAX unchanged otherwise.  Fill in the
+blanks:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+   subl $0,%eax
+   ____________________
+   _____________ %eax
+done: ...
+\end{Verbatim}
+
+{\bf 2.} This problem concerns the sorting example on pp.72ff.  
+
+\begin{itemize}
+
+\item [(a)] (20) Give the line number of the instruction executed after
+the one in line 88.
+
+\item [(b)] (20) The first time 35 is executed, what specific value will
+be in EDI?
+
+\end{itemize}
+
+Parts (c) and (d) involve the following context:
+
+Suppose in executing the program from within GDB, I set a breakpoint at
+line 76 (a {\bf js} instruction), and run the program.  When the program
+reaches line 76, I issue the command {\bf info registers}, and get the
+following output:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+eax            0x80490c4        
+ecx            0x1      
+edx            0x80490d0        
+ebx            0x6      
+ebp            0x4      
+esi            0x80490cc        
+edi            0x2      
+eflags         0x287   
+\end{Verbatim}
+
+The columns here give name of the register, and its contents in hex.
+(I've omitted some material.) 
+
+\begin{itemize}
+
+\item [(c)] (20) Let's refer to the loop in lines 31-42 as the ``main''
+loop.  What iteration of that loop was the program in when the current
+call to {\bf findmin()} was executed?  Answer first, second etc.
+
+\item [(d)] (20) Based purely on the above information above and NOT on
+the specific values in the array {\bf x} (1,5,2,...), state whether the
+jump will be taken or not, i.e. whether we'll jump to line 82.  {\bf
+Explain which specific quantity (not just which register) shows this.}
+
+\end{itemize}
+
+{\bf Solutions:}
+
+{\bf 1.}
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+   subl $0,%eax
+   js done
+   decl %eax
+done: ...
+\end{Verbatim}
+
+{\bf 2a.} 35
+
+{\bf 2b.} 2
+
+{\bf 2c.} second
+
+{\bf 2d.} JS looks at Bit 7 of EFLAGS; the latter has value 0x287, which
+is 11 1000 0111, so Bit 7 had a 1, so we do jump
+
+\end{document}
+

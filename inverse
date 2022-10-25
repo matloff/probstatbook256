@@ -1,0 +1,31 @@
+
+\section{A General Method for Simulating a Random Variable}
+\label{genrannumgen}
+
+Suppose we wish to simulate a random variable X with density $f_{X}$ for
+which there is no R function. This can be done via $F_X^{-1}(U)$, where
+U has a U(0,1) distribution.  In other words, we call {\bf runif()} and
+then plug the result into the inverse of the cdf of X. 
+
+For example, say X has the density 2t on (0,1). Then $F_X(t) = t^2$, so
+$F^{-1}(s) = s^{0.5}$.  We can then generate an X as {\bf
+sqrt(runif(1))}.  Here's why:
+
+For brevity, denote $F_X^{-1}$ as G.  Our generated random variable is
+then Y = G(U).  Then
+
+\begin{eqnarray}
+F_Y(t) &=& P[G(U)\leq t] \\
+& = & P[U\leq G^{-1}(t)] \\
+& = & P[U\leq F_X(t)] \\
+& = & F_X(t)
+\end{eqnarray}
+
+(this last coming from the fact that U has a uniform distribution on
+(0,1)).
+
+In other words, Y and X have the same cdf, i.e.\ the same distribution!
+This is exactly what we want.
+
+Note that this method, though valid, is not necessarily practical, since
+computing $F_X^{-1}$ may not be easy.

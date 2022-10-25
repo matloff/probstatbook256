@@ -1,0 +1,108 @@
+
+\documentclass[twocolumn]{article}
+
+\setlength{\oddsidemargin}{-0.5in}
+\setlength{\evensidemargin}{-0.5in}
+\setlength{\topmargin}{0.0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{0.05in}
+\setlength{\columnseprule}{0.3pt}
+\usepackage{fancyvrb}
+\usepackage{relsize}
+\usepackage{hyperref}
+
+\usepackage{listings}
+
+\begin{document}
+
+Name: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+Directions: {\bf Work only on this sheet} (on both sides, if needed); do
+not turn in any supplementary sheets of paper. There is actually plenty
+of room for your answers, as long as you organize yourself BEFORE
+starting writing.
+
+{\bf 1.} This problem concerns the file {\bf bookvec.R} in our handout.
+
+\begin{itemize}
+
+\item [(a)] (35) Suppose we create a new object {\bf z} of type {\bf
+"bookvec"}, and then execute
+
+\begin{lstlisting}
+z[2] <- z[2]
+\end{lstlisting}
+
+Name the functions in {\bf bookvec.R} that are executed in these two
+actions (object creation, assignment).
+
+\item [(b)] (35) One of the comments says, ``note the recycling.''  Give a
+specific illustration of recycling in the line associated with that
+comment, involving the object {\bf b} in the examples in the handout,
+{\bf and explain why}.  
+
+No ``snow jobs,'' please; be specific.  Your answer must be in similar
+form to
+
+\begin{quote}
+If we execute
+
+\begin{lstlisting}
+> x <- b[1]
+\end{lstlisting}
+
+then the vector (6,1,9) will be recycled to (6,1,9,6,1).
+\end{quote}
+
+
+\item [(c)] (30) Write a function {\bf sum.bookvec()} that will
+``overload'' R's generic {\bf sum()} function.  It will return the sum
+of counts of writes, e.g.
+
+\begin{lstlisting}
+> b <- newbookvec(c(5,12,13))
+> b[2] <- 8
+> b[2] <- 88
+> b[3] <- 168
+> sum(b)
+[1] 3
+\end{lstlisting}
+
+\end{itemize}
+
+{\bf You are allowed a maximum of 5 lines of code.}
+
+\onecolumn
+
+{\bf Solutions:} 
+
+{\bf 1.a} 
+
+\begin{lstlisting}
+newbookvec()
+[.bookvec
+[<-.bookvec
+\end{lstlisting}
+
+{\bf 1.b}  If we execute
+
+\begin{lstlisting}
+> b[2:4] <- 7
+\end{lstlisting}
+
+the one-element vector 1 will be recycled to (1,1,1).
+
+{\bf 1.c}
+
+\begin{lstlisting}
+sum.bookvec <- function(bv,na.rm=F) sum(bv$wrts)
+\end{lstlisting}
+
+(Don't worry about the {\bf na.mr=F}.)
+
+\end{document}
+

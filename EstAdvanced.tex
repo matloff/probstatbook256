@@ -1,0 +1,1089 @@
+\chapter{Advanced Statistical Estimation and Inference}
+\label{chap:estadv} 
+
+\section{Slutsky's Theorem}
+\label{slutsky}
+
+(The reader should review Section \ref{formalclt} before continuing.)
+
+Since one generally does not know the value of $\sigma$ in
+(\ref{preci}), we replace it by $s$, yielding (\ref{theci}).  Why was
+that legitimate?  
+
+The answer depends on the theorem below.  First, we need a definition.
+
+\begin{definition}
+We say that a sequence of random variables $L_n$ {\bf converges in
+probability} to the random variable $L$ if for every $\epsilon > 0$,
+
+\begin{equation}
+\lim_{{n} \rightarrow \infty} P(|L_n -L| > \epsilon)  = 0
+\end{equation}
+
+\end{definition}
+
+This is a little weaker than convergence with probability 1, as in the
+Strong Law of Large Numbers (SLLN, Section \ref{reconcil}).  Convergence
+with probability 1 implies convergence in probability but not vice
+versa.
+
+So for example, if $Q_1, Q_2, Q_3,...$ are i.i.d. with mean $\omega$,
+then the SLLN implies that
+
+\begin{equation}
+L_n = \frac{Q_1+...+Q_n}{n}
+\end{equation}
+
+converges with probability 1 to $\omega$, and thus $L_n$ converges in
+probability to $\omega$ too.
+
+\subsection{The Theorem}
+
+\begin{theorem}
+
+{\bf Slutsky's Theorem} (abridged version):  Consider random variables
+$X_n, Y_n, \textrm{ and } X$, such that $X_n$ converges in distribution
+to $X$ and $Y_n$ converges in probability to a constant $c$ with
+probability 1,   
+
+Then:
+
+\begin{itemize}
+
+\item [(a)] $X_n + Y_n$ converges in distribution to $X+c$.
+
+\item [(b)] $X_n / Y_n$ converges in distribution to $X/c$.
+
+\end{itemize}
+
+\end{theorem}
+
+\subsection{Why It's Valid to Substitute $s$ for $\sigma$}
+
+We now return to the question raised above.  In our context here, that
+we take
+
+\begin{equation}
+\label{xn}
+X_n = \frac{\overline{W}-\mu}
+{\sigma/\sqrt{n}}
+\end{equation}
+
+\begin{equation}
+\label{yn}
+Y_n = \frac{s}{\sigma}
+\end{equation}
+
+We know that (\ref{xn}) converges in distribution to N(0,1) while
+(\ref{yn}) converges in to 1.  Thus for large n, we have that 
+
+\begin{equation}
+\frac{\overline{W}-\mu} {s/\sqrt{n}}
+\end{equation}
+
+has an approximate N(0,1) distribution, so that (\ref{theci}) is valid.
+
+\subsection{Example:  Confidence Interval for a Ratio Estimator}
+
+Again consider the example in Section \ref{davisweights} of weights of
+men and women in Davis, but this time suppose we wish to form a
+confidence interval for the {\it ratio} of the means,
+
+\begin{equation}
+\gamma = \frac{\mu_1}{\mu_2}
+\end{equation}
+
+Again, the natural estimator is
+
+\begin{equation}
+\widehat{\gamma} = \frac{\overline{X}}{\overline{Y}}
+\end{equation}
+
+How can we construct a confidence interval from this estimator?  If it
+were a linear combination of $\overline{X}$ and $\overline{Y}$, we'd
+have no problem, since a linear combination of multivariate normal
+random variables is again normal.
+
+That is not exactly the case here, but it's close.  Since $\overline{Y}$
+converges in probability to $\mu_2$, Slutsky's Theorem (Section
+\ref{slutsky}) tells us that the problem here really is one of such a
+linear combination.  We can form a confidence interval for $\mu_1$, then
+divide both endpoints of the interval by $\overline{Y}$, yielding a
+confidence interval for $\gamma$.
+
+\section{The Delta Method:  Confidence Intervals for General
+Functions of Means or Proportions}
+\label{delta}
+
+The {\bf delta method} is a great way to derive asymptotic distributions
+of quantities that are functions of random variables whose asymptotic
+distributions are already known.
+
+\subsection{The Theorem}
+
+\begin{theorem}
+
+Suppose $R_1,...,R_k$ are estimators of $\eta_1,...,\eta_k$ based on a
+random sample of size n.  Let R denote the vector whose components are
+the $R_i$, and let $\eta$ denote the corresponding vector for the
+$\eta_i$.  
+Suppose the random vector 
+
+\begin{equation}
+\sqrt{n} (R - \eta) =
+\sqrt{n} 
+\left (
+\begin{array}{l}
+   R_1 - \eta_1 \\
+   R_2 - \eta_2 \\
+   ... \\
+   R_k- \eta_k  
+\end{array}
+\right )
+\end{equation}
+
+is known to have an asymptotically multivariate normal distribution with
+mean 0 and nonsingular covariance matrix $\Sigma = (\sigma_{ij})$.  
+
+Let h be a smooth scalar function\footnote{The word ``smooth'' here
+refers to mathematical conditions such as existence of derivatives,
+which we will not worry about here.  
+
+Similarly, the reason that we multiply by $\sqrt{n}$ is also due to
+theoretical considerations we will not go into here, other than to note
+that it is related to the formal statement of the Central Limit Theorem
+in Section \ref{formalclt}.  If we replace $X_1+...,+X_n$ in
+(\ref{cltquant}), by $n \overline{X}$, we get
+
+\begin{equation}
+Z = \sqrt{n} \cdot \frac{\overline{X}-m}{v}
+\end{equation}
+
+} of k variables, with $h_i$ denoting its $i^{th}$ partial derivative.
+Consider the random variable 
+
+\begin{equation}
+Y = h(R_1,...,R_k)
+\end{equation}
+
+Then $\sqrt{n}[Y-h(\eta_1,...,\eta_k)]$ converges in distribution to a
+normal distribution with mean 0 and variance
+
+\begin{equation}
+\label{avar}
+[\nu_1,...,\nu_k]' \Sigma [\nu_1,...,\nu_k]
+\end{equation}
+
+provided not all of 
+
+\begin{equation}
+\nu_i = h_i(\eta_1,...,\eta_k), ~ i=1,...,k
+\end{equation}
+
+are 0.
+
+\end{theorem}
+
+Informally, the theorem says, with R, $\eta$, $\Sigma$, h() and Y
+defined above:
+
+\begin{quote}
+Suppose R is asymptotically multivariate normally distributed
+with mean $\eta$ and covariance matrix $\Sigma/n$.  $Y$ will be 
+approximately normal with mean $h(\eta_1,...,\eta_k)$ and covariance 
+matrix 1/n times (\ref{avar}).  
+\end{quote} 
+
+Note carefully that the theorem is not saying, for example, that $E[h(R)
+= h(\eta)$ for fixed, finite n, which is not true.  Nor is it saying
+that h(R) is normally distributed, which is definitely not true; recall
+for instance that if $X$ has a N(0,1) distribution, then $X^2$ has a
+chi-square distribution with one degree of freedom, hardly the same as
+N(0,1).  But the theorem says that for the purpose of asymptotic
+distributions, we can operate as if these things were true.
+
+The theorem can be used to form confidence intervals for
+$h(\eta_1,...,\eta_k)$, because it provides us with a standard error
+(Section \ref{stderrest}): 
+
+\begin{equation}
+\textrm{std. err. of } h(R) = \sqrt{\frac{1}{n} ~ 
+[\nu_1,...,\nu_k]' \Sigma [\nu_1,...,\nu_k]}
+\end{equation}
+
+Of course, these quantities are typically estimated from the sample,
+e.g.
+
+\begin{equation}
+\widehat{\nu}_i = h_i(R_1,...,R_k)
+\end{equation}
+
+So, our approximate 95\% confidence interval for $h(\eta_1,...,\eta_k)$
+is 
+
+\begin{equation}
+\label{deltaci}
+h(R_1,...,R_k) \pm 1.96 
+\sqrt{
+\frac{1}{n}
+[\widehat{\nu}_1,...,\widehat{\nu}_k]' \widehat{\Sigma} [\widehat{\nu}_1,...,\widehat{\nu}_k]
+}
+\end{equation}
+
+% \checkpoint
+
+Note that here we are considering scalar functions h(), but the theorem
+can easily be extended to vector-valued h().
+
+Now, how is theorem derived?
+
+\begin{proof}
+
+We'll cover the case k = 1 (dropping the subscript 1 for convenience).
+
+The intuitive version of the proof cites the fact from
+calculus\footnote{This is where the ``delta'' in the name of the method
+comes from, an allusion to the fact that derivatives are limits of
+difference quotients.} that a curve is close to its tangent line if we
+are close to the point of tangency.  Here that means
+
+\begin{equation}
+\label{intuitiveproof}
+h(R) \approx h(\eta) + h'(\eta) (R - \eta) 
+\end{equation}
+
+if R is near $\eta$, which will be the case for large n.  Note that in
+the right-hand side of (\ref{intuitiveproof}), the only random quantity
+is R; the rest are constants.  In other words, the right-hand side
+has the form c+dQ, where Q is approximately normal.  Since a linear
+function of a normally distributed random variable itself has a normal
+distribution, (\ref{intuitiveproof}) implies that h(R) is approximately
+normal with mean $h(\eta)$ and variance $[h'(\eta)]^2 Var(R)$.
+
+Reasoning more carefully, recall the Mean Value Theorem from calculus:
+
+\begin{equation}
+h(R) = h(\eta) + h'(W) (R - \eta) 
+\end{equation}
+
+for some $W$ between $\eta$ and $R$.  Rewriting this, we have
+
+\begin{equation}
+\label{mvt}
+\sqrt{n}[h(R) - h(\eta)] = \sqrt{n} ~ h'(W) (R - \eta)
+\end{equation}
+
+It can be shown---and should be intuitively plausible to you---that if a
+sequence of random variables converges in distribution to a constant,
+the convergence is in probability too.  So, $R - \eta$ converges in
+probability to 0, forcing $W$ to converge in probability to $h(\eta)$.
+Then from Slutsky's Theorem, the asymptotic distribution of (\ref{mvt})
+is the same as that of $\sqrt{n}~  h'(\eta) (R - \eta)$.  The result
+follows.
+
+\end{proof}
+
+\subsection{Example:  Square Root Transformation}
+\label{varstabxform}
+
+Here is an example of the delta method with k = 1.  It will be a rather
+odd example, in that our goal is actually not to form a confidence
+interval for anything, but it will illustrate how the delta method is
+used.
+
+It is used to be common, and to some degree is still common today, for
+statistical analysts to apply a square-root transformation to Poisson
+data.  The delta method sheds light on the motivation for this, as
+follows.
+
+First, note that we cannot even apply the delta method unless we have
+approximately normally distributed inputs, i.e. the $R_i$ in the
+theorem.  But actually, any Poisson-distributed random variable $T$ is
+approximately normally distributed if its mean, $\lambda$, is large.  To
+see this,  recall from Section \ref{sumpoi} that sums of independent
+Poisson random variables are themselves Poisson distributed.  So, if for
+instance, ET is an integer k, then $T$ has the same distribution as
+
+\begin{equation}
+U_1+...+U_m
+\end{equation}
+
+where the $U_i$ are i.i.d. Poisson random variables each having mean 1.
+By the Central Limit Theorem, T then has an approximate normal
+distribution, with mean and variance $\lambda$.  (This is not quite a
+rigorous argument, so our treatment here is informal.) 
+
+Now that we know that T is approximately normal, we can apply the delta
+method.  So, what h() should we use?  The pioneers of statistics chose 
+$h(t) = \sqrt{t}$.  Let's see why.
+
+Set $Y = h(T) = \sqrt{T}$ (so that T is playing the role of R in the
+theorem).  Here $\eta$ is $ET = \lambda$.
+
+We have $h'(t) = 1 / (2\sqrt{t})$.  Then the delta method says that
+since T is approximately normally distributed with mean $\lambda$ and
+variance $\lambda$, $Y$ too has an approximate normal distribution, with
+mean 
+
+\begin{equation}
+h(\eta) = \sqrt{\lambda}
+\end{equation}
+
+What about the variance?  Well, in one dimension, (\ref{avar}) reduces
+to
+
+\begin{equation}
+\nu^2 Var(R)
+\end{equation}
+
+so we have
+
+\begin{equation}
+[h'(\eta)]^2 Var(R) =
+\left ( \frac{1}{2\sqrt{t}} \Big |_{t=\lambda} \right )^2 \cdot \lambda =
+\frac{1}{4 \lambda} \lambda = \frac{1}{4}
+\end{equation}
+
+So, the (asymptotic) variance of $\sqrt{T}$ is a constant, independent
+of $\lambda$, and we say that the square root function is a {\bf
+variance stabilizing transformation.} This becomes relevant in
+regression analysis, where, as we will discuss in Chapter
+\ref{chap:linreg}, a
+classical assumption is that a certain collection of random variables
+all have the same variance.  If those random variables are
+Poisson-distributed, then their square roots will all have approximately
+the same variance.
+
+\subsection{Example:  Confidence Interval for $\sigma^2$}
+\label{cisigma2}
+
+Recall that in Section \ref{whynot} we noted that (\ref{meanci}) is only
+an approximate confidence interval for the mean.  An exact interval is
+available using the Student t-distribution, \underline{if} the
+population is normally distributed.  We pointed out that (\ref{meanci})
+is very close to the exact interval for even moderately large n anyway,
+and since no population is exactly normal, (\ref{meanci}) is good
+enough.  Note that one of the implications of this and the fact that
+(\ref{meanci}) did not assume any particular population distribution 
+is that a Student-t based confidence interval works well even for
+non-normal populations.  We say that the Student-t interval is {\bf
+robust} to the normality assumption.
+
+But what about a confidence interval for a variance?  It can be shown
+that one can form an exact interval based on the chi-square
+distribution, \underline{if} the population is normal.  In this case,
+though, the interval does NOT work well for non-normal populations; it
+is NOT robust to the normality assumption.  So, let's derive an interval
+that doesn't assume normality; we'll use the delta method.  (Warning:
+This will be a lengthy derivation, but it will cause you to review 
+many concepts, which is good.)
+
+As before, say we have $W_1,...,W_n$, a random sample from our
+population, and with W representing a random variable having the
+population distribution.) Write
+
+\begin{equation}
+\sigma^2 = E(W^2) -(EW)^2
+\end{equation}  
+
+and from (\ref{alts2}) write our estimator of $\sigma^2$ as
+
+\begin{equation}
+s^2 = \frac{1}{n} \sum_{i=1}^{n} W_i^2 - \overline{W}^2 
+\end{equation}
+
+This suggests how we can use the delta method.  We define
+
+\begin{equation}
+R_1 = \overline{W}
+\end{equation}
+
+\begin{equation}
+R_2 = \frac{1}{n} \sum_{i=1}^{n} W_i^2 
+\end{equation}
+
+$R_1$ is an estimator of EW, and $R_2$ estimates $E(W^2)$.  Furthermore,
+we'll see below that $R_1$ and $R_2$ are approximately bivariate normal,
+by the multivariate Central Limit Theorem, so we can use the delta
+method.  
+
+And most importantly, our estimator of interest, $s^2$, is a
+function of $R_1$ and $R_2$:
+
+\begin{equation}
+s^2 = R_2 - R_1^2
+\end{equation}
+
+So, we take our function h to be
+
+\begin{equation}
+h(u,v) = -u^2 + v
+\end{equation}
+
+Now we must find $\Sigma$ in the theorem.  That means we'll need we'll
+need the covariance matrix of $R_1$ and $R_2$.  But since
+
+\begin{equation}
+\left (
+   \begin{array}{l}
+   R_1 \\
+   R_2 
+   \end{array} 
+\right ) =
+\frac{1}{n}
+\sum_{i=1}^n  
+\left (
+   \begin{array}{l}
+   W_i \\
+   W_i^2 
+   \end{array}
+\right ) 
+\end{equation}
+
+we can derive the covariance matrix of $R_1$ and $R_2$, as follows.
+
+Remember, the covariance matrix is the multidimensional analog of
+variance.  So, after reviewing the reasoning in (\ref{oneovernpopvar}), 
+we have in the vector-valued version of that derivation that
+
+\begin{eqnarray}
+Cov \left [
+\left (
+   \begin{array}{l}
+   R_1 \\
+   R_2 
+   \end{array}
+\right ) 
+\right ]
+&=& \frac{1}{n^2} 
+Cov \left [
+   \sum_{i=1}^n  
+   \left (
+      \begin{array}{l}
+      W_i \\
+      W_i^2 
+      \end{array}
+   \right ) 
+\right ] \\
+&=& \frac{1}{n^2} 
+\sum_{i=1}^n  
+   Cov \left [
+   \left (
+      \begin{array}{l}
+      W_i \\
+      W_i^2 
+      \end{array}
+   \right ) 
+   \right ] \\
+&=& \frac{1}{n^2} 
+\sum_{i=1}^n  
+   Cov \left [
+   \left (
+      \begin{array}{l}
+      W \\
+      W^2 
+      \end{array}
+   \right ) 
+   \right ] \\
+&=& \frac{1}{n} 
+   Cov \left [
+   \left (
+      \begin{array}{l}
+      W \\
+      W^2 
+      \end{array}
+   \right ) 
+   \right ] 
+\end{eqnarray}
+
+So
+
+\begin{equation}
+\Sigma = 
+Cov \left [
+\left (
+   \begin{array}{l}
+   W \\
+   W^2 
+   \end{array}
+\right )
+\right ]
+\end{equation}
+
+Now we must estimate $\Sigma$.  Taking sample analogs of
+(\ref{quickcovarmat}), we set
+
+\begin{equation}
+\widehat{\Sigma} = 
+\frac{1}{n}
+\sum_{i=1}^n  
+\left (
+   \begin{array}{l}
+   W_i \\
+   W_i^2 
+   \end{array}
+\right ) 
+(W_i,W_i^2) 
+- R ~ R'
+=
+\frac{1}{n}
+\sum_{i=1}^n  
+\left (
+   \begin{array}{ll}
+   W_i^2 & W_i^3 \\
+   W_i^3 & W_i^4 
+   \end{array}
+\right ) 
+- R ~ R'
+\end{equation}
+
+where $R = (R_1,R_2)'$.
+
+Also, $h'(u,v) = (-2u,1)'$, so
+
+\begin{equation}
+h'(R_1,R_2) = (-2R_1,1)' 
+\end{equation}
+
+Whew!  We're done.  We can now plug everything into (\ref{deltaci}).
+
+Note that all these quantities are expressions in $E(W^k)$ for various
+k.  It should be noted that estimating means of higher powers of a
+random variable requires larger samples in order to achieve comparable
+accuracy.  Our confidence interval here may need a rather large sample
+to be accurate, as opposed to the situation with (\ref{meanci}), in
+which even n = 20 should work well.
+
+\subsection{Example:  Confidence Interval for a Measurement of
+Prediction Ability}
+
+Suppose we have a random sample $X_1,...,X_n$ from some population. In
+other words, the $X_i$ are independent and each is distributed as in the
+population. Let X represent a generic random variable having that
+distribution. Here we are allowing the $X_i$ and X to be random vectors,
+though they won't play much explicit role anyway.
+
+Let A and B be events associated with X. If for example X is a random
+vector (U,V), we might have A and B being the events U $>$ 12 and U-V
+$<$ 5. The question of interest here will be to what extent we can
+predict A from B.
+
+One measure of that might be the quantity $\nu = P(A|B) - P(A)$. The
+larger $\nu$ is (in absolute value), the stronger the ability of B to
+predict A. (We could look at variations of this, such as the quotient of
+those two probabilities, but will not do so here.)
+
+Let's use the delta method to derive an approximate 95\% confidence
+interval for $\nu$.  To that end, think of four categories---A and B; A
+and not B; not A and B; and not A and not B. Each $X_i$ falls into one of
+those categories, so the four-component vector Y consisting of counts of
+the numbers of $X_i$ falling into the four categories has a multinomial
+distribution with r = 4.
+
+To use the theorem, set R = Y/n, so that R is the vector of the sample
+proportions.  For instance, $R_1$ will be the number of $X_i$ satisfying
+both events A and B, divided by n.  The vector $\eta$ will then be the
+corresponding population proportion, so that for instance 
+
+\begin{equation}
+\eta_2 = P(A\textrm{ and not }B)
+\end{equation}
+
+We are interested in
+
+\begin{eqnarray}
+\label{nueqn}
+\nu &=& P(A|B) - P(A) \\
+&=& \frac{P(A \textrm{ and } B)}
+{P(A \textrm{ and }B) + P(\textrm{not }A \textrm{ and }B)} 
+- \left [ P(A \textrm{ and } B) + P(A \textrm{ and not } B) \right ] \\
+&=& \frac{\eta_1}{\eta_1+\eta_3} - (\eta_1+\eta_2)
+\end{eqnarray}
+
+By the way, since $\eta_4$ is not involved, let's shorten R to
+$(R_1,R_2,R_3)'$.
+
+What about $\Sigma$?  Since Y is multinomial, Equation (\ref{propcov})
+provides us $\Sigma$:
+
+\begin{equation}
+\Sigma = 
+\frac{1}{n}
+\left (
+\begin{array}{rrr}
+\eta_1 (1-\eta_1) & -\eta_1 \eta_2 & -\eta_1 \eta_3 \\
+-\eta_2 \eta_1 & \eta_2 (1-\eta_2) & -\eta_2 \eta_3 \\
+-\eta_3 \eta_1 & -\eta_3 \eta_2 & \eta_3 (1-\eta_3) 
+\end{array}
+\right )
+\end{equation}
+
+We then get $\widehat{\Sigma}$ by substituting $R_i$ for $\eta_i$.
+After deriving the $\widehat{\nu}_i$ from (\ref{nueqn}), we make the
+same substitution there, and then compute (\ref{deltaci}).
+
+\section{Simultaneous Confidence Intervals} 
+\label{simultancis}
+
+Suppose in our study of heights, weights and so on of people in Davis,
+we are interested in estimating a number of different quantities, with
+our forming a confidence interval for each one.  Though our confidence
+level for each one of them will be 95\%, our {\it overall} confidence
+level will be less than that.  In other words, we cannot say we are 95\%
+confident that all the intervals contain their respective population
+values.
+
+In some cases we may wish to construct confidence intervals in such a
+way that we can say we are 95\% confident that all the intervals are
+correct.  This branch of statistics is known as {\bf simultaneous
+inference} or {\bf multiple inference}.  
+
+Usually this kind of methodology is used in the comparison of several
+{\bf treatments}.  This term originated in the life sciences, e.g.
+comparing the effectiveness of several different medications for
+controlling hypertension, it can be applied in any context.  For
+instance, we might be interested in comparing how well programmers do in
+several different programming languages, say Python, Ruby and Perl.
+We'd form three groups of programmers, one for each language, with say
+20 programmers per group.  Then we would have them write code for a
+given application.  Our measurement could be the length of time T that
+it takes for them to develop the program to the point at which it runs
+correctly on a suite of test cases.  
+
+Let $T_{ij}$ be the value of T for the j$^{th}$ programmer in the
+i$^{th}$ group, i = 1,2,3, j = 1,2,...,20.  We would then wish to
+compare the three ``treatments,'' i.e. programming languages, by
+estimating $\mu_i = ET_{i1}$, i = 1,2,3.  Our estimators would be $U_i =
+\sum_{j=1}^{20} T_{ij}/20$, i = 1,2,3.  Since we are comparing the three
+population means, we may not be satisfied with simply forming ordinary
+95\% confidence intervals for each mean.  We may wish to form confidence
+intervals which {\it jointly} have confidence level 95\%.\footnote{The
+word {\it may} is important here.  It really is a matter of philosophy
+as to whether one uses simultaneous inference procedures.}
+
+Note very, very carefully what this means.  As usual, think of our
+notebook idea.  Each line of the notebook would contain the 60
+observations; different lines would involve different sets of 60 people.
+So, there would be 60 columns for the raw data, three columns for the
+$U_i$.  We would also have six more columns for the confidence intervals
+(lower and upper bounds) for the $\mu_i$.  Finally, imagine three more
+columns, one for each confidence interval, with the entry for each being
+either Right or Wrong.  A confidence interval is labeled Right if it
+really does contain its target population value, and otherwise is
+labeled Wrong.
+
+Now, if we construct individual 95\% confidence intervals, that means
+that in a given Right/Wrong column, in the long run 95\% of the entries
+will say Right.  But for simultaneous intervals, we hope that within a
+line we see \underline{three} Rights, and 95\% of all lines will have
+that property.
+
+In our context here, if we set up our three intervals to have individual
+confidence levels of 95\%, their simultaneous level will be $0.95^3 =
+0.86$, since the three confidence intervals are independent.
+Conversely, if we want a simultaneous level of 0.95, we could take each
+one at a 98.3\% level, since $0.95^{\frac{1}{3}} \approx 0.983$.
+
+However, in general the intervals we wish to form will not be
+independent, so the above ``cube root method'' would not work.  Here we
+will give a short introduction to more general procedures.
+
+Note that ``nothing in life is free.''  If we want simultaneous
+confidence intervals, they will be wider.
+
+Another reason to form simultaneous confidence intervals is that it
+gives you  ``license to browse,'' i.e. to rummage through the data
+looking for interesting nuggets.
+
+\subsection{The Bonferonni Method}
+
+One simple approach is {\bf Bonferonni's Inequality}:
+
+\begin{lemma}
+Suppose $A_1,...,A_g$ are events.  Then
+
+\begin{equation}
+\label{bonf}
+P(A_1 {\rm ~or~...~or} A_g) \leq \sum_{i=1}^{g} P(A_i)
+\end{equation}
+
+\end{lemma}
+
+You can easily see this for g = 2: 
+
+\begin{equation}
+P(A_1 \textrm{ or } A_2) = P(A_1) + P(A_2) - P(A_1 \textrm{ and } A_2)
+\leq  P(A_1) + P(A_2)
+\end{equation}
+
+One can then prove the general case by mathematical induction.
+
+Now to apply this to forming simultaneous confidence intervals, take
+$A_i$ to be the event that the $i^{th}$ confidence interval is
+incorrect, i.e. fails to include the population quantity being
+estimated.  Then (\ref{bonf}) says that if, say, we form two confidence
+intervals, each having individual confidence level (100-5/2)\%, i.e.
+97.5\%, then the overall collective confidence level for those two
+intervals is at least 95\%.  Here's why:
+Let $A_1$ be the event that the first interval is wrong, and $A_2$ is
+the corresponding event for the second interval.  Then
+
+% \checkpoint
+\begin{eqnarray}
+\textrm{overall conf. level} &=& P(\textrm{not } A_1 \textrm{ and not } A_2) \\ 
+&=& 1 - P(A_1 \textrm{ or } A_2) \\
+&\geq&  1 - P(A_1) - P(A_2) \\
+&=& 1 - 0.025 - 0.025 \\
+&=& 0.95
+\end{eqnarray}
+
+\subsection{Scheffe's Method}
+\label{scheffe}
+
+The Bonferonni method is unsuitable for more than a few intervals; each
+one would have to have such a high individual confidence level that the
+intervals would be very wide.  Many alternatives exist, a famous one
+being {\bf Scheffe's method}.\footnote{The name is pronounced
+``sheh-FAY.''}
+
+\begin{theorem}
+
+Suppose $R_1,...,R_k$ have an approximately multivariate normal
+distribution, with mean vector $\mu = (\mu_i)$ and covariance matrix
+$\Sigma = (\sigma_{ij})$.  Let $\widehat{\Sigma}$ be a {\bf consistent}
+estimator of $\Sigma$, meaning that it converges in probability to
+$\Sigma$ as the sample size goes to infinity.
+
+For any constants $c_1,...,c_k$, consider linear combinations of the
+$R_i$, 
+
+\begin{equation}
+\label{lincomb}
+\sum_{i=1}^{k} c_i R_i
+\end{equation}
+
+which estimate
+
+\begin{equation}
+\sum_{i=1}^{k} c_i \mu_i
+\end{equation}
+
+Form the confidence intervals 
+
+\begin{equation}
+\label{radius}
+\sum_{i=1}^{k} c_i R_i \pm 
+\sqrt{k \chi_{\alpha; k}^2} s(c_1,...,c_k)
+\end{equation}
+
+where
+
+\begin{equation}
+[s(c_1,...,c_k)]^2 = (c_1,...,c_k)^T \widehat{\Sigma} (c_1,...,c_k)
+\end{equation}
+
+and where $\chi_{\alpha; k}^2$ is the upper-$\alpha$ percentile of a
+chi-square distribution with k degrees of freedom.\footnote{Recall
+that the distribution of the sum of squares of g independent N(0,1)
+random variables is called {\bf chi-square with g degrees of freedom}.
+It is tabulated in the R statistical package's function {\bf qchisq()}.}
+
+Then all of these intervals (for infinitely many values of the $c_i$!)
+have simultaneous confidence level $1-\alpha$.
+
+\end{theorem}
+
+By the way, if we are interested in only constructing confidence
+intervals for {\bf contrasts}, i.e. $c_i$ having the property that
+$\Sigma_i c_i = 0$, we the number of degrees of freedom reduces to k-1,
+thus producing narrower intervals.
+
+Just as in Section \ref{whynot} we avoided the t-distribution, here we
+have avoided the F distribution, which is used instead of ch-square in
+the ``exact'' form of Scheffe's method.
+
+\subsection{Example}
+
+For example, again consider the Davis heights example in Section
+\ref{diffs}.  Suppose we want to find approximate 95\% confidence
+intervals for two population quantities, $\mu_1$ and $\mu_2$.  These
+correspond to values of $c_1,c_2$ of (1,0) and (0,1).  Since the two
+samples are independent, $\sigma_{12} = 0$.  The chi-square value is
+5.99,\footnote{Obtained from R via {\bf qchisq(0.95,2)}.} so the square
+root in (\ref{radius}) is 3.46.  So, we would compute (\ref{meanci}) for
+$\overline{X}$ and then for $\overline{Y}$, but would use 3.46 instead of 1.96.
+
+This actually is not as good as Bonferonni in this case.  For
+Bonferonni, we would find two 97.5\% confidence intervals, which would
+use 2.24 instead of 1.96.
+
+% \checkpoint
+
+Scheffe's method is too conservative if we just are forming a small
+number of intervals, but it is great if we form a lot of them.
+Moreover, it is very general, usable whenever we have a set of
+approximately normal estimators.
+
+\subsection{Other Methods for Simultaneous Inference}
+
+There are many other methods for simultaneous inference.  It should be
+noted, though, that many of them are limited in scope, in contrast to
+Scheffe's method, which is usable whenever one has multivariate normal
+estimators, and Bonferonni's method, which is universally usable.
+
+% \section{Conditional Confidence Intervals}
+% 
+% Often in simulations we will be interested in conditional quantities.
+% In a queuing model, for instance, we might wish to estimate the mean
+% wait time of jobs which arrive when the server is busy.  We still use
+% the usual formulas, e.g. (\ref{meanci}) and (\ref{propci}), but keep in
+% mind that the value of n in those formulas might be small, even though
+% we might have run the simulation for a long time and the n for
+% unconditional quantities would be large.
+% 
+% By the way, if a conditional confidence interval has confidence level, 
+% say, 95\%, then that is also its unconditional confidence level.  To see
+% this, let K = 1 or 0, depending on whether the interval contains the
+% desired quantity, and say we are conditioning on C.  Then
+% 
+% \begin{equation}
+% P(K = 1) = EK = E \left [ E(K|C) \right ] =
+% E \left [ P(K = 1 | C) \right ] = E(0.95) = 0.95
+% \end{equation}
+
+\section{The Bootstrap Method for Forming Confidence Intervals}
+
+Many statistical applications can be quite complex, which makes them very
+difficult to analyze mathematically.  Fortunately, there is a fairly
+general method for finding confidence intervals called the {\bf
+bootstrap}.  Here is a brief overview of the type of bootstrap
+confidence interval construction called {\bf Efron's percentile method}.
+
+\subsection{Basic Methodology}
+\label{basicboot}
+
+Say we are estimating some population value $\theta$ based on i.i.d.
+random variables $Q_i$, i = 1,...,n.  Note that $\theta$ and the $Q_i$
+could be vector-valued.
+
+Our estimator of $\theta$ is of course some function of the $Q_i$, 
+$h(Q_1,...,Q_n)$.  For example, if we are estimating a population mean
+by a sample mean, then the function h() is defined by
+
+\begin{equation}
+h(u_1,...,u_n) = \frac{u_1+...,+u_n}{n}
+\end{equation}
+
+Our procedure is as follows:
+
+\begin{itemize}
+
+\item Estimate $\theta$ based on the original sample, i.e. set
+
+\begin{equation}
+\widehat{\theta} = h(Q_1,...,Q_n)
+\end{equation}
+
+\item For j = 1,2,...,k:
+
+   \begin{itemize}
+
+   \item Resample, i.e. create a new ``sample,'' $\widetilde{Q}_1,..,
+   \widetilde{Q}_n$, by drawing n times with replacement from
+   $Q_1,..,Q_n$.
+
+   \item Calculate the value of $\widehat{\theta}$ based on the
+   $\widetilde{Q}_i$ instead of the $Q_i$, i.e. set
+
+   \begin{equation}
+   \widetilde{\theta}_j = h(\widetilde{Q}_1,...,\widetilde{Q}_n)
+   \end{equation}
+
+   \end{itemize}
+
+\item Sort the values $\widetilde{\theta}_j$, j = 1,...,k, and let
+$\widetilde{\theta}_{(k)}$ be the k$^{th}$-smallest value.
+
+\item Let A and B denote the 0.025 and 0.975 quantiles of the
+$\widetilde{\theta}_j - \widehat{\theta}$, i.e. 
+
+\begin{equation}
+\label{abci}
+A = \widehat{\theta}_{(0.025n)} - \widehat{\theta} \textrm{ and }
+B = \widehat{\theta}_{(0.975n)} - \widehat{\theta}
+\end{equation}
+
+(The quantities 0.025n and 0.975n must be rounded, say to the nearest
+integer in the range 1,...,n.) 
+
+\item Then your approximate 95\% confidence interval for $\theta$ is 
+
+\begin{equation}
+\label{bootci}
+(\widehat{\theta} - B, \widehat{\theta} - A)
+\end{equation}
+
+\end{itemize}
+
+\subsection{Example:  Confidence Intervals for a Population Variance}
+
+As noted in Section \ref{cisigma2}, the classical chi-square method for
+finding a confidence interval for a population variance $\sigma^2$ is
+not robust to the assumption of a normally distributed parent
+population.  In that section, we showed how to find the desired
+confidence interval using the delta method.
+
+That was a solution, but the derivation was complex.  An alternative
+would be to use the bootstrap.  We resample many times, calculate the
+sample variance on each of the new samples, and then form a confidence
+interval for $\sigma^2$ as in (\ref{abci}).  We show the details using R
+in Section \ref{compinr}
+
+\subsection{Computation in R}
+\label{compinr}
+
+R includes the {\bf boot()} function to do the mechanics of this for us.
+To illustrate its usage, let's consider finding a confidence interval
+for the population variance $\sigma^2$, based on the sample variance,
+$s^2$.  Here is the code:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+# R base doesn't include the boot package, so must load it
+library(boot)  
+
+# finds the sample variance on x[c(inds)]
+s2 <- function(x,inds) {
+   return(var(x[inds]))
+}
+
+bt <- boot(x,s2,R=200)
+cilow[rep] <- quantile(bt$t,alp)
+cihi[rep] <- quantile(bt$t,1-alp)
+
+print(mean(cilow <= 1.0 & 1.0 <= cihi))
+\end{Verbatim}
+
+How does this work?  The line
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+bt <- boot(x,s2,R=200)
+\end{Verbatim}
+
+instructs R to apply the bootstrap to the data set {\bf x}, with the
+statistic of interest being specified by the user in the function {\bf
+s2()}.  The argument {\bf R} here is what we called k in Section
+\ref{basicboot} above, i.e. the number of times we resample n items from
+{\bf x}.
+
+Our argument {\bf inds} in {\bf s2()} is less obvious.  Here's what
+happens:  As noted, the {\bf boot()} function merely shortens our work.
+Without it, we could simply call {\bf sample()} to do our resampling.
+Say for simplicity that n is 4.  We might make the call
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+j <- sample(1:4,replace=T)
+\end{Verbatim}
+
+and {\bf j} might turn out to be, say, c(4,1,3,3).  We would then apply
+the statistic to be bootstrapped, in our case here the sample variance,
+to the data $x[4], x[1], x[3], x[3]$---more compactly and efficiently
+expressed as $x[c(4,1,3,3)]$.  That's what {\bf boot()} does for us.
+So, in our example above, the argument {\bf inds} would be c(4,1,3,3)
+here.
+
+In the example here, our statistic to be bootstrapped was a very common
+one, and thus there was already an R function for it, {\bf var()}.  In
+more complex settings, we'd write our own function.  
+
+\subsection{General Applicability}
+
+Much theoretical work has been done on the bootstrap, and it is
+amazingly general.  It has become the statistician's ``Swiss army
+knife.''  However, there are certain types of estimators on which the
+bootstrap fails.  How can one tell in general?
+
+One approach would be to consult the excellent book {\it Bootstrap
+Methods and Their Application}, by A. C. Davison and D. V. Hinkley, 
+Cambridge University Press, 1997.
+
+But a simpler method would be to test the bootstrap in the proposed
+setting by simulation:  Write R code to generate many samples; get a
+bootstrap confidence interval on each one; and then see whether the
+number of intervals containing the true population value is
+approximately 95\%.
+
+In the sample variance example above, the code could be:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+sim <- function(n,nreps,alp) {
+   cilow <- vector(length=nreps)
+   cihi <- vector(length=nreps)
+   for (rep in 1:nreps) {
+      x <- rnorm(n)
+      bt <- boot(x,s2,R=200)
+      cilow[rep] <- quantile(bt$t,alp)
+      cihi[rep] <- quantile(bt$t,1-alp)
+   }
+   print(mean(cilow <= 1.0 & 1.0 <= cihi))
+}
+\end{Verbatim}
+
+\subsection{Why It Works}
+
+The mathematical theory of the bootstrap can get extremely involved, but
+we can at least get a glimpse of why it works here.
+
+First review notation:
+
+\begin{itemize}
+
+\item Our random sample data is $Q_1,...,Q_n$.
+
+\item Our estimator of $\theta$ is $\widehat{\theta} = h(Q_1,...,Q_n)$.
+
+\item Our resampled estimators of $\theta$ are $\widehat{\theta}_1,...,
+\widehat{\theta}_k$.
+
+\end{itemize}
+
+Remember, to get any confidence interval from an estimator, we need the
+distribution of that estimator.  Here in our bootstrap context, our goal
+is to find the approximate distribution of $\widehat{\theta}$.  The
+bootstrap achieves that goal very simply.
+
+In essence, we are performing a simulation, drawing samples from the
+empirical distribution function for our $Q_i$ data.  Since the empirical
+cdf is an estimate of the population cdf $F_Q$, then the
+$\widehat{\theta}_j$ act like a random sample from the resulting
+distribution of $\widehat{\theta}$.
+
+Indeed, if we calculate the sample standard deviation (``s'') of the
+$\widetilde{\theta}_j$, that is an estimate of the standard error of
+$\widehat{\theta}$.  If due to the delta method or other
+considerations, we know that the asymptotic distribution of
+$\widehat{\theta}$ is normal, then an approximate 95\% confidence
+interval for $\theta$ would be
+
+\begin{equation}
+\widehat{\theta} \pm 1.96 \times 
+\textrm{ standard deviation of the } \widehat{\theta}_j
+\end{equation}
+
+Efron's percentile method is more general, and works better for small
+samples.  The idea is that the above discussion implies that the values
+
+\begin{equation}
+\widetilde{\theta}_j - \widehat{\theta}
+\end{equation}
+
+have approximately the same distribution as the values
+
+\begin{equation}
+\label{thetadiff}
+\widetilde{\theta} - \theta
+\end{equation}
+
+Accordingly, the probability that (\ref{thetadiff}) is between A and B
+is approximately 0.95, thus giving us (\ref{bootci}).
+
+

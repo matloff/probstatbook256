@@ -1,0 +1,110 @@
+\documentclass[twocolumn]{article}
+
+\setlength{\oddsidemargin}{-0.5in}
+\setlength{\evensidemargin}{-0.5in}
+\setlength{\topmargin}{0.0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{0.05in}
+\setlength{\columnseprule}{0.3pt}
+\usepackage{fancyvrb}
+\usepackage{relsize}
+\usepackage{hyperref}
+
+\begin{document}
+
+Name: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+Directions: {\bf Work only on this sheet} (on both sides, if needed); do not
+turn in any supplementary sheets of paper. There is actually plenty of room
+for your answers, as long as you organize yourself BEFORE starting writing.
+
+{\bf 1.} (20) The statement
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+ __asm__("addl $8,%eax");
+\end{Verbatim}
+
+would be mostly likely to appear amongst the code of what language?
+
+{\bf 2.} (20) Fill in the blank:  The term
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ refers to a set of
+parallel wires, to which the CPU and memory are attached.
+
+{\bf 3.} (20) Fill in the blanks:  In the instruction on line 50, p.73,
+the source and destination operands are specified in
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ and
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ modes,
+respectively.
+
+{\bf 4.} I had a certain assembly language source file {\bf trymovs.s},
+which I assembled, linked and fed into GDB.  I set one breakpoint, and
+ran the program.  At the breakpoint, I queried the contents of the
+registers.  Here is what my GDB session looked like at that point:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+(gdb) break 14
+Breakpoint 1 at 0x8048092: file trymovs.s, line 14.
+(gdb) r
+Starting program: ...
+Breakpoint 1, _start () at trymovs.s:14
+14	    rep movsb          
+Current language:  auto; currently asm
+(gdb) info registers
+eax            0x8888	34952
+ecx            0x888888	8947848
+edx            0x8888888	143165576
+ebx            0x88888	559240
+esp            0xbfc3e230	0xbfc3e230
+ebp            0x0	0x0
+esi            0x8049094	134516884
+edi            0x804909a	134516890
+eip            0x8048092	0x8048092 <_start+30>
+eflags         0x292	[ AF SF IF ]
+cs             0x73	115
+ss             0x7b	123
+ds             0x7b	123
+es             0x7b	123
+fs             0x0	0
+gs             0x0	0
+\end{Verbatim}
+
+Note that the second and third columns show register contents, in hex
+and decimal.
+
+\begin{itemize}
+
+\item [(a)] (15) How many bytes will be copied?
+
+\item [(b)] (15) Now resuming execution, what is the first value to go
+onto the address bus?  (This is {\it execution}, not counting
+instruction fetch.)
+
+\end{itemize}
+
+{\bf 5.} (10) The R language allows one to interface with C code in the
+following way.  One writes a C function, say {\bf cftn()} in C, then
+compiles it into a library.  Then, while running R, one calls the R
+function {\bf dyn.load()}, with the argument being the library file.
+One can then call {\bf cftn()} from R.  On Linux, what suffix will that
+file name have?
+
+{\bf Solutions:}
+
+{\bf 1.}  C++ (Sec. 3.14)
+
+{\bf 2.} {\it bus} (p.44)
+
+{\bf 3.} immediate, register (Sec. 3.7)
+
+{\bf 4a.} c(ECX) = 8947848 (p.99)
+
+{\bf 4b.} c(EDI) = 134516890 (p.99, p.44)
+
+{\bf 5.} {\bf .so} (p.95)
+
+\end{document}
+

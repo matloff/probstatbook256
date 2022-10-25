@@ -1,0 +1,436 @@
+\chapter{The Message Passing Paradigm} 
+\label{chap:msgpass}
+
+
+The scatter-gather paradigm we've seen in all our examples so far works
+well for many problems, but it can be confining.  This chapter will
+present more general approaches to parallel computation.
+
+Instead of a situation in which the workers communicate only with the
+manager, think now of allowing the workers to send messages to each
+other as well.  This general case is known as the {\it message passing}
+paradigm, the subject of this chapter.
+
+A message-passing library will have some kind of {\bf send()} and {\bf
+receive()} functions for its basic operations, along with variants such
+as broadcasting messages to all processes.  In addition, there may be
+functions for other operations, such as:
+
+\begin{itemize}
+
+\item {\it Scatter/gather} (Section \ref{snowintro}).
+
+\item {\it Reduction}, similar to R's {\bf Reduce()} function. 
+
+\item {\it Remote procedure call}, in which one process triggers a
+function call at another process. 
+
+\end{itemize}
+
+The most popular C-level package for message passing is the Message
+Passing Interface (MPI), a collection of routines callable from C/C++.
+Professor Hao Yu of the University of Western Ontario wrote an R
+library, {\bf Rmpi}, that interfaces R to MPI, as well as adding a
+number of R-specific functions.  {\bf Rmpi} will be our main focus in
+this chapter.  (Two other popular message-passing libraries, PVM and
+0MQ, also have had R interfaces developed for them ({\bf Rpvm} and {\bf
+Rzmq}), as well as a very
+promising new R interface to MPI, {\bf pdbR}.)
+
+So with {\bf Rmpi}, we might have, say, eight machines in our cluster.
+When we run {\bf Rmpi} from one machine, that will then start up R
+processes on each of the other machines.  This is the same as what
+happens when we use {\bf snow} on a physical cluster.\footnote{If we use
+a numeric argument, e.g. {\bf makeCluster(8)}, there will be 8 R
+processes created on the manager's machine.} The various processes will
+occasionally exchange data, via calls to {\bf Rmpi} functions, in order
+to run the given application in parallel.  Again, this is the same as
+for {\bf snow}, but here the workers can directly exchange data with
+each other.
+
+We'll cover a specific example shortly.  But first, let's follow up on
+the discussion of Section \ref{latband}, and note the special issues that
+arise with message passing code.
+
+\section{Performance Issues}
+
+Message passing is a software/algorithmic notion, and thus does not
+imply any special structure of the underlying hardware platform.  So,
+although MPI and {\bf Rmpi} can be run on a multicore machine, which is
+quite common,  message passing is typically thought of as being
+run on a cluster, i.e. a network of independent standalone machines, each
+having its own processor and memory.  In a small business or university
+computing lab, for instance, one may have a number of PCs, connected by
+a network.  Though each PC runs independently of the others, one
+can use the network to pass messages among the PCs, thus forming a
+parallel processing system.  We'll assume this situation thoughout.
+
+\subsection{The Basic Problems}
+
+Recall the discussion of network infrastructures in Section
+\ref{netbasics}.  The network is, literally, the weakest link, meaning
+the major source of slowdown.
+
+In data science applications, this delay can be especially acute, as
+copying large amounts of data incurs a large time penalty.
+
+
+\subsection{Solutions}
+
+Though any set of computers that are networked together may be called a
+cluster, the best usage of the terms is for a network of machines that
+is dedicated to high-performance parallel computing.  Since the machines
+are not used individually, one dispenses with the keyboards and monitors,
+and places multiple PCs on the same rack.
+
+A more important distinction is that a cluster will typically have a
+fancier network than the standard Ethernet used in an office or lab.  An
+example is InfiniBand.  In this technology, the single communications
+channel is replaced by multiple point-to-point links, connected by
+switches.
+
+The fact that there are multiple links means that potential bandwidth is
+greatly increased, and contention for a given link is reduced.
+InfiniBand also strives for low latency.  
+
+Note, though, that even with InfiniBand, latency is on the order of a
+microsecond, i.e. a millionth of a second.  Since CPU clock speeds are
+typically more than a gigaherz, i.e. are capable of billions of
+operations per second, even InfiniBand network latency presents
+considerable overhead.
+
+One way of reducing the overhead arising from the network system
+software is to use {\it remote direct memory access} (RDMA), which
+involves both nonstandard hardware and software.  The name derives from
+the Direct Memory Acess devices that are common in even personal computers
+today.  
+
+When reading from a fast disk, for instance, DMA bypasses the
+``middleman,'' the CPU, and writes directly to memory, a significant
+speedup.  (DMA devices in fact are special-purpose CPUs in their own
+right, designed to copy data directly between an input-output device and
+memory.) Disk writes are made faster the same way.
+
+With RDMA, we bypass a different kind of middleman, in this case the
+network protocol stack.  When reading a message arriving from the
+network, RDMA deposits the message directly into the memory used by our
+program.
+
+\section{Rmpi}
+
+As noted, {\bf Rmpi} is an R interface to the famous MPI protocol,
+the latter normally being accessed via C, C++ or FORTRAN.  MPI consists
+of hundreds of functions callable from user programs.
+
+Note that MPI also provides network services beyond simply sending and
+receiving messages.  An important point is that it enforces message
+order.  If say, messages A and B are sent from process 8 to process 3 in
+that order, then the program at process 3 will receive them in that
+order.  A call at process 3 to receive from process 8 will receive A
+first, with B not being processed until the second such
+call.\footnote{This assumes that the calls do not specify message type,
+discussed below.}  
+
+This makes the logic in your application code much easier to write.
+Indeed, if you are a beginner in the parallel processing world, keep
+this foremost in mind.  Code that makes things happen in the wrong order
+(among the various processes) is one of the most common types of bugs in
+parallel programming.
+
+In addition, MPI allows the programmer to define several different
+kinds of messages.  One might make a call, for instance, that says in
+essence, ``read the next message of type 2 from process 8,'' or even 
+``read the next message of type 2 from any process.'' 
+
+{\bf Rmpi} provides the R programmer with access to such operations, and
+also provides some new R-specific messaging operations.
+
+With all that power comes complexity.  {\bf Rmpi} can be tricky to
+install---and even to launch---with various platform dependencies to
+deal with, even in terms of how the manager launches the workers.  These
+issues, as well as the plethora of functions available in {\bf Rmpi} and
+the plethora of options in those functions, are beyond the scope of this
+book.  Instead, the hope here is to present a good introduction to the
+message-passing paradigm, with {\bf Rmpi} as our vehicle.
+
+\section{Example:  Genomics Data Analysis}
+
+\section{Example:  Quicksort}
+
+\subsection{The Code}
+
+\subsection{Usage}
+
+\subsection{Timing Example}
+
+\subsection{Latency, Bandwdith and Parallelism}
+\label{latbandpar}
+
+\subsection{Possible Improvements}
+
+\subsection{Analysis of the Code}
+\label{qscode}
+
+\section{Memory Allocation Issues}
+\label{memallocissues}
+
+Memory allocation is a major issue, both in this application and
+many others, thus worth spending some extra here.  The problem is that
+when a message arrives at a process, {\bf Rmpi} needs to have a place to
+put it.  If we call {\bf mpi.recv()}, we must set up a buffer for it,
+e.g.
+
+\begin{lstlisting}
+b <- double(100000)
+b <- mpi.recv(b,2,type=0)
+\end{lstlisting}
+
+If the receive call is within a loop, the overhead of repeatedly setting
+up buffer space may be substantial.  This of course would be remedied by
+moving the statement
+
+\begin{lstlisting}
+b <- double(100000)
+\end{lstlisting}
+
+to a position preceding the loop.
+
+With {\bf mpi.recv.Robj()}, this memory allocation overhead occurs
+``invisibly.''  If the function is called from within a loop, there
+is potentially a reallocation at every iteration.  So, while this type
+of receive call is more convenient, you should not be lulled into
+thinking there are no memory issues, exacerbated by the repeated
+allocation of memory if called within a look..
+
+Thus we may attain better efficiency from {\bf mpi.recv()} than from {\bf
+mpi.recv.Robj()}.  (As mentioned earlier, the latter also suffers some
+slowdown from serialization.)
+
+On the other hand, if we use {\bf mpi.recv()} and set the memory
+allocation before the loop, we must allocate enough memory for the
+largest message that might be received.  This may be wasteful of memory,
+and if memory space is an issue, this is a problem that must be
+considered.
+
+\section{Some Other Rmpi Functions}
+
+MPI features many, many functions, and {\bf Rmpi} features interfaces to
+most of them.  In addition, {\bf Rmpi} adds some R-specific functions of
+its own.  Here we briefly introduce just a few.  
+
+{\bf Rmpi} includes scatter/gather operations, including ``vector''
+versions.  Here's code run on the manager, in interactive mode,
+illustrating the ordinary gather:
+
+First, let's set up some data, and check it using the remote execution
+function, {\bf mpi.remote.exec()}:
+\begin{lstlisting}
+# have each worker sense its rank (MPI ID), and store it in "id"
+> mpi.bcast.cmd(id <- mpi.comm.rank())  
+# have all wrkrs execute "id"; in Rmpi, results are returned to the mgr,
+# thus printed on the screen; here we are checking that the workers did
+# indeed set "id" correctly
+> mpi.remote.exec(id)  
+1  1  2
+> mpi.bcast.cmd(z <- id + runif(1))
+> mpi.remote.exec(z)
+        X1       X2
+1 1.964408 2.789881
+\end{lstlisting}
+
+Now let's do a gather operation on that data:
+
+\begin{lstlisting}
+> myrcv <- double(3)
+> mpi.bcast.cmd(mpi.gather(x=z,type=2,rdata=double(1)))
+> mpi.gather(x=2.5,type=2,rdata=myrcv)
+[1] 2.500000 1.964408 2.789881
+> myrcv
+[1] 2.500000 1.964408 2.789881
+\end{lstlisting}
+
+What just happened here?  First, it's important to understand that {\it
+all} the processes, both the workers and the manager, participate in the
+gather operation.  Thus we must pair a remote {\bf mpi.gather()} call to
+each worker, via {\bf mpi.bcast.cmd()}, with a similar {\bf
+mpi.gather()} call at the manager, which we did.
+
+Second, we are no longer working with objects here; we are working with
+the vectors themselves.  We are calling {\bf mpi.gather()}, rather than
+{\bf mpi.gather.Robj()}.  The difference is that in the latter, the
+result comes out as the return value from the call, while in the latter,
+the result is {\it placed into the {\bf rdata} argument} (and also
+returned).  Here we took {\bf myrcv} for that argument, making sure to
+allocate enough memory for {\bf myrcv} first.  
+
+(Of course, the fact that the result of the gather was both placed in
+{\bf myrc} {\it and} returned would be a problem if we had a large
+amount of data.  We can suppress that by making the call within {\bf
+invisible()}.)
+
+Note the different roles of some of the arguments above between the
+manager and the workers.  Since the result of the gather will go to the
+manager, not to the workers (an optional argument can be used to change
+this), the {\bf rdata} argument is meaningless for them; we merely put
+in a placeholder, a single dummy {\bf double}.  On the other hand, at
+the manager, we don't put in a dummy for the {\bf x} argument, because
+it too will be gathered, as seen in the final output.
+
+The fact that {\bf myrcv} at the manager is being directly written to is
+quite important.  We'll return to this point in Section \ref{adshared}.
+
+As mentioned, {\bf Rmpi} also interfaces to MPI's `v' variants of
+scatter/gather.  Here's an example on the scatter side:
+
+\begin{lstlisting}
+> z <- runif(3)
+> mpi.bcast.cmd(id <- mpi.comm.rank())
+> mpi.bcast.cmd(w <- double(id))
+> mpi.bcast.cmd(mpi.scatterv(x=double(1),scounts=0,type=2,rdata=w))
+> mpi.scatterv(x=z,scounts=c(0,1:2),type=2,rdata=double(1))
+[1] 0
+> mpi.remote.exec(w)
+$slave1
+[1] 0.6318092
+
+$slave2
+[1] 0.68236571 0.08751833
+\end{lstlisting}
+
+Here we wished to scatter the 3-element vector {\bf z} at the manager to
+the workers, with one element going to worker 1 and the other two to
+worker 2.  So we allocated space to vectors {\bf w} (the plural here
+alluding to the fact that each worker has its own {\bf w}), before doing
+the scatter operation.
+
+The difference between {\bf mpi.scatter()} and {\bf mpi.scatterv()} is
+that the latter allows the caller to specify what size chunk we wish to
+go to each of the recipients.  This is defined via the argument {\bf
+scounts} (in the case of {\bf mpi.gatherv()}, it's {\bf rcounts}).  In
+the call
+
+\begin{lstlisting}
+mpi.scatterv(x=z,scounts=c(0,1:2),type=2,rdata=double(1))
+\end{lstlisting}
+
+we are having the manager parcel out 0, 1 and 2 elements of {\bf z} to
+the manager itself and the two workers, respectively.  Since the manager
+will receive none of the data, we can allow the {\bf rdata} argument to
+be a placeholder.  The argument {\bf scounts} is also a placeholder in
+the call at the workers.
+
+As you can see, {\bf Rmpi} is more complex than the libraries we've seen
+so far.  But it can be very powerful in some settings.
+
+\section{Subtleties}
+
+In message-passing systems, even an innocuous-looking operations
+can have lots of important subtleties.  This section will present an
+overview.
+
+\subsection{Blocking Vs. Nonblocking I/O}
+\label{nonblock}
+
+The call
+
+\begin{lstlisting}
+mpi.send(x,type=2,tag=0,dest=8)
+\end{lstlisting}
+
+send the data in {\bf x}.  But when does the call return?  The answer
+depends on the underlying MPI implementation.  In some implementations,
+probably most, the call returns as soon as the space {\bf x} is
+reusable, as follows.  {\bf Rmpi} will call MPI, which in turn will call
+network-send functions in the operating system.  That last step will
+involve copying the contents of {\bf x} to space in the OS, after which
+{\bf x} is reusable.  The point is that this may be long before the
+receiver has gotten the data.
+
+Other implementations of MPI, though, wait until the destination
+process, number 8 in the example above, has received the transmitted
+data.  The call to {\bf mpi.send()} at the source process won't return
+until this happens.
+
+Due to network delays, there could be a large performance difference
+between the two MPI implementations.  There are also possible
+implications for deadlock (Section \ref{deadlock}).
+
+In fact, even with the first kind of implementation, there may be some
+delay.  For such reasons, MPI offers {\it nonblocking} send and receive
+functions, for which {\bf Rmpi} provides the interfaces such as {\bf
+mpi.isend()} and {\bf mpi.irecv()}.  This way you can have your code get
+a send or receive started, do some other useful work, and then later
+check back to see if the action has been completed, using a function
+such as {\bf mpi.test()}.
+
+\subsection{The Dreaded Deadlock Problem}
+\label{deadlock}
+
+Consider code in which processes 3 and 8 trade data:
+
+\begin{lstlisting}
+me <- mpi.comm.rank()
+if (me == 3) {
+   mpi.send(x,type=2,tag=0,dest=8)
+   mpi.recv(y,type=2,tag=0,source=8)
+} else if (me == 8){
+   mpi.send(x,type=2,tag=0,dest=3)
+   mpi.recv(y,type=2,tag=0,source=3)
+}
+\end{lstlisting}
+
+If the MPI implementation has send operations block until
+the matching receive is posted, then this would create a {\it deadlock}
+problem, meaning that two processes are stuck, waiting for each
+other.  Here process 3 would start the send, but then wait for an
+acknowledgment from 8, while 8 would do the same and wait for 3.  They
+would wait forever.
+
+This arises in various other ways as well.  Suppose we have the manager
+launch the workers via the call
+
+\begin{lstlisting}
+mpi.bcast.cmd(dowork,n,divisors,msgsize)
+\end{lstlisting}
+
+This sends the command to the workers, then immediately returns.  By
+contrast,
+
+\begin{lstlisting}
+res <- mpi.remote.exec(dowork,n,divisors,msgsize)
+\end{lstlisting}
+
+would make the same call at the workers, but would wait until the
+workers were done with their work before returning (and then assigning
+the results to {\bf res}).  If we had made the alternative call to
+launch the workers, and then tried to send some numbers to a process,
+we would have a deadlock.
+
+Deadlock can arise in shared-memory programming as well (Chapter
+\ref{chap:sharedmemr}), but the message-passing paradigm is especially
+susceptible to it.  One must constantly beware of the possibility when
+writing message-passing code.
+
+So, what are the solutions?  In the example involving processes 3 and 8
+above, one could simply switch the ordering:
+
+\begin{lstlisting}
+me <- mpi.comm.rank()
+if (me == 3) {
+   mpi.send(x,type=2,tag=0,dest=8)
+   mpi.recv(y,type=2,tag=0,source=8)
+} else if (me == 8){
+   mpi.recv(y,type=2,tag=0,source=3)
+   mpi.send(x,type=2,tag=0,dest=3)
+}
+\end{lstlisting}
+
+MPI also has a combined send-receive operation, interfaced to from {\bf
+Rmpi} via {\bf mpi.sendrecv()}.
+
+Another way out of deadlock is to use the nonblocking sends and/or
+receives, at the cost of additional code complexity.
+
+\section{Introduction to pdbR}
+
+TO BE COMPLETED

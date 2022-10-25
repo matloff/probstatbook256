@@ -1,0 +1,67 @@
+\documentclass[twocolumn]{article}
+
+\setlength{\oddsidemargin}{-0.5in}
+\setlength{\evensidemargin}{-0.5in}
+\setlength{\topmargin}{0.0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{0.05in}
+\setlength{\columnseprule}{0.3pt}
+\usepackage{fancyvrb}
+\usepackage{relsize}
+\usepackage{hyperref}
+
+\begin{document}
+
+Name: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+Directions: {\bf Work only on this sheet} (on both sides, if needed); do not
+turn in any supplementary sheets of paper. There is actually plenty of room
+for your answers, as long as you organize yourself BEFORE starting writing.
+
+{\bf 1.} (15) A scheme under which an I/O device communicates with memory
+without the intervention of the CPU is called 
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_.
+
+{\bf 2.} (15) Consider the example in Section 6.11.  Fill in the blanks:
+By using a macro instead of a subroutine, we made the program
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ by the amount of 
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ bytes, and we
+made its run time 
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_.  (The first
+blank must be filled in by {\it larger} or {\it smaller}, the second by
+a number, and the third by {\it faster} or {\it slower}.)
+
+{\bf 3}. Answer either HW (``hardware'') or SW (``software'')
+concerning what entity performs each of the following tasks:
+
+\begin{itemize}
+
+\item [(a)] (10) Saving c(EBX) within a device driver.
+
+\item [(b)] (10) Setting c(IDT).
+
+\item [(c)] (10) Setting c(c(IDT)+8).
+
+\item [(d)] (15) Saving the ``bread crumbs'' when an interrupt is
+detected.
+
+\item [(e)] (10) Acknowledging an interrupt.
+
+\item [(f)] (15) Evicting a cache block.
+
+\end{itemize}
+
+{\bf Solutions:}
+
+{\bf 1.} DMA
+
+{\bf 2.} larger; 6; faster
+
+{\bf 3.} SW; SW; SW; HW; HW; HW
+
+\end{document}
+

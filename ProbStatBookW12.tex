@@ -1,0 +1,37 @@
+\documentclass[11pt]{book}
+
+\include{Includes/Includes}
+
+\begin{document} 
+
+\thispagestyle{empty}
+\input Cover 
+\newpage
+\pagecolor{white}
+\color{black}
+
+\input ../../MiscPLN/AuthorBio 
+
+\frontmatter
+\tableofcontents
+\include{Preface}
+
+\mainmatter
+\input Intro
+\input ProbCalc
+\input DiscreteProb
+\input ContinProb
+\input Hazard
+\input StopAndReview
+\input RandVecs
+\input MultVarDistr
+\input ConfInts
+\input SigTests
+\input LinReg
+
+\appendix
+\input ../../MiscPLN/MatrixReview
+\input ../../MiscPLN/R5MinIntro
+
+\end{document}
+

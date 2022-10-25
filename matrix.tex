@@ -1,0 +1,1346 @@
+\chapter{Matrices} 
+\label{chap:matrix}
+
+A matrix is a vector with two additional attributes, the number of rows
+and number of columns.
+
+Multidimensional vectors in R are called {\it arrays}. A two-dimensional
+array is also called a {\it matrix}, and is eligible for the usual
+matrix mathematical operations.  Most of this chapter will concern
+matrices, but we will discuss general arrays in the final section.
+
+\section{General Operations}
+
+Matrix row and column subscripts begin with 1, so for instance the
+upper-left corner of the matrix {\tt a} is denoted {\tt a[1,1]}. The
+internal linear storage of a matrix is in {\it column-major order},
+meaning that first all of column 1 is stored, then all of column 2, etc.
+
+One of the ways to create a matrix is via the {\tt matrix()} function, e.g.
+
+\begin{Code}
+> y <- matrix(c(1,2,3,4),nrow=2,ncol=2)
+> y
+  [,1] [,2]
+[1,] 1    3
+[2,] 2    4
+\end{Code}
+
+\noindent
+Here we concatenated what we intended as the first column, the numbers 1
+and 2, with what we intended as the second column, 3 and 4. So, our data
+in linear form was {\tt c(1,2,3,4)}, and then we specified the number of
+rows and columns. The fact that R uses column-major order then
+determined where these four numbers were put within the matrix.
+
+Since we specified the matrix entries in the above example, we would not
+have needed to specify {\tt ncol}; just {\tt nrow} would be enough (or
+vice versa). For instance:
+
+\begin{Code}
+> y <- matrix(c(1,2,3,4),nrow=2)
+> y
+  [,1] [,2]
+[1,] 1    3
+[2,] 2    4
+\end{Code}
+
+Note that when we then printed out {\tt y}, R showed us its notation for
+rows and columns. For instance, [,2] means column 2, as can be seen in
+this check:
+
+\begin{Code}
+> y[,2]
+[1] 3 4
+\end{Code}
+
+Another  way we could have built {\tt y} would have been to specify elements
+individually:
+
+\begin{Code}
+> y <- matrix(nrow=2,ncol=2)
+> y[1,1] = 1
+> y[2,1] = 2
+> y[1,2] = 3
+> y[2,2] = 4
+> y
+  [,1] [,2]
+[1,] 1    3
+[2,] 2    4
+\end{Code}
+
+Note that we did have to warn R ahead of time that {\tt y} would be a
+matrix, and would have the given number of rows and columns.
+
+Though internal storage of a matrix is in column-major order, we can set
+the {\tt byrow} argument in {\tt matrix()} to {\tt TRUE} in order to specify
+that the data we are using to fill a matrix be interpreted as being in
+row-major order.  For example:
+
+\begin{Code}
+> m <- matrix(c(1,2,3,4,5,6),nrow=3)
+> m
+     [,1] [,2]
+[1,]    1    4
+[2,]    2    5
+[3,]    3    6
+> m <- matrix(c(1,2,3,4,5,6),nrow=2,byrow=T)
+> m
+     [,1] [,2] [,3]
+[1,]    1    2    3
+[2,]    4    5    6
+\end{Code}
+
+
+\noindent
+Note that the matrix is still stored in column-major order.  The
+{\tt byrow} argument only enabled our {\it input} to come in row-major
+form, which may be more convenient.
+
+We can perform various operations on matrices, e.g. matrix multiplication,
+matrix scalar multiplication and matrix addition.  Using {\tt y} from
+above, we have
+
+\begin{Code}
+> y %*% y  # mathematical matrix multiplication
+  [,1] [,2]
+[1,] 7   15
+[2,]10   22
+> 3*y  # mathematical multiplication of matrix by scalar
+  [,1] [,2]
+[1,] 3    9
+[2,] 6   12
+> y+y  # mathematical matrix addition
+  [,1] [,2]
+[1,] 2    6
+[2,] 4    8
+\end{Code}
+
+For more on linear algebra operations on matrices, see Section \ref{linalg}.
+
+\section{Matrix Indexing}
+
+The  same  operations we discussed in Section \ref{slicing} for vectors
+apply to matrices as well. For instance:
+
+\begin{Code}
+> z
+  [,1] [,2] [,3]
+[1,] 1    1    1
+[2,] 2    1    0
+[3,] 3    0    1
+[4,] 4    0    0
+> z[,2:3]
+  [,1] [,2]
+[1,] 1    1
+[2,] 1    0
+[3,] 0    1
+[4,] 0    0
+\end{Code}
+
+\noindent
+In that second command, we requested the submatrix of {\tt z} consisting
+of all elements with column numbers 2 and 3 and any row number.  This
+amounts to extracting the second and third columns.
+
+Here's an example for rows:
+
+\begin{Code}
+> y <- matrix(c(11,21,31,12,22,32),nrow=3,ncol=2)
+> y
+  [,1] [,2]
+[1,]11   12
+[2,]21   22
+[3,]31   32
+> y[2:3,]
+  [,1] [,2]
+[1,]21   22
+[2,]31   32
+> y[2:3,2]
+[1] 22 32
+\end{Code}
+
+You can of course also assign to submatrices:
+
+\begin{Code}
+> y <- matrix(1:6,nrow=3)
+> y
+     [,1] [,2]
+[1,]    1    4
+[2,]    2    5
+[3,]    3    6
+> y[c(1,3),] <- matrix(c(1,1,8,12),nrow=2)
+> y
+     [,1] [,2]
+[1,]    1    8
+[2,]    2    5
+[3,]    1   12
+\end{Code}
+
+\noindent
+Here we assigned new values to the first and third rows of {\tt y}.
+
+And another example:
+
+\begin{Code}
+> x <- matrix(nrow=3,ncol=3)
+> x[2:3,2:3] <- cbind(4:5,2:3)
+> x  
+     [,1] [,2] [,3]
+[1,]   NA   NA   NA
+[2,]   NA    4    2
+[3,]   NA    5    3
+\end{Code}
+
+Negative subscripts, used with vectors to exclude certain elements, work
+the same way with matrices, e.g.:
+
+\begin{Code}
+> y <- matrix(1:6,nrow=3)
+> y
+     [,1] [,2]
+[1,]    1    4
+[2,]    2    5
+[3,]    3    6
+> y[-2,]
+     [,1] [,2]
+[1,]    1    4
+[2,]    3    6
+\end{Code}
+
+\section{Filtering on Matrices}
+
+Filtering can be done with matrices, as with vectors.  One must be
+careful with the syntax, though.  For instance:
+
+\begin{Code}
+> x
+     x
+[1,] 1 2
+[2,] 2 3
+[3,] 3 4
+> x[x[,2] >= 3,]
+     x
+[1,] 2 3
+[2,] 3 4
+\end{Code}
+
+\noindent
+Again, let's dissect this:
+
+\begin{Code}
+> j <- x[,2] >= 3
+> j
+[1] FALSE  TRUE  TRUE
+> x[j,]
+     x
+[1,] 2 3
+[2,] 3 4
+\end{Code}
+
+We first looked at the vector {\tt x[,2]}, and determined which of its
+elements were greater than or equal to 3.  The result, {\tt j}, is a
+boolean vector.  We then computed {\tt x[j,]}, i.e. the rows of {\tt x}
+specified by {\tt j}, thus the rows corresponding to the elements in
+column 2 that were at least equal to 3.
+
+For performance purposes, it's worth noting again that the computation
+of {\tt j} above was a completely vectorized operation:
+
+\begin{itemize}
+
+\item The object {\tt x[,2]} is a vector.
+
+\item The operator {\tt $>$=} compares two vectors.
+
+\item The number 3 was recycled to a vector of 3s.
+
+\end{itemize}
+
+Note too that even though {\tt j} was defined in terms of {\tt x} and
+then was in turn used to extract from {\tt x}, it need not be that way.
+The filtering criterion can be based on a variable separate from the one
+to which the filtering will be applied.  For instance:
+
+\begin{Code}
+> z <- c(5,12,13)
+> m[z %% 2 == 1,]  
+     [,1] [,2]
+[1,]    1    4
+[2,]    3    6
+\end{Code}
+
+The expression {\tt z \%\% 2 == 1} tests each element of {\tt z} for being
+an odd number, thus yielding {\tt c(TRUE,FALSE,TRUE)}.  That resulted in
+our extracting the first and third rows of {\tt m}.
+
+Here is another example:
+
+\begin{Code}
+> m <- matrix(c(1,2,3,4,5,6),nrow=3)
+> m
+     [,1] [,2]
+[1,]    1    4
+[2,]    2    5
+[3,]    3    6
+> m[m[,1] > 1 & m[,2] > 5,]
+[1] 3 6
+\end{Code}
+
+It's the same principle here, but now with a slightly more complex set of
+conditions for row extraction.  Note by the way that we needed to use
+{\tt \&}, the vector boolean AND operator, rather than the scalar one,
+{\tt \&\&}.  A complete list of such operators is given in Section
+\ref{ops}.
+
+\section{Extended Example:  Preliminary Analysis of Automobile Data}
+\label{mtcars}
+
+Here we look at one of R's built-in data sets, named {\tt mtcars},
+automobile data collected back in 1974.  The help file for this data set
+is invoked as usual via
+
+\begin{Code}
+> ?mtcars
+\end{Code}
+
+while the data set itself, being in the form of a data frame, is
+accessed simply by its name.
+
+There are data on 11 variables, as the help file tells us:
+
+\begin{Verbatim}
+       [, 1]  mpg   Miles/(US) gallon
+       [, 2]  cyl   Number of cylinders
+       [, 3]  disp  Displacement (cu.in.)
+       [, 4]  hp    Gross horsepower
+       [, 5]  drat  Rear axle ratio
+       [, 6]  wt    Weight (lb/1000)
+       [, 7]  qsec  1/4 mile time
+       [, 8]  vs    V/S
+       [, 9]  am    Transmission (0 = automatic, 1 = manual)
+       [,10]  gear  Number of forward gears
+       [,11]  carb  Number of carburetors
+\end{Verbatim}
+
+Since our chapter here concerns matrix objects, let us first change the
+data frame to a matrix.  This is not really necessary in this case, as
+the matrix indexing operations we've covered here do apply to data
+frames too, but it's important to understand that these are two
+different classes.  Here is how we do the conversion:
+
+\begin{Code}
+> class(mtcars)
+[1] "data.frame"
+> mtc <- as.matrix(mtcars)
+> class(mtc)
+[1] "matrix"
+\end{Code}
+
+Let's take a look at the first few records, i.e. the first few rows,
+using {\tt head()}:
+
+\begin{Code}
+> head(mtc)
+                   mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
+\end{Code}
+
+You can see that the matrix has been given row names corresponding to
+the car names, which it inherited from the original data frame.  The
+columns have names too.
+
+Let's find the overall average mile-per-gallon figure:
+
+\begin{Code}
+> mean(mtc[,1])
+[1] 20.09062
+\end{Code}
+
+Let's also find the means of several variables at once:
+
+\begin{Code}
+> colMeans(mtc[,c(1,3:7)])
+       mpg       disp         hp       drat         wt       qsec 
+ 20.090625 230.721875 146.687500   3.596563   3.217250  17.848750 
+\end{Code}
+
+This simple example actually illustrates a very important principle:
+The {\tt colMeans()} function can only be applied to matrices, but that
+can be any matrix, including ones formed by submatrix extraction, as was
+the case here.
+
+Now let's break the gas mileage data down by number of cylinders:
+
+\begin{Code}
+> mean(mtc[mtc[,2] == 4,1])
+[1] 26.66364
+> mean(mtc[mtc[,2] == 6,1])
+[1] 19.74286
+> mean(mtc[mtc[,2] == 8,1])
+[1] 15.1
+\end{Code}
+
+Or, more compactly from a programming point of view:
+
+\begin{Code}
+> for (ncyl in c(4,6,8)) print(mean(mtc[mtc[,2] == ncyl,1]))
+[1] 26.66364
+[1] 19.74286
+[1] 15.1
+\end{Code}
+
+As explained earlier, here the expression {\tt mtc[,2] == ncyl} returns
+a boolean vector, with {\tt TRUE} components corresponding to the rows in {\tt
+mtc} that satisfy {\tt mtc[,2] == ncyl}.  The expression {\tt
+mtc[mtc[,2] == ncy,1]} yields a submatrix consisting of those rows of
+{\tt mtc}, in which we look at column 1.
+
+And we can do this even more compactly with the {\tt by()} function:
+
+\begin{Code}
+> by(mtc[,1],mtc[,2],mean)
+INDICES: 4
+[1] 26.66364
+------------------------------------------------------------ 
+INDICES: 6
+[1] 19.74286
+------------------------------------------------------------ 
+INDICES: 8
+[1] 15.1
+\end{Code}
+
+This call to {\tt by()} instructs R to break the values in {\tt mtc[,1]}
+into groups according to {\tt mtc[,2]}, and then apply the {\tt mean()}
+function to each group.  (The {\tt by()} function is a {\tt wrapper} for
+calling {\tt tapply()} on data frames and matrices.  We'll see more on
+the latter function in Chapter \ref{chap:factab}.)
+
+How many have more than 200 horsepower?  Which are they?
+
+\begin{Code}
+> nrow(mtc[mtc[,4] > 200,])
+[1] 7
+> rownames(mtc[mtc[,4] > 200,])
+[1] "Duster 360"          "Cadillac Fleetwood"  "Lincoln Continental"
+[4] "Chrysler Imperial"   "Camaro Z28"          "Ford Pantera L"     
+[7] "Maserati Bora" 
+\end{Code}
+
+As can be seen in the first command above, the {\tt nrow()} function is
+a handy way to find the count of the number of rows satisfying a certain
+condition.  In the second command, we extracted a submatrix
+corresponding to the given condition, and then asked for the names of
+the rows of that submatrix---giving us the names of the cars satisfying
+the condition.
+
+\section{The apply() Function}
+\label{apply}
+
+One of the most famous and most-used features of R consists of 
+the {\tt *apply()} family, such as {\tt apply()}, {\tt tapply()}
+and {\tt lapply()}.  Here we cover {\tt apply()}.
+
+The arguments of {\tt apply()} are the matrix/data frame to be applied
+to, the dimension---1 if the function applies to rows, 2 for
+columns---and the function to be applied.
+
+For example, here we apply the built-in R function {\tt mean()} to each
+column of a matrix {\tt z}.
+
+\begin{Code}
+> z
+     [,1] [,2]
+[1,]    1    4
+[2,]    2    5
+[3,]    3    6
+> apply(z,2,mean)
+[1] 2 5
+\end{Code}
+
+\noindent
+(Of course, we could have used {\tt rowMeans() instead.)
+
+Here is an example of working on rows, using our own function:
+
+\begin{Code}
+> z
+     [,1] [,2]
+[1,]    1    4
+[2,]    2    5
+[3,]    3    6
+> f <- function(x) x/c(2,8)
+> y <- apply(z,1,f)
+> y
+  [,1]  [,2] [,3]
+[1,]  0.5 1.000 1.50
+[2,]  0.5 0.625 0.75
+\end{Code}
+
+The call to {\tt apply()} asked R to call {\tt f()} on each of the rows
+of {\tt z}.  The first such row was (1,4), so in the call to {\tt f()},
+the actual argument corresponding to the formal argument {\tt x} was
+(1,4).  Thus R computed the value of (1,4)/(2,8), which in R's
+elementwise vector arithmetic is (0.5,0.5).  The computations for the
+other two rows were similar.
+
+You might be surprised that the size of the result here is 2 x 3 rather
+than 3 x 2.  If the function to be applied returns a vector of k
+components, the result of {\tt apply()} will have k rows. You can use
+the matrix transpose function {\tt t()} to change it if need be.
+
+As you can see, the function to be applied needs at least one argument.
+The formal argument here will correspond to an actual argument of one
+row or column in the matrix, as described above. In some cases, you
+will need additional arguments for this function, which you can place
+following the function name in your call to {\tt apply()}.
+
+For instance, suppose we have a matrix of 1s and 0s, and want to create
+a vector as follows:  For each row of the matrix, the corresponding
+element of the vector will be either 1 or 0, depending on whether the
+majority of the first {\tt c} elements in that row are 1 or 0.  Here
+{\tt c} will be a parameter which we may wish to vary.  We could do
+this:
+
+\begin{Code}
+> copymaj <- function(rw,c) {
++    maj <- sum(rw[1:c]) / c
++    return(ifelse(maj > 0.5,1,0))
++ }
+> x <- matrix(c(1,1,1,0, 0,1,0,1, 1,1,0,1, 1,1,1,1, 0,0,1,0),nrow=4)
+> x
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    1    0    1    1    0
+[2,]    1    1    1    1    0
+[3,]    1    0    0    1    1
+[4,]    0    1    1    1    0
+> apply(x,1,copymaj,3)
+[1] 1 1 0 1
+> apply(x,1,copymaj,2)
+[1] 0 1 0 0
+\end{Code}
+
+\noindent
+Here the values 3 and 2 form the actual arguments for the formal
+argument {\tt c} in {\tt copymaj()}.  
+
+So, the general form of {\tt apply} is
+
+\begin{Code}
+apply(m,dimcode,f,fargs}
+\end{Code}
+
+\noindent
+where {\tt m} is the matrix, {\tt dimcode} is 1 or 2, according to
+whether we will operate on rows or columns, {\tt f} is the function to
+be applied, and {\tt fargs} is an optional list of arguments to be
+supplied to {\tt f}.
+
+Using {\tt apply()} will generally not speed up your code.  But it makes
+for very compact code, which may be easier to read and modify, and for
+which the (unseen) looping is already debugged.  Moreover, as R moves
+closer and closer to parallel processing, functions like {\tt apply()}
+will become more and more important.  For example, the {\tt
+clusterApply()} function in the snow package gives R some parallel
+processing capability, by distributing the submatrix data to various
+network nodes, with each one basically running {\tt apply()} on its
+submatrix, and then collect the results.  See Section \ref{snow}.
+
+\section{Adding/Deleting Rows/Columns of Matrices}
+\label{rcbind}
+
+Technically, matrices are of fixed length and dimensions.
+However, they can be reassigned.  Consider:
+
+\begin{Code}
+> x <- c(12,5,13,16,8)
+> x <- c(x,20)  # append 20
+> x
+[1] 12  5 13 16  8 20
+> x <- c(x[1:3],20,x[4:6])  # insert 20
+> x
+[1] 12  5 13 20 16  8 20  # delete elements 2 through 4
+> x <- x[-2:-4]
+> x
+[1] 12 16  8 20
+\end{Code}
+
+\noindent
+(Actually, reassignment often occurs even when you don't see it, as
+will be discussed in Chapter \ref{chap:fun}.  For instance, even the
+innocuous-looking ``assignment'' {\tt x[2] = 12} will turn out to be a
+reassignment.)
+
+The {\tt rbind()} and {\tt cbind()} functions enable one to add rows or
+columns to a matrix.  For example:
+
+\begin{Code}
+> one
+[1] 1 1 1 1
+> z
+  [,1] [,2] [,3]
+[1,] 1    1    1
+[2,] 2    1    0
+[3,] 3    0    1
+[4,] 4    0    0
+> cbind(one,z)
+[1,]1 1 1 1
+[2,]1 2 1 0
+[3,]1 3 0 1
+[4,]1 4 0 0
+\end{Code}
+
+You can also use these functions as a quick way to create small
+matrices:
+
+\begin{Code}
+> q <- cbind(c(1,2),c(3,4))
+> q
+     [,1] [,2]
+[1,]    1    3
+[2,]    2    4
+\end{Code}
+
+Be careful with this, though.  If you are adding rows or columns one at
+a time and the matrix will become large, it's better to allocate a large
+matrix in the first place.  It will be empty at first, but you fill in
+the rows one at a time.  This may be much faster than using {\tt rbind()}
+or {\tt cbind()} as above, as new space will have to be allocated each
+time, a slow operation.
+
+We can delete rows or columns by reassignment too, e.g.:
+
+\begin{Code}
+> m <- matrix(1:6,nrow=3)
+> m
+     [,1] [,2]
+[1,]    1    4
+[2,]    2    5
+[3,]    3    6
+> m <- m[c(1,3),]
+> m
+     [,1] [,2]
+[1,]    1    4
+[2,]    3    6
+\end{Code}
+
+\section{Extended Example:  Finding the Closest Pair of Cities}
+\label{cities}
+
+A common class of examples in computer science involves cities and
+distances between them.  Suppose need a function that inputs a distance
+matrix (the element in row i, column j gives the distance between city i
+and city j), and outputs the minimum one-hop distance between cities,
+and the pair that achieves that minimum.  Here's the code
+
+\begin{Code}
+# returns the minimum value of d[i,j], i != j, and the row/col attaining
+# that minimum, for square symmetric matrix d; no special policy on ties;
+# motivated by distance matrices
+mind <- function(d) {
+   n <- nrow(d)
+   # add a column to identify row number for apply()
+   dd <- cbind(d,1:n)
+   wmins <- apply(dd[-n,],1,imin)  
+   # wmins will be 2xn, 1st row being indices and 2nd being values
+   i <- which.min(wmins[2,])
+   j <- wmins[1,i]
+   return(c(d[i,j],i,j))
+}
+
+# finds the location, value of the minimum in a row x
+imin <- function(x) {
+   n <- length(x) 
+   i <- x[n]
+   j <- which.min(x[(i+1):(n-1)])
+   k <- i+j
+   return(c(k,x[k]))
+}
+\end{Code}
+
+For example:
+
+\begin{Code}
+q> m
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    0   12   13    8   20
+[2,]   12    0   15   28   88
+[3,]   13   15    0    6    9
+[4,]    8   28    6    0   33
+[5,]   20   88    9   33    0
+> mind(m)
+[1] 6 3 4
+\end{Code}
+
+\noindent
+The minimum value was 6, located in row 3, column 4.
+
+As you can see, a call to {\tt apply()} plays a prominent role.  Let's
+see how it works.
+
+Our task is fairly simple---we need to find the minimum nonzero element
+in the matrix.  We find the minimum in each row, and then find the
+smallest value among those minima.
+
+One key point, though, is that the matrix is {\it symmetric}, because
+the distance from city i to city j is the same as from j to i.  So in
+finding the minimum value in the {\tt i}$^{th}$ row, we need look only
+at elements {\tt i+1}, {\tt i+2},...,{\tt n}, where {\tt n} is the
+number of rows and columns in the matrix.  Indeed, since the matrix
+could be large---1000 cities would mean a million entries in the
+matrix---we ought to avoid doing extra work in going through the entire
+row.
+
+That, however, presents a problem.  A function called by {\tt apply()},
+in our case here {\tt imin()}, will treat all the rows (or columns)
+identically---which is in conflict with the work-saving plan we
+discussed in the previous paragraph, in which we would treat different
+rows differently, according to their row numbers. 
+
+So, we augment the matrix with an extra column, consisting of the row
+numbers:
+
+\begin{Code}
+dd <- cbind(d,1:n)
+\end{Code}
+
+Here then is the function to be applied:
+
+\begin{Code}
+imin <- function(x) {
+   m <- length(x) 
+   i <- x[m]
+   j <- which.min(x[(i+1):(m-1)])
+   k <- i+j
+   return(c(k,x[k]))
+\end{Code}
+
+\noindent
+The R function {\tt which.min()} tells us {\it where} in a vector the
+minimum value is located, rather than {\it what} the value is.  Note
+that in the expression {\tt (i+1):(m-1)}, we skip the early part of the
+vector, to avoid duplicate computation, and we also skip the row number
+at the end.
+
+\section{Digging a Little Deeper on the Vector/Matrix Distinction}
+
+It was stated at the outset of this chapter that
+
+\begin{quote}
+A matrix is a vector with two additional attributes, the number of 
+rows and number of columns.  
+\end{quote}
+
+\noindent
+Let's look at this a bit more closely:
+
+\begin{Code}
+> z <- matrix(1:8,nrow=4)
+> z
+     [,1] [,2]
+[1,]    1    5
+[2,]    2    6
+[3,]    3    7
+[4,]    4    8
+\end{Code}
+
+\noindent
+Looks fine.  But {\tt z} is still a vector, so that for instance we can
+query its length:
+
+\begin{Code}
+> length(z)
+[1] 8
+\end{Code}
+
+But as a matrix, {\tt z} is a bit more than a vector:
+
+\begin{Code}
+> class(z)
+[1] "matrix"
+> attributes(z)
+$dim
+[1] 4 2
+\end{Code}
+
+In other words, there actually is a {\tt matrix} {\it class}, in the
+object-oriented programming sense.  We'll cover OOP in Chapter
+\ref{chap:oop}, but for now it will suffice to say that R classes use a
+dollar sign to denote members of a class, just like C++, Python and so
+on use a period.  So, we see that the {\tt matrix} class has one
+attribute, named {\tt dim}, which is a vector containing the numbers of
+rows and columns in the matrix.
+
+You can also obtain {\tt dim} via the {\tt dim()} function:
+
+\begin{Code}
+> dim(z)
+[1] 4 2
+\end{Code}
+
+The numbers of rows and columns are obtainable individually via the
+{\tt nrow()} and {\tt ncol()} functions:
+
+\begin{Code}
+> nrow(z)
+[1] 4
+> ncol(z)
+[1] 2
+\end{Code}
+
+\noindent
+These just piggyback on {\tt dim()}, as you can see by inspecting the
+code (functions, as objects, can be printed in interactive mode by
+simply typing their names), e.g.
+
+\begin{Code}
+> nrow
+function (x) 
+dim(x)[1]
+\end{Code}
+
+\noindent
+This calls {\tt dim()}, then extracts element 1 from the resulting
+vector.
+
+These functions are useful when you are writing a general-purpose
+library function whose argument is a matrix.  By being able to sense the
+number of rows and columns in your code, you alleviate the caller of the
+burden of supplying that information as two additional arguments.
+
+\section{Dimension Reduction:  a Bug or a Feature?}
+\label{feature}
+
+In the world of statistics, dimension reduction is a good thing, with
+many statistical procedures aimed to do it well.  If we are working
+with, say, 10 variables, and can reduce that number to three, we're
+happy.
+
+However, in R there is something else that might merit the name
+``dimension reduction" which we may sometimes wish to avoid.  Say we
+have a four-row matrix, and extract a row from it:
+
+\begin{Code}
+> z <- matrix(1:8,nrow=4)
+> z
+     [,1] [,2]
+[1,]    1    5
+[2,]    2    6
+[3,]    3    7
+[4,]    4    8
+> r <- z[2,]
+> r
+[1] 2 6
+\end{Code}
+
+This seems innocuous, but note the format in which R has displayed {\tt
+r}.  It's a vector format, not a matrix format.  In other words, {\tt r}
+is a vector of length 2, rather than a 1x2 matrix.  We can confirm this:
+
+\begin{Code}
+> attributes(z)
+$dim
+[1] 4 2
+
+> attributes(r)
+NULL
+\end{Code}
+
+This seems natural, but in many cases it will cause trouble in programs
+that do a lot of matrix operations.  You may find that your code works
+fine in general, but fails in a special case.  Say for instance that
+your code extracts a submatrix from a given matrix, and then does some
+matrix operations on the submatrix.  If the submatrix has only one row,
+R will make it a vector, which could ruin your computation.
+
+Fortunately, R has a way to suppress this dimension reduction, with the
+{\tt drop} argument.  For example:
+
+\begin{Code}
+> r <- z[2,, drop=F]
+> r
+     [,1] [,2]
+[1,]    2    6
+> dim(r)
+[1] 1 2
+\end{Code}
+
+\noindent
+Ah, now {\tt r} is a 1x2 matrix.
+
+See Sections \ref{des} for an example in which {\tt drop} is used.
+
+If you have a vector which you wish to be treated as a matrix, use {\tt
+as.matrix()}:
+
+\begin{Code}
+> u
+[1] 1 2 3
+> v <- as.matrix(u)
+> attributes(u)
+NULL
+> attributes(v)
+$dim
+[1] 3 1
+\end{Code}
+
+\section{Extended Example:  Discrete-Event Simulation in R}
+\label{des}
+
+{\it Discrete-event simulation} (DES) is widely used in business,
+industry and government.  The term ``discrete event'' refers to the fact
+that the state of the system changes only in discrete quantities, rather
+than changing continuously.  
+
+A typical example would involve a queuing system, say people lining up
+to use an ATM machine.  Let's define the state of our system at time t
+to be the the number of people in the queue at that time.  The state
+changes only by +1, when someone arrives, or by -1, when a person
+finishes an ATM transaction.  This is in contrast to, for instance, a
+simulation of weather, in which temperature, barometric pressure and so
+on changes continuously.
+
+This will be one of the longer, more involved examples in this book, but
+it exemplifies a number of important issues in R, so the reader's
+patience will turn out to be a good investment of time.  It is not
+assumed here that the reader has any prior background in DES.  
+
+Central to DES operation is maintenance of the {\it event list}, a list
+of scheduled events.  (The term ``list'' here does not refer to the R
+data type.)  In the ATM example, for instance, the event list might at
+some point in the simulation look like
+
+\begin{Verbatim}
+customer 1 arrives at time 23.12
+customer 2 arrives at time 25.88
+customer 3 arrives at time 25.97
+customer 1 finishes service at time 26.02
+\end{Verbatim}
+
+Since the earliest event must always be handled next, the simplest form
+of coding the event list is to store it in time order, as seen above.
+(Readers with computer science background might notice that a more
+efficient approach might be to use some kind of binary tree for
+storage.)  Here we will implement it as a matrix, with the first row
+containing the earliest scheduled event, the second row containing the
+second earliest, and so on. 
+
+The main loop of the simulation repeatedly iterates, each iteration
+pulling the earliest event off of the event list, updating the simulated
+time to reflect the occurrence of that event, and reacting to this
+event.  The latter action will typically result in the creation of new
+events.  For example, if a customer arrival occurs when the queue is
+empty, that customer's service will begin.  Our code must determine the
+customer's service time, and then will know the time at which service
+will be done, an event for which must be added to the event list.
+
+One of the oldest approaches to write DES code is the {\it
+event-oriented paradigm}.  Here the code to handle the occurrence of one
+event sets up another event.  As an example to guide our thinking,
+consider the ATM situation.
+
+At time 0, the queue is empty.  The simulation code randomly generates
+the time of the first arrival, say 2.3.  At this point the event list is
+simply (2.3).  This event is pulled off the list, simulated time is
+updated to 2.3, and we react to the arrival event as follows:  The queue
+for the ATM is empty, so we start the service, by randomly generating
+the service time; say it is  1.2 time units.  Then the completion of
+service will occur at simulated time 2.3+1.2 = 3.5, so we add this event
+to the event list, which will now consist of (3.5).  We will also
+generate the time to the next arrival, say 0.6, which means the arrival
+will occur at time 2.9.  Now the event list consists of (2.9,3.5).
+
+So, let's go to the code.  As will be detailed below, our example code
+here is hardly optimal, and the reader is invited to improve it.  (C
+programmers will note that R's lack of pointer variables means that we
+must write code for maintaining the event list in a nontraditional way,
+but on the other hand it will also lead to some conveniences too.) It
+does, however, serve to illustrate a number of the issues we have
+discussed in this chapter.
+
+The code consists of generally-applicable library functions, as well as
+application-specific functions for our example.  The latter simulates an
+M/M/1 queue, i.e. a single-server queue in which both interarrival time
+and service time are exponentially distributed.  
+
+Here is a summary of the library functions:
+
+\begin{itemize}
+
+\item {\tt newsim()}:  Initializes a simulation.
+
+\item {\tt insevnt()}:  Inserts a newly-created event into the event
+list.
+
+\item {\tt schedevnt()}:  Determines the occurrence time of a
+newly-created event, then calls {\tt insevnt()} to add it to the event
+list.
+
+\item {\tt getnextevnt()}:  Pulls the earliest event off the event list.
+
+\item {\tt mainloop()}:  As the name implies, this is the core loop of
+the simulation.  Repeatedly calls {\tt getnextevnt()}, updates the
+current simulated time, {\tt sim\$currtime}, and calls the
+application-specific function {\tt reactevnt()} to process this
+newly-occurred event.
+
+\end{itemize}
+
+\noindent
+The application-specific functions here are 
+
+\begin{itemize}
+
+\item {\tt initglbls()}:  Initializes the global variables (and
+documents them).
+
+\item {\tt reactevnt()}:  This is the application-specific event
+processor required by the DES library function {\tt mainloop()}.
+If the event is an arrival, it adds to the server queue if the latter is
+nonempty, or starts service for this arrival if not.  If the event is
+service done, it then starts service for the first job in the queue, if
+any.
+
+\end{itemize}
+
+Here's the code:
+
+\begin{Code}
+# DES.R:  R routines for discrete-event simulation (DES), with an example
+
+# each event will be represented by a vector; the first component will
+# be the time the event is to occur; the second component will be the
+# numerical code for the programmer-defined event type; the programmer
+# may add further components that are application-specific
+
+# a list named "sim" holds the events list and other information; for
+# convenience, sim has been stored as a global variable; some functions
+# have side effects
+
+# create "sim"
+newsim <- function() {
+   sim <<- list()
+   sim$currtime <<- 0.0  # current simulated time
+   sim$evnts <<- NULL  # event list
+}
+
+# insert event evnt into event list
+insevnt <- function(evnt) {
+   # if the event list is empty, set it to consist of evnt and return
+   if (is.null(sim$evnts)) {
+      sim$evnts <<- matrix(evnt,nrow=1)
+      return()
+   }
+   # otherwise, find insertion point
+   inspt <- binsearch(sim$evnts[,1],evnt[1])
+   # now "insert," by reconstructing the matrix; we find what portion of
+   # the current matrix should come before evnt and what portion should 
+   # come after it, then string everything together
+   before <- if (inspt == 1) NULL else sim$evnts[1:(inspt-1),]
+   nr <- nrow(sim$evnts)
+   after <- if (inspt <= nr) sim$evnts[inspt:nr,] else NULL
+   sim$evnts <<- rbind(before,evnt,after)
+}
+
+# schedule new event; evnttime is the time at which the event is to
+# occur; evnttype is the event type; and appfields are the values of the
+# programmer-defined fields, if any
+schedevnt <- function(evnttime,evnttype,appfields=NULL) {
+   evnt <- c(evnttime,evnttype,appfields)
+   insevnt(evnt)  
+}
+
+# start to process next event (second half done by application
+# programmer via call to reactevnt()) from mainloop()
+getnextevnt <- function() {
+   head <- sim$evnts[1,]
+   # delete head
+   if (nrow(sim$evnts) == 1) sim$evnts <<- NULL else 
+      sim$evnts <<- sim$evnts[-1,,drop=F]
+   return(head)
+}
+
+# main loop of the simulation
+mainloop <- function(maxsimtime) {
+   while(sim$currtime < maxsimtime) {
+      head <- getnextevnt()
+      sim$currtime <<- head[1]  # update current simulated time
+      reactevnt(head)  # process this event (programmer-supplied ftn)
+   }
+}
+
+# binary search of insertion point of y in the sorted vector x; returns
+# the position in x before which y should be inserted, with the value
+# length(x)+1 if y is larger than x[length(x)]
+binsearch <- function(x,y) {
+   n <- length(x)
+   lo <- 1
+   hi <- n
+   while(lo+1 < hi) {
+      mid <- floor((lo+hi)/2)
+      if (y == x[mid]) return(mid)
+      if (y < x[mid]) hi <- mid else lo <- mid
+   }
+   if (y <= x[lo]) return(lo)
+   if (y < x[hi]) return(hi)
+   return(hi+1)
+}
+
+# application:  M/M/1 queue, arrival rate 0.5, service rate 1.0; we must
+# set the globals and the function reactevnt() for this application
+
+# initializes the global variables
+initglbls <- function() {
+   # globals
+   # rates
+   arvrate <<- 0.5  # arrival rate
+   srvrate <<- 1.0  # service rate
+   # event types
+   arvtype <<- 1  # arrival type
+   srvdonetype <<- 2  # service done type
+   # server queue, consisting of arrival times of queued jobs
+   srvq <<- vector(length=0) 
+   # statistics
+   njobsdone <<- 0  # jobs done so far
+   totwait <<- 0.0  # total wait time so far
+}
+
+# application-specific event processing function required by mainloop()
+# in the general DES library above
+reactevnt <- function(head) {
+   if (head[2] == arvtype) {  # arrival
+      # if server free, start service, else add to queue
+      if (length(srvq) == 0) {
+         srvq <<- head[3]
+         srvdonetime <- sim$currtime + rexp(1,srvrate)
+         schedevnt(srvdonetime,srvdonetype,head[3])
+      } else srvq <<- c(srvq,head[3])
+      # generate next arrival
+      arvtime <- sim$currtime + rexp(1,arvrate)
+      schedevnt(arvtime,arvtype,arvtime)
+   } else {  # service done
+      # process job that just finished
+      # do accounting
+      njobsdone <<- njobsdone + 1
+      totwait <<- totwait + sim$currtime - head[3]
+      # remove from queue
+      srvq <<- srvq[-1]
+      # more still in the queue?
+      if (length(srvq) > 0) {
+         # schedule new service
+         srvdonetime <- sim$currtime + rexp(1,srvrate)
+         schedevnt(srvdonetime,srvdonetype,srvq[1])
+      }
+   }
+}
+
+mm1sim <- function() {
+   initglbls()
+   # create simulation
+   newsim()
+   # get things going, generating and scheduling first arrival event
+   arvtime <- rexp(1,rate=arvrate)
+   schedevnt(arvtime,arvtype,arvtime)
+   mainloop(10000.0)
+   return(totwait/njobsdone)
+}
+\end{Code}
+
+The simulation state, consisting of the current simulated time and the
+event list, have been placed in an R list, {\tt sim}.  This was done out
+of a desire to encapsulate the information, which in R typically means
+using a list.
+
+This list {\tt sim} has been made a global variable, for convenience and
+clarity.  This led to the use of R's superassignment operator
+\verb+<<-+, with associated side effects.  For instance in {\tt
+mainloop()}, the line
+
+\begin{Code}
+sim$currtime <<- head[1]  # update current simulated time
+\end{Code}
+
+\noindent
+changes a global directly, while {\tt sim\$evnts} is changed indirectly
+via the call
+
+\begin{Code}
+head <- getnextevnt()
+\end{Code}
+
+If one has objections to use of globals, this could be changed, through
+the use of the ``getters'' and ``setters'' familiar to object-oriented
+programming fans.
+
+As noted, a key issue in writing a DES library is the event list.  It
+has been implemented here as a matrix, {\tt sim\$evnts}.  Each row of
+the matrix corresponds to one scheduled event, with information on the
+event time, the event type (say arrival or service completion) and any
+application-specific data the programmer wishes to add.  The rows of the
+matrix are in ascending order of event time, which is contained in the
+first column.
+
+The main potential advantage of using a matrix as our structure here is
+that it enables us to maintain the event list in ascending order by time
+via a binary search operation by event time in that first column.  This
+is done in the line
+
+\begin{Code}
+inspt <- binsearch(sim$evnts[,1],evnt[1])
+\end{Code}
+
+\noindent
+in {\tt insevnt()}.  Here we wish to insert a newly-created event into
+the event list, and the fact that we are working with a vector appears
+to enable the use of a fast binary search.
+
+However, looks are somewhat deceiving here.  Though for an event set
+of size n, the search will be of time order O(log n), we still need O(n)
+to reassign the matrix, in the code
+
+\begin{Code}
+if (inspt > 1) e <- rbind(sim$evnts[1:(inspt-1),],evnt)
+nrse <- nrow(sim$evnts) 
+if (inspt <= nrse)
+   e <- rbind(evnt, sim$evnts[inspt:nrse,])
+sim$evnts <<- e
+\end{Code}
+
+\noindent
+Again, this exemplifies the effects of lack of pointers.  Here is a
+situation in which it may be useful to write some code in C/C++ and then
+interface to R, which is discussed in Chapter \ref{chap:otherlang}.
+
+The line 
+
+\begin{Code}
+sim$evnts <<- rbind(before,evnt,after)
+\end{Code}
+
+is a good example of the use of {\tt rbind()}.  Here we have extracted
+the events in the event list whose times are earlier than that of {\tt
+evnt}, and stored them in {\tt before}, and constructed a similar set in
+{\tt after} for the events whose times are later than that of {\tt
+evnt}.  We then use {\tt rbind()} to put all these together in the
+proper order.
+
+There are a couple of items worth mentioning in the line
+
+\begin{Code}
+sim$evnts <<- sim$evnts[-1,,drop=F]
+\end{Code}
+
+First, as mentioned earlier, the negative-subscript feature of vector
+operations apply to matrices too.  Here we are in essence deleting the
+first row of {\tt sim\$evnts}.
+
+Second, here is an example of the need for {\tt drop}.  If there are
+just two events, the deletion will leave us with only one.  Without {\tt
+drop}, the assignment would then change {\tt sim\$evnts} from a matrix
+to a vector, causing problems in subsequent code that assumes it is a
+matrix.
+
+The DES library code we've written above requires that the user provide
+a function {\tt reactevnt()} that takes the proper actions for each
+event.  In our M/M/1 queue example here, we've defined two types of
+events---arrival and service completion.  Our function {\tt reactevnt()}
+must then supply code to execute for each of these two events.  As
+mentioned earlier, for an arrival event, we must add the new job to the
+queue, and if the server is idle, schedule a service event for this job.
+If a service completion event occurs, our code updates the statistics
+and then checks the queue; if there are still jobs there, the first has
+a service completion event scheduled for it.  
+
+We might add some code to set up some graphical analysis.  For instance,
+let's add code to track how the queue length varies with time.  We'll
+set up a global variable {\tt qlngs} to record the length of the ATM
+queue each time a customer arrives, initializing it in {\tt initglbls}:
+
+\begin{Code}
+qlngs <<- vector()
+\end{Code}
+
+\noindent 
+Then in {\tt reactevnt()}, we'll record the latest queue length:
+
+\begin{Code}
+if (head[2] == arvtype) {  # arrival
+   qlngs <<- c(qlngs,length(srvq))
+\end{Code}
+
+Now, after we run the program, our global variables are still there, so
+we can do the plot:
+
+\begin{Code}
+> mm1sim()
+[1] 2.045909
+> plot(qlngs[1:100],pch=".",type="l")
+\end{Code}
+
+\noindent
+(We only looked at the first 100 arrivals.  Otherwise the graph would be
+too bunched together, and we'd need to do smooting or something like
+that.) The resulting graph is shown in Figure \ref{qlngs}.
+
+\begin{figure}[tp]
+   \includegraphics[width=3.0in]{Images/qlngs.png}
+   \caption{Queue Lengths Over Time}
+   \label{qlngs}
+\end{figure}
+
+In this example, there is just one piece of application-specific data
+that we add to events, which is each job's arrival time.  This is needed
+in order to calculate total wait time.
+
+\section{Matrix Row and Column Names}
+
+The natural way to refer to rows and columns in a matrix is, of course,
+via the row and column numbers.  However, optionally one can give
+alternate names to these entities.
+
+For example:
+
+\begin{Code}
+> z <- matrix(c(1,2,3,4),nrow=2)
+> z
+     [,1] [,2]
+[1,]    1    3
+[2,]    2    4
+> colnames(z)
+NULL
+> colnames(z)  <- c("a","b")
+> z
+     a b
+[1,] 1 3
+[2,] 2 4
+> colnames(z)
+[1] "a" "b"
+> z[,"a"]
+[1] 1 2
+\end{Code}
+
+\noindent
+As you see here, these names can then be used to reference specific
+columns.  The function {\tt rownames()} works similarly.
+
+This feature is usually less important when writing R code for general
+application, but can be very useful when analyzing a specific data set.
+An example of this is seen in Section \ref{mtcars}.
+
+\section{Higher-Dimensional Arrays}
+
+A typical matrix in R arising in a statistical context has rows
+corresponding to observations, say on various people, and columns
+corresponding to variables.  But suppose in this context we also have
+data taken at different times, one data point per person per variable
+per time.  Time then becomes the third dimension, in addition to rows
+and columns.  In R such data sets are called {\it arrays}.
+
+One of the most common situations in which arrays are used is that of
+calculating tables.  See Section \ref{tableusage} for an example of a
+three-dimensional table.

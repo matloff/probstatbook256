@@ -1,0 +1,47 @@
+
+\documentclass[11pt]{article}
+
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{0.0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9.0in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{0.1in}
+
+\usepackage{times}
+\usepackage{fancyvrb}  
+\usepackage{relsize}  
+\usepackage{hyperref}
+
+\begin{document}
+
+Let $I_i$ be 1 or 0, depending on whether the i$^{th}$ interaction is
+successful or not, and set $S_n = I_1 +...+ I_n$ is the number of
+successes among the first n interactions.  Then
+
+\begin{equation}
+E(S_n) = \sum_{i=1}^n \sigma_i
+\end{equation}
+
+and since the interactions are independent, 
+
+\begin{equation}
+Var(S_n) = \sum_{i=1}^n \sigma_i (1 - \sigma_i)
+\end{equation}
+
+Since $S_n$ is a sum of independent though nonidentically-distributed
+random variables, the Central Limit Theorem (CLT) applies if certain
+conditions, such as those of Lindeberg, are satisfied.  We do not pursue
+those conditions here, but the CLT holds, one can find approximate
+probabilities involving the $S_n$, as
+
+\begin{equation}
+P(S_n \leq k) \approx \Phi \left [(k-\sum_{i=1}^n \sigma_i)/
+\sqrt{\sum_{i=1}^n \sigma_i (1 - \sigma_i)} \right ]
+\end{equation}
+
+\end{document}
+

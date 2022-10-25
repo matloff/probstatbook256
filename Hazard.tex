@@ -1,0 +1,535 @@
+\chapter{Describing ``Failure''} 
+\label{haz}
+
+Here we will study the distributions of times until event occurrence.
+There are numerous applications, such as:
+
+\begin{itemize}
+
+\item Medical research:  E.g. time of recurrence of a disease.
+
+\item Software reliability:  E.g. time until the next bug is discovered.
+
+\item Software development processes: Time until a new team member is
+added to an open source project.
+
+\item Hardware reliability:  Time until failure.
+
+\item Marketing:  E.g. time until your customer moves to some other
+provider.
+
+\item Employment discrimination litigation:  E.g. time until a worker is
+fired.
+
+\end{itemize}
+
+Here in this chapter, we study the mathematical underpinnings.
+
+\section{Hazard Functions}
+
+In addition to density functions, another useful description of a
+continuous distribution is its {\bf hazard function}.\footnote{This can
+be done for discrete random variables too.} Again think of the lifetimes
+of light bulbs, not necessarily assuming an exponential distribution.
+Intuitively, the hazard function states the likelihood of a bulb failing
+in the next short interval of time, given that it has lasted up to now.  To understand this, let's review a certain property of the exponential distribution family.  \subsection{Basic Concepts} Suppose the lifetimes of light bulbs L were discrete.  Suppose a particular bulb has already lasted 80 hours.  The probability of it failing in the next hour could be written in terms of the pmf and cdf of the distribution of lifetimes of bulbs: \begin{equation} P(L = 81 | L > 80) = \frac{P(L = 81 \textrm{ and } L > 80)}{P(L > 80)} 
+= \frac{P(L = 81)}{P(L > 80)} 
+= \frac{p_L(81)}{1-F_L(80)}
+\end{equation}
+
+In general, for discrete L, we define its {\bf hazard function} as
+
+\begin{equation}
+h_L(i) = \frac{p_L(i)}{1-F_L(i-1)}
+\end{equation}
+
+By analogy, for continuous L we define 
+
+\begin{equation}
+\label{hf}
+h_L(t) = \frac{f_L(t)}{1-F_L(t)} 
+\end{equation}
+
+Again, the interpretation is that $h_L(t)$ is the likelihood of the item
+failing very soon after t, given that it has lasted t amount of time.
+The probability of failing within the next $\delta$ amount of time is
+approximately $h_L(t) \delta$, for small $\delta$.
+
+Note carefully that the word ``failure'' here should not be taken
+literally.  In our Davis railroad crossing example in Chapter
+\ref{chap:expondistr}, ``failure'' means that the train ends---a
+``failure'' which those of us who are waiting will welcome!
+
+Since we know that exponentially distributed random variables are
+memoryless, we would expect intuitively that their hazard functions are
+constant.  We can verify this by evaluating (\ref{hf}) for an
+exponential density with parameter $\lambda$; sure enough, the hazard
+function is constant, with value $\lambda$.
+
+The reader should verify that in contrast to an exponential
+distribution's constant failure rate, a uniform distribution has an
+increasing failure rate (IFR).  Some distributions have decreasing
+failure rates, while most have non-monotone rates.
+
+Hazard function models have been used extensively in software testing.
+Here ``failure'' is the discovery of a bug, and with quantities of
+interest include the mean time until the next bug is discovered, and the
+total number of bugs.
+
+Some parametric families of distributions have strictly increasing
+failure rates (IFR).  Some have strictly decreasing failure rates (DFR).
+People have what is called a ``bathtub-shaped'' hazard function.  It is
+high near 0 (reflecting infant mortality) and after, say, 70, but is low
+and rather flat in between.
+
+You may have noticed that the right-hand side of (\ref{hf}) is the
+derivative of $-ln[1-F_L(t)]$.  Therefore
+
+\begin{equation}
+\int_{0}^{t} h_L(s) ~ ds = -\ln[1-F_L(t)]
+\end{equation}
+
+so that
+
+\begin{equation}
+1 - F_L(t) = e^{-\int_{0}^{t} h_L(s) ~ ds}
+\end{equation}
+
+and thus\footnote{Recall that the derivative of the integral of a
+function is the original function!}
+
+\begin{equation}
+f_L(t) = h_L(t) e^{-\int_{0}^{t} h_L(s) ~ ds}
+\end{equation}
+
+In other words, just as we can find the hazard function knowing the
+density, we can also go in the reverse direction.  This establishes that
+there is a one-to-one correspondence between densities and hazard
+functions.
+
+This may guide our choice of parametric family for modeling some random
+variable.  We may not only have a good idea of what general shape the
+density takes on, but may also have an idea of what the hazard function
+looks like.  These two pieces of information can help guide us in our
+choice of model.
+
+\subsection{Example:  Software Reliability Models}
+
+Hazard function models have been used successfully to model the
+``arrivals'' (i.e. discoveries) of bugs in software.  Questions that
+arise are, for instance, ``When are we ready to ship?'', meaning when
+can we believe with some confidence that most bugs have been found?
+
+Typically one collects data on bug discoveries from a number of projects
+of similar complexity, and estimates the hazard function from that data.
+Some investigations, such as Ohishia {\it et al}, Gompertz Software
+Reliability Model: Estimation Algorithm and Empirical Validation, {\it
+Journal of Systems and Software}, 82, 3, 2009, 535-543.
+
+See {\it Accurate Software Reliability Estimation}, by Jason Allen
+Denton, Dept. of Computer Science, Colorado State University, 1999, and
+the many references therein.
+
+\section{Residual-Life Distribution}
+\label{reslife}
+
+In the bus-paradox example, if we had been working with light bulbs
+instead of buses, the analog of the time we wait for the next bus would
+be the remaining lifetime of the current light bulb. The time from a
+fixed time point t until the next bulb replacement, is known as the
+\textbf{residual life}.  (Another name for it is the \textbf{forward
+recurrence time.}) 
+
+Our aim here is to derive the distribution of renewal times.  To do
+this, let's first bring in some terminology from {\bf renewal theory}.
+
+\subsection{Renewal Theory}
+
+Recall the light bulb example of Section \ref{connpoi}.  Every time a
+light bulb burns out, we immediately replace it with a new one.  The
+time of the r$^{th}$ replacement is denoted by $T_r$, and satisfies the
+relation
+
+\begin{equation}
+N(t) = \max\{k: T_k \leq t\}
+\end{equation}
+
+where N(t) is the number of replacements that have occurred by time t
+and $X_i$ is the lifetime of the i$^{th}$ bulb.  The random variables
+$X_1, X_2,...$ are assumed independent and identically distributed
+(i.i.d.); we will NOT assume that their common distribution is
+exponential, though.
+
+Note that for each t $>$ 0, N(t) is a random variable, and since we have
+a collection of random variables indexed by t.  This collection is
+called a {\bf renewal process}, the name being motivated by the idea of
+``renewals'' occurring when light bulbs burn out.  We say that N(t) is
+the number of renewals by time t.
+
+In the bus paradox example, we can think of bus arrivals as renewals
+too, with the interbus times sbeing analogous to the light bulb
+lifetimes, and with N(t) being the number of buses that have arrived by
+time t.
+
+Note the following for general renewal processes:
+
+{\bf Duality Between ``Lifetime Domain'' and ``Counts Domain'':}
+
+A very important property of renewal processes is that
+
+\begin{equation}
+\label{equivdoms}
+N(t) \geq k  \textrm{ if and only if } T_k \leq t
+\end{equation}
+
+This is just a formal mathematical of common sense:  There have been at
+least k renewals by now if and only if the $k^{th}$ renewal has already
+occurred!  But it is a very important device in renewal analysis.
+
+Equation (\ref{equivdoms}) might be described as relating the ``counts
+domain'' (left-hand side of the equation) to the ``lifetimes domain''
+(right-hand side).
+
+There is a very rich theory of renewal processes, but let's move on to
+our goal of finding the distribution of residual life.
+
+\subsection{Intuitive Derivation of Residual Life for the Continuous
+Case}
+\label{deriveresidlife}
+
+Here is a derivation for the case of continuous $X_i$.  For
+concreteness think of the bus case, but the derivation is general.
+
+In the context of the bus and stick examples in Section
+\ref{busparadox}, denote by V the length of the interbus arrival that we
+happen to hit when we arrive at the bus stop, and let D denote the
+residual life, i.e. the time until the next bus.  The key point is that,
+given V, D is uniformly distributed on (0,V).  To see this, think of the
+stick example.  If the stick that we happen to touch first has length V,
+the point on which we touched it could be anywhere from one end to the
+other with equal likelihood.  So,
+
+\begin{equation}
+f_{D|V}(s,t) = \frac{1}{t}, ~~ 0 < s < t
+\end{equation}
+
+% Thus (\ref{contcond}) yields
+Thus
+
+\begin{equation}
+f_{D,V}(s,t) = \frac{1}{t} \cdot f_V(t), ~~ 0 < s < t
+\end{equation}
+
+Then 
+
+\begin{eqnarray}
+\label{resid}
+f_{D}(s) &=& \int_{s}^{\infty} \frac{1}{t} \cdot f_V(t) ~ dt \\
+&=& \int_{s}^{\infty} \frac{1}{EX} \cdot f_X(t) ~ dt \\
+&=& \frac{1-F_X(s)}{EX}
+\end{eqnarray}
+
+This is a classic result, of central importance and usefulness, as seen
+in our upcoming examples later in this section.\footnote{If you are
+wondering about that first equality in (\ref{resid}), it is basically a
+continuous analog of 
+
+$$
+P(A) = P(A \textrm{ and } B_1 \textrm{ or } A \textrm{ and } B_2
+\textrm{ or } ...) =
+P(A | B_1) P(B_1) + P(A|B_2) P(B_2) + ...)
+$$
+
+for disjoint events $B_1, B_2, ...$.  This is stated more precisely in
+Section \ref{lte}.}
+
+It should be noted that all of this assume a ``long-run'' situation.  In
+our bus example, for instance, it implicitly assumes that when we arrive
+at the bus stop at 5:00, the buses have been running for quite a while.
+To state this more precisely, let's let D depend on t:  D(t) will be the
+residual life at time t, e.g. the time we must wait for the next bus if
+we arrive at the stop at time t.  Then (\ref{resid}) is really
+the limiting density of $f_{D(t)}$ as $t \rightarrow \infty$.
+
+\subsection{Age Distribution}
+\label{agedistribution}
+
+Analogous to the residual lifetime D(t), let A(t) denote the
+\textbf{age} (sometimes called the \textbf{backward recurrence time}) of
+the current light bulb, i.e.  the length of time it has been in service.
+(In the bus-paradox example, A(t) would be the time which has elapsed
+since the last arrival of a bus, to the current time t.) One can show that
+
+\begin{equation}
+\label{age}
+\lim_{t\rightarrow \infty }f_{A(t)}(w)=\frac{1-F_{L}(w)}{E(L)}
+\end{equation}
+
+In other words, A(t) has the same long-run distribution as D(t)!
+
+The derivation in the continuous case mimics that taken in Section
+\ref{deriveresidlife} above.  But actually, one can make a direct
+argument based on the {\bf reversed process}:
+
+A reversed process is defined loosely to be ``an ordinary stochastic
+process, with the `movie' played backwards.''  Consider for instance a
+discrete time Markov chain $X_1, X_2,...$.  Choose some ``far future''
+time, say 1000000, and define a new process $Y_i$, where $Y_1 =
+X_{1000000}$, $Y_2 = X_{999999}$, $Y_3 = X_{999998}$ and so on.
+
+There is a rich theory for reversed processes, including a theorem that
+says that a reversed Markov chain will itself be Markovian if and only
+if
+
+\begin{equation}
+\pi_i p_{ij} = \pi_j p_{ji}
+\end{equation}
+
+for all i and j.
+
+But in our case here, renewal processes, you can see that the reversed
+process is again a renewal process,\footnote{We'll have to take time 0
+of the renewal process to be the time of a renewal in the original
+process.} with the same distribution for lifetimes as in the original
+process.  Moreover, {\it the residual life distribution for the reversed
+process is the same as the age distribution of the original.}  
+
+So, it's quite clear that (\ref{age}) holds, and we really don't need
+any more derivations.  But let's look at one for the discrete case
+anwyay, as it is an application of Markov chains.
+
+Let L be the generic random variable for lifetime.  Remember, our fixed
+observation point t is assumed large, so that the system is in
+steady-state.  Let W denote the lifetime so far for the current bulb.
+Say we have a new bulb at time 52.  Then W is 0 at that time.  If the
+total lifetime turns out to be, say, 12, then W will be 0 again at time
+64.  
+
+Then we have a Markov chain in which our state at any time is the value
+of W.  In fact, the transition probabilities for this chain are the
+values of the hazard function of L:
+
+First note that when we are in state i, i.e. $W = i$, we know that the
+current bulb's lifetime is at least i+1.  If its lifetime is exactly
+i+1, our next state will be 0.  So,
+
+\begin{equation}
+p_{i,0} = P(L = i+1 | L > i) = \frac{p_L(i+1)}{1-F_L(i)}
+\end{equation}
+
+\begin{equation}
+p_{i,i+1} = \frac{1-F_L(i+1)}{1-F_L(i)}
+\end{equation}
+
+Define
+
+\begin{equation}
+q_i = \frac{1-F_L(i+1)}{1-F_L(i)}
+\end{equation}
+
+and write
+
+\begin{equation}
+\label{rc}
+\pi_{i+1} = \pi_i q_i
+\end{equation}
+
+Applying (\ref{rc}) recursively, we have
+
+\begin{equation}
+\label{telescope}
+\pi_{i+1} = \pi_0 q_i q_{i-1} \cdots q_0 
+\end{equation}
+
+But the right-hand side of (\ref{telescope}) telescopes down to
+
+\begin{equation}
+\pi_{i+1} = \pi_0 [1 - F_L(i+1) ]
+\end{equation}
+
+Then
+
+\begin{equation}
+1 = \sum_{i=0}^{\infty} \pi_i 
+= \pi_0 \sum_{i=0}^{\infty} [1 - F_L(i)]  
+= \pi_0 E(L)
+\end{equation}
+
+Thus
+
+\begin{equation}
+\label{piage}
+\pi_i =  \frac{1 - F_L(i+1)} {EL}
+\end{equation}
+
+in analogy to (\ref{age}).
+
+\subsection{Mean of the Residual and Age Distributions}
+
+Taking the expected value of (\ref{resid}) or (\ref{age}), we get a
+double integral.  Reversing the order of integration, we find that
+the mean residual life or age is given by
+
+\begin{equation}
+\label{variancecounts}
+\frac{E(L^2)}{2EL} 
+\end{equation}
+
+\subsection{Example:  Estimating Web Page Modification Rates}
+
+My paper, Estimation of Internet File-Access/Modification Rates, {\it
+ACM Transactions on Modeling and Computer Simulation}, N. Matloff, 2005,
+15, 3, 233-253,    concerns the following problem.  
+
+Suppose we are interested in the rate of modfication of a file in some
+FTP repository on the Web.  We have a spider visit the site at regular
+intervals.  At each visit, the spider records the time of last
+modification to the site.  We do not observe how MANY times the site was
+modified.  The problem then is how to estimate the modification rate
+from the last-modification time data that we do have. 
+
+I assumed that the modifications follow a renewal process.  Then the
+difference between the spider visit time and the time of last
+modfication is equal to the age A(t).  I then applied a lot of renewal
+theory to develop statistical estimators for the modfication rate.  
+
+\subsection{Example:  Disk File Model}
+
+Suppose a disk will store backup files.  We place the first file in the
+first track on the disk, then the second file right after the first in
+the same track, etc.  Occasionally we will run out of room on a track,
+and the file we are placing at the time must be split between this track
+and the next.  Suppose the amount of room X taken up by a file (a
+continuous random variable in this model) is uniformly distributed
+between 0 and 3 tracks.  
+
+Some tracks will contain data from only one file.  (The file may extend
+onto other tracks as well.)  Let's find the long-run proportion of
+tracks which have this property.  
+
+Think of the disk as consisting of a Very Long Line, with the
+end of one track being followed immediately by the beginning of the next
+track.  The points at which files begin then form a renewal process,
+with ``time'' being distance along the Very Long Line.  If we observe
+the disk at the end of the $k^{th}$ track, this is observing at ``time''
+k.  That track consists entirely of one file if and only if the ``age''
+A of the current file---i.e. the distance back to the beginning of that
+file---is greater than 1.0.
+
+Then from Equation (\ref{age}), we have
+
+\begin{equation}
+f_A(w) = \frac{1-\frac{w}{3}}{1.5} = \frac{2}{3} - \frac{2}{9} w
+\end{equation}
+
+Then
+
+\begin{equation}
+P(A > 1) = \int_{1}^{3} \left (\frac{2}{3} - \frac{2}{9} w \right) ~ dw
+= \frac{4}{9}
+\end{equation}
+
+\subsection{Example: Memory Paging Model}
+\label{mem} 
+
+(Adapted from \textit{Probabiility and Statistics, with Reliability, Queuing
+and Computer Science Applicatiions}, by K.S. Trivedi, Prentice-Hall,
+1982 and 2002.)
+
+Consider a computer with an address space consisting of n pages, and a program
+which generates a sequence of memory references with addresses (page numbers)
+$D_{1},\, D_{2},\, ...$ In this simple model, the $D_{i}$ are assumed
+to be i.i.d. integer-valued random variables.
+
+For each page i, let $T_{ij}$ denote the time at which the $j^{th}$
+reference to page i occurs. Then for each fixed i, the $T_{ij}$ form a
+renewal process, and thus all the theory we have developed here
+applies.\footnote{Note, though, tht all random variables here are
+discrete, not continuous.} Let $F_{i}$ be the cumulative distribution
+function for the interrenewal distribution, i.e. $F_{i}(m)=P(L_{ij} \leq m)$,
+where $L_{ij}=T_{ij}-T_{i,j-1}$ for m = 0, 1, 2, ...
+
+Let $W(t,\tau )$ denote the working set at time t, i.e. the
+collection of page numbers of pages accessed during the time $(t-\tau
+,t)$, and let $S(t,\tau )$ denote the size of that set. We are
+interested in finding the value of
+
+\begin{equation}
+s(\tau )=\lim_{t\rightarrow \infty } E[S(t,\tau )]
+\end{equation}
+
+Since the definition of the working set involves looking backward \(
+\tau $ amount of time from time t, a good place to look for an
+approach to finding $s(\tau )$ might be to use the limiting
+distribution of backward-recurrence time, given by 
+Equation (\ref{piage}). 
+
+Accordingly, let $A_{i}(t)$ be the age at time t for page i. Then
+
+\begin{quote}
+Page i is in the working set if and only if it has been accessed 
+after time $t-\tau $., i.e. $A_{i}(t)<\tau $.  
+\end{quote}
+
+Thus, using (\ref{piage}) and letting $1_{i}$ be 1 or 0 according to
+whether or not $A_{i}(t)<\tau $, we have that
+
+\begin{eqnarray}
+s(\tau ) & = & \lim_{t\rightarrow \infty } E(\sum ^{n}_{i=1}1_{i})
+\nonumber \\
+ & = & \lim_{t\rightarrow \infty } \sum ^{n}_{i=1}P(A_{i}(t)<\tau )
+ \nonumber \\
+ & = & \sum ^{n}_{i=1}\sum ^{\tau -1}_{j=0}\frac{1-F_{i}(j)}{E(L_{i})}
+\end{eqnarray}
+
+\startproblemset
+
+\oneproblem Use R to plot the hazard functions for the gamma
+distributions plotted in Figure \ref{gammas}, plus the case r = 0.5.
+Comment on the implications for trains at 8th and J Streets in Davis.
+
+\oneproblem
+Consider the ``random bucket'' example in Section \ref{busparadox}.
+Suppose bucket diameter $D$, measured in meters, has a uniform
+distribution on (1,2).  Let $W$ denote the diameter of the bucket in
+which the tossed ball lands.
+
+\begin{itemize}
+
+\item [(a)] Find the density, mean and variance of $ W$, and also $P(W >
+1.5)$
+
+\item [(b)] Write an R function that will generate random variates
+having the distribution of $W$.
+
+\end{itemize}
+
+\oneproblem
+In Section \ref{nomemxxx}, we showed that the exponential distribution
+is memoryless.  In fact, it is the only continuous distribution with
+that property.  Show that the U(0,1) distribution does NOT have that
+property.  To do this, evaluate both sides of (\ref{stmtnomemxxx}).
+
+\oneproblem
+Suppose $f_X(t) = 1/t^2$ on $(1,\infty)$, 0 elsewhere.  Find
+$h_X(2.0)$
+
+\oneproblem
+Consider the three-sided die on page \pageref{threesideddiepage}.
+Find the hazard function $h_V(t)$, where V is the number of dots
+obtained on one roll (1, 2 or 3).
+
+\oneproblem
+Suppose $f_X(t) = 2t$ for $0 < t <1$ and the density is 0
+elsewhere.
+
+\begin{itemize}
+
+\item [(a)] Find $h_X(0.5)$.
+
+\item [(b)] Which statement concerning this distribution is correct?
+(i) IFR  (ii) DFR. (iii) U-shaped failure rate. (iv) Sinusoidal failure
+rate. (v) Failure rate is undefined for $t > 0.5$.
+
+\end{itemize}
+

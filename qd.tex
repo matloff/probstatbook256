@@ -1,0 +1,99 @@
+\documentclass[twocolumn]{article}
+
+\setlength{\oddsidemargin}{-0.5in}
+\setlength{\evensidemargin}{-0.5in}
+\setlength{\topmargin}{0.0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textwidth}{7.0in}
+\setlength{\textheight}{9.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{0.05in}
+\setlength{\columnseprule}{0.3pt}
+\usepackage{fancyvrb}
+\usepackage{relsize}
+\usepackage{hyperref}
+
+\begin{document}
+
+Name: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+Directions: {\bf \Large Work only on this sheet} (on both sides, if
+needed); do not turn in any supplementary sheets of paper. There is
+actually plenty of room for your answers, as long as you organize
+yourself BEFORE starting writing.
+
+{\bf \Large Unless otherwise stated, give numerical answers as
+expressions, e.g. $\frac{2}{3} \times 6 - 1.8$.  Do NOT use
+calculators.}
+
+{\bf 1.} Consider a six-dimensional hypercube $D$, subdivided into two
+five-dimensional hypercubes $D_0$ and $D_1$.
+
+\begin{itemize}
+
+\item [(a)] () What is the node number of the partner of node 23?
+
+\item [(b)] () What is the node number of the root in $D_1$?
+
+\item [(c)] () Suppose our algorithm requires partners in the two
+5-cubes to exchange their values of an {\bf int} variable {\bf x}.
+What would be the best MPI function for this purpose?
+
+\end{itemize}
+
+{\bf 2.} Consider the program on pp.85-87.
+
+\begin{itemize}
+
+\item [(a)] () Suppose that while running the program, someone runs the
+shell commands {\bf ps} and {\bf gdb}.  At this point, the likely line
+number on which the program is running (at all nodes) is
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_.
+
+\item [(b)] () Fill in the table regarding the actions of lines 107 and
+108 and the array {\bf overallmin}, at a given node.  Mark an entry R if the
+array is read, W if it is RW if both, and N if neither:
+
+\begin{tabular}{|r|r|r|}
+\hline
+node number & 107 & 108 \\ \hline 
+0 & \  & \  \\ \hline 
+$\neq$ 0 & \  & \  \\ \hline 
+\end{tabular}
+
+\item [(c)] () This example program is somewhat artificial, in that each
+node generates its data matrix {\bf ohd}.  Instead, say that node 0 has
+the matrix, say by reading it from disk, and wishes to distribute it to
+the other nodes.  Give a single line of code that would replace lines
+57-64, that would accomplish this distribution.
+
+\end{itemize}
+
+{\bf Solutions:}
+
+{\bf 1a.}  23 + 32 = 55
+
+{\bf 1b.} 100000, i.e. 32
+
+{\bf 1c.} {\bf  MPI\_Sendrecv() }
+
+{\bf 2a.} 70
+
+{\bf 2b.}
+
+\begin{tabular}{|r|r|r|}
+\hline
+node number & 107 & 108 \\ \hline 
+0 & W & R \\ \hline 
+$\neq$ 0 & N & W \\ \hline 
+\end{tabular}
+
+{\bf 2c.}
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+MPI_Bcast(ohd,nv*nv,MPI_INT,0,MPI_COMM_WORLD);
+\end{Verbatim}
+
+\end{document}
+

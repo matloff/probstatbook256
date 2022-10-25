@@ -1,0 +1,1882 @@
+\chapter{Markov Chains}
+\label{mar} 
+
+One of the most famous stochastic models is that of a {\bf Markov chain}.
+This type of model is widely used in computer science, biology, physics,
+business and so on.
+
+\section{Discrete-Time Markov Chains}
+
+\subsection{Example:  Finite Random Walk}
+\label{finite}
+
+To motivate this discussion, let us start with a
+simple example: Consider a \textbf{random walk} on the set of integers
+between 1 and 5, moving randomly through that set, say one move per
+second, according to the following scheme.  If we are currently at
+position i, then one time period later we will be at either i-1, i or
+i+1, according to the outcome of rolling a fair die---we move to i-1 if
+the die comes up 1 or 2, stay at i if the die comes up 3 or 4, and move
+to i+1 in the case of a 5 or 6. For the special cases i = 1 and i =
+5, we simply move back to 2 or 4, respectively.  (In random walk
+terminology, these are called {\bf reflecting barriers}.)
+
+The integers 1 through 5 form the \textbf{state space} for this process;
+if we are currently at 4, for instance, we say we are in state 4.
+Let $X_{t}$ represent the position of the particle at time t, t =
+0, 1,2,\ldots{}.
+
+The random walk is a \textbf{Markov process}. The process is
+``memoryless,'' meaning that we can ``forget the past''; given the
+present and the past, the future depends only on the
+present:
+
+\begin{equation}
+P(X_{t+1}=s_{t+1}|X_{t}=s_{t},X_{t-1}=s_{t-1},\ldots ,X_{0}=s_{0})=P(X_{t+1}=s_{t+1}|X_{t}=s_{t})
+\end{equation}
+
+The term {\it Markov process} is the general one.  If the state space is
+discrete, i.e. finite or countably infinite, then we usually use the more
+specialized term, {\it Markov chain}.
+
+Although this equation has a very complex look, it has a very simple
+meaning: The distribution of our next position, given our current
+position and all our past positions, is dependent only on the current
+position.  In other words, the system is ``memoryless,'' somewhat in
+analogy to the properties of the exponential distribution discussed in
+Section \ref{nomem}.  (In fact exponential distributions will play a key
+role when we get to continuous-time Markov chains in Section
+\ref{continmc}.  It is clear that the random walk process above does
+have this memoryless property; for instance, if we are now at position
+4, the probability that our next state will be 3 is 1/3---no matter
+where we were in the past.
+
+Continuing this example, let $p_{ij}$ denote the probability of going
+from position i to position j in one step. For example,
+$p_{21}=p_{23}=\frac{1}{3}$ while $p_{24}=0$ (we can reach position 4
+from position 2 in two steps, but not in one step). The numbers $p_{ij}$
+are called the \textbf{one-step transition probabilities} of the
+process. Denote by P the matrix whose entries are the $p_{ij}$:
+
+\begin{equation} 
+\label{p}
+\begin{pmatrix} 
+0 & 1 & 0 & 0 & 0 \\ 
+\frac{1}{3} & \frac{1}{3} & \frac{1}{3} & 0 & 0 \\ 
+0 & \frac{1}{3} & \frac{1}{3} & \frac{1}{3} & 0 \\
+0 & 0 & \frac{1}{3} & \frac{1}{3} & \frac{1}{3} \\
+0 & 0 & 0 & 1 & 0 
+\end{pmatrix}
+\end{equation}
+
+By the way, it turns out that the matrix $P^{k}$ gives the k-step
+transition probabilities. In other words, the element (i,j) of this
+matrix gives the probability of going from i to j in k steps.
+
+\subsection{Long-Run Distribution}
+\label{discpi}
+
+In typical applications we are interested in the long-run distribution of the
+process, for example the long-run proportion of the time that we are at position
+4. For each state i, define
+
+\begin{equation}
+\label{limnt}
+\pi_{i}=\lim_{t\rightarrow \infty }\frac{N_{it}}{t}
+\end{equation}
+
+where $N_{it}$ is the number of visits the process makes to state i
+among times 1, 2,..., t. In most practical cases, this proportion will
+exist and be independent of our initial position $X_{0}$.  The $\pi_i$
+are called the {\bf steady-state probabilities}, or the {\bf stationary
+distribution} of the Markov chain.
+
+Intuitively, the existence of $\pi_{i}$ implies that as t approaches
+infinity, the system approaches steady-state, in the sense that
+
+\begin{equation}
+\label{limxt}
+\lim_{t\rightarrow \infty }P(X_{t}=i)=\pi_{i}
+\end{equation}
+
+Actually, the limit (\ref{limxt}) may not exist in some cases.  We'll
+return to that point later, but for typical cases it does exist, and we
+will usually assume this.  
+
+\subsubsection{Derivation of the Balance Equations}
+\label{baleqns}
+
+Equation (\ref{limxt}) suggests a way to calculate the values $\pi_{i}$,
+as follows.
+
+First note that
+
+\begin{equation}
+\label{prestation}
+P(X_{t+1}=i)
+= \sum_{k} P(X_{t}=k \textrm{ and } X_{t+1}=i)
+= \sum_{k} P(X_{t}=k) P(X_{t+1}=i | X_t = k)
+= \sum_{k} P(X_{t}=k)p_{ki}
+\end{equation}
+
+where the sum goes over all states k.  For example, in our random walk
+example above, we would have
+
+\begin{equation}
+P(X_{t+1}=3)
+= \sum_{k=1}^5 P(X_{t}=k \textrm{ and } X_{t+1}=3)
+= \sum_{k=1}^5 P(X_{t}=k) P(X_{t+1}=3 | X_t = k)
+= \sum_{k=1}^5 P(X_{t}=k)p_{k3}
+\end{equation}
+
+Then as $t\rightarrow \infty $ in Equation (\ref{prestation}),
+intuitively we would have  
+
+\begin{equation}
+\label{balance}
+\pi_{i}=\sum_{k}\pi_{k}p_{ki}
+\end{equation}
+
+Remember, here we know the $p_{ki}$ and want to find the $\pi_i$.
+Solving these {\bf balance equations} equations (one for each i), gives
+us the $\pi_i$.
+
+For the random walk problem above, for instance, the solution is $\pi
+=(\frac{1}{11},\frac{3}{11},\frac{3}{11},\frac{3}{11},\frac{1}{11})$.
+Thus in the long run we will spend 1/11 of our time at position 1, 3/11
+of our time at position 2, and so on.
+
+\subsubsection{Solving the Balance Equations}
+\label{solvbal}
+
+A matrix formulation is also useful.  Letting $\pi $ denote the row
+vector of the elements $\pi_{i}$, i.e.  $\pi = (\pi_1, \pi_2, ...)$,
+these equations (one for each i) then have the matrix form
+
+\begin{equation}
+\label{eigen}
+\pi =\pi P
+\end{equation}
+
+
+or
+
+\begin{equation}
+\label{pieqn}
+(I-P') \pi' = 0
+\end{equation}
+
+where as usual $'$ denotes matrix transpose.
+
+Note that there is also the constraint
+
+\begin{equation}
+\label{sumto1}
+\sum_{i}\pi_{i}=1
+\end{equation}
+
+One of the equations in the system is redundant.   We thus eliminate one
+of them, say by removing the last row of I-P in (\ref{pieqn}).  
+This can be used to calculate the $\pi_{i}$.  
+
+To reflect (\ref{sumto1}), which in matrix form is
+
+\begin{equation}
+1_n' \pi' = 1
+\end{equation}
+
+where $1_n$ is a column vector of all 1s, n is the number of states, and
+we replace the removed row in I-P by a row of all 1s, and in the
+right-hand side of (\ref{pieqn}) we replace the last 0 by a 1.  We can
+then solve the system.  
+
+All this can be done with R's {\bf solve()} function:
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+findpi1 <- function(p) {
+   n <- nrow(p)
+   imp <- diag(n) - t(p)  # I-P'
+   imp[n,] <- rep(1,n)  # form row of 1s
+   rhs <- c(rep(0,n-1),1)  # form right-hand-side vector
+   pivec <- solve(imp,rhs)  # solve for pi
+   return(pivec)
+}
+\end{Verbatim}
+
+Or one can note from (\ref{eigen}) that $\pi$ is a left eigenvector of P
+with eigenvalue 1, so one can use R's {\bf eigen()} function.  It can be
+proven that if P is irreducible and aperiodic (defined later in this
+chapter), every eigenvalue other than 1 is smaller than 1 (so we can
+speak of {\it the} eigenvalue 1), and the eigenvector corresponding to 1
+has all components real.  
+
+Since $\pi$ is a left eigenvector, the argument in the call must be P'
+rather than P.  In addition, since an eigenvector is only unique up to
+scalar multiplication, we must deal with the fact that the return value
+of {\bf eigen()} may have negative components, and will likely not
+satisfy (\ref{sumto1}).  Here is the code:
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+findpi2 <- function(p) {
+   n <- nrow(p)
+   # find first eigenvector of P'
+   pivec <- eigen(t(p))$vectors[,1]
+   # guaranteed to be real, but could be negative
+   if (pivec[1] < 0) pivec <- -pivec
+   # normalize
+   pivec <- pivec / sum(pivec)
+   return(pivec)
+}
+\end{Verbatim}
+
+But Equation (\ref{pieqn}) may not be easy to solve.  For instance, if
+the state space is infinite, then this matrix equation represents
+infinitely many scalar equations.  In such cases, you may need to try to
+find some clever trick which will allow you to solve the system, or in
+many cases a clever trick to analyze the process in some way other than
+explicit solution of the system of equations.
+
+And even for finite state spaces, the matrix may be extremely large.  In
+some cases, you may need to resort to numerical methods. 
+
+\subsubsection{Periodic Chains}
+
+Note again that even if Equation (\ref{pieqn}) has a solution, this does
+not imply that (\ref{limxt}) holds. For instance, suppose we alter the
+random walk example above so that
+
+\begin{equation}
+p_{i,i-1}=p_{i,i+1}=\frac{1}{2}
+\end{equation}  
+
+for i = 2, 3, 4, with transitions out of states 1 and 5 remaining as
+before.  In this case, the solution to Equation (\ref{pieqn}) is
+$(\frac{1}{8},\frac{1}{4},\frac{1}{4},\frac{1}{4},\frac{1}{8})$.  This
+solution is still valid, in the sense that Equation (\ref{limnt}) will
+hold. For example, we will spend 1/4 of our time at Position 4 in the
+long run.  But the limit of $P(X_{i}=4)$ will not be 1/4, and in fact
+the limit will not even exist. If say $X_{0}$ is even, then $X_{i}$ can
+be even only for even values of i.  We say that this Markov chain is
+{\bf periodic} with period 2, meaning that returns to a given state can
+only occur after amounts of time which are multiples of 2.
+
+\subsubsection{The Meaning of the Term ``Stationary Distribution''}
+\label{stationmeaning}
+
+Though we have informally defined the term {\it stationary distribution}
+in terms of long-run proportions, the technical definition is this:
+
+\begin{definition}  Consider a Markov chain.  Suppose we have a 
+vector $\pi$ of nonnegative numbers that sum to 1.
+Let $X_0$ have the distribution $\pi$.  If that results in $X_1$ having
+that distribution too (and thus also all $X_n$), we say that $\pi$ 
+is the {\bf stationary distribution} of this Markov chain.
+\end{definition}
+
+Note that this definition stems from (\ref{prestation}).
+
+For instance, in our (first) random walk example above, this would mean
+that if we have $X_0$ distributed on the integers 1 through 5 with
+probabilities
+$(\frac{1}{11},\frac{3}{11},\frac{3}{11},\frac{3}{11},\frac{1}{11})$,
+then for example $P(X_1 = 1) = \frac{1}{11}$ , $P(X_1 = 4) =
+\frac{3}{11}$ etc.  This is indeed the case, as you can verify using
+(\ref{prestation}) with t = 0.
+
+In our ``notebook'' view, here is what we would do.  Imagine that we
+generate a random integer between 1 and 5 according to the probabilities
+$(\frac{1}{11},\frac{3}{11},\frac{3}{11},\frac{3}{11},
+\frac{1}{11})$,\footnote{Say by rolling an 11-sided die.} and set $X_0$
+to that number.  We would then generate another random number, by
+rolling an ordinary die, and going left, right or staying put, with
+probability 1/3 each.  We would then write down $X_1$ and $X_2$ on the
+first line of our notebook.  We would then do this experiment again,
+recording the results on the second line, then again and again.  In the
+long run, 3/11 of the lines would have, for instance, $X_0 = 4$, and
+3/11 of the lines would have $X_1 = 4$.  In other words, $X_1$ would
+have the same distribution as $X_0$.
+
+\subsection{Example:  Stuck-At 0 Fault} 
+\label{stuckat}
+
+\subsubsection{Description}
+
+In the above example, the labels for the states consisted of single
+integers i. In some other examples, convenient labels may be r-tuples,
+for example 2-tuples (i,j).
+
+Consider a serial communication line. Let $B_{1},B_{2},B_{3},...$ denote
+the sequence of bits transmitted on this line. It is reasonable to assume the
+$B_{i}$ to be independent, and that $P(B_{i}=0)$ and $P(B_{i}=1)$ are
+both equal to 0.5.
+
+Suppose that the receiver will eventually fail, with the type of failure
+being \textbf{stuck at 0}, meaning that after failure it will report all
+future received bits to be 0, regardless of their true value. Once
+failed, the receiver stays failed, and should be replaced. Eventually
+the new receiver will also fail, and we will replace it; we continue
+this process indefinitely.
+
+Let $\rho$ denote the probability that the receiver fails on any given
+bit, with independence between bits in terms of receiver failure.  Then
+the lifetime of the receiver, that is, the time to failure, is
+geometrically distributed with ``success'' probability $\rho $ i.e. the
+probability of failing on receipt of the i-th bit after the receiver is
+installed is $(1-\rho)^{i-1}\rho$ for i = l,2,3,... 
+
+However, the problem is that we will not know whether a receiver has
+failed (unless we test it once in a while, which we are not including in
+this example).  If the receiver reports a long string of 0s, we should
+suspect that the receiver has failed, but of course we cannot be sure
+that it has; it is still possible that the message being transmitted
+just happened to contain a long string of 0s.
+
+Suppose we adopt the policy that, if we receive k consecutive 0s, we
+will replace the receiver with a new unit. Here k is a design parameter;
+what value should we choose for it? If we use a very small value, then
+we will incur great expense, due to the fact that we will be replacing
+receiver units at an unnecessarily high rate. On the other hand, if we
+make k too large, then we will often wait too long to replace the
+receiver, and the resulting error rate in received bits will be sizable.
+Resolution of this tradeoff between expense and accuracy depends on the
+relative importance of the two. (There are also other possibilities,
+involving the addition of redundant bits for error detection, such as
+parity bits. For simplicity, we will not consider such refinements here.
+However, the analysis of more complex systems would be similar to the
+one below.)
+
+\subsubsection{Initial Analysis}
+
+A natural state space in this example would be
+
+\begin{equation}
+\{(i,j):i=0,1,...,k-1;j=0,1;i+j\neq 0\}
+\end{equation}
+
+where i represents the number of consecutive 0s that we have received so
+far, and j represents the state of the receiver (0 for failed, 1 for
+nonfailed).  Note that when we are in a state of the form (k-1,j), if we
+receive a 0 on the next bit (whether it is a true 0 or the receiver has
+failed), our new state will be (0,1), as we will install a new receiver.
+Note too that there is no state (0,0), since if the receiver is down it
+must have received at least one bit.
+
+The calculation of the transition matrix P is straightforward, though it
+requires careful thought.  For example, suppose the current state is
+(2,1), and that we are investigating the expense and bit accuracy
+corresponding to a policy having k = 5. What can happen upon receipt of
+the next bit? The next bit will have a true value of either 0 or 1, with
+probability 0.5 each. The receiver will change from working to failed
+status with probability $\rho$. Thus our next state could be:
+
+\begin{itemize}
+
+\item (3,1), if a 0 arrives, and the receiver does not fail; 
+
+\item (0,1), if a 1 arrives, and the receiver does not fail; or 
+
+\item (3,0), if the receiver fails 
+
+\end{itemize}
+
+The probabilities of these three transitions out of state (2,1) are:
+
+\begin{eqnarray}
+p_{(2,1),(3,1)} & = & 0.5(1-\rho ) \\
+p_{(2,1),(0,1)} & = & 0.5(1-\rho ) \\  
+p_{(2,1),(3,0)} & = & \rho 
+\end{eqnarray}  
+
+Other entries of the matrix P can be computed similarly.  Note by the
+way that from state (4,1) we will go to (0,1), no matter what happens.
+
+Formally specifying the matrix P using the 2-tuple notation as above
+would be very cumbersome.  In this case, it would be much easier to map
+to a one-dimensional labeling.  For example, if k = 5, the nine states
+(1,0),...,(4,0),(0,1),(1,1),...,(4,1) could be renamed states 1,2,...,9.
+Then we could form P under this labeling, and the transition
+probabilities above would appear as
+
+\begin{eqnarray}
+p_{78} & = & 0.5(1-\rho )\\
+p_{75} & = & 0.5(1-\rho )\\
+p_{73} & = & \rho 
+\end{eqnarray}
+
+\subsubsection{Going Beyond Finding $\pi$}  
+
+Finding the $\pi_{i}$ should be just the first step.  We then want to
+use them to calculate various quantities of interest.\footnote{Note that
+unlike a classroom setting, where those quantities would be listed for
+the students to calculate, in research we must decide on our own which
+quantities are of interest.} For instance, in this example, it would
+also be useful to find the error rate $\epsilon$, and the mean time
+(i.e., the mean number of bit receptions) between receiver replacements,
+$\mu$. We can find both $\epsilon$ and $\mu$ in terms of the $\pi_{i}$,
+in the following manner.
+
+The quantity $\epsilon$ is the proportion of the time during which the
+true value of the received bit is 1 but the receiver is down, which is
+0.5 times the proportion of the time spent in states of the form (i,0):
+
+\begin{equation}
+\epsilon = 0.5 (\pi_{1}+\pi_{2}+\pi_{3}+\pi _{4})
+\end{equation}
+
+This should be clear intuitively, but it would also be instructive to
+present a more formal derivation of the same thing.  Let $E_n$ be the
+event that the n-th bit is received in error, with $D_n$ denoting the
+event that the receiver is down.  Then
+
+\begin{eqnarray}
+\label{errorrate} 
+\epsilon &=& \lim_{n \rightarrow \infty} P(E_n) \\
+&=& \lim_{n \rightarrow \infty} P(B_n = 1 \textrm{ and } D_n) \\
+&=& \lim_{n \rightarrow \infty} P(B_n = 1) P(D_n) \\
+&=& 0.5 (\pi_{1}+\pi_{2}+\pi_{3}+\pi _{4})
+\end{eqnarray}
+
+Here we used the fact that $B_n$ and the receiver state are independent.
+
+Note that with the interpretation of $\pi$ as the stationary
+distribution of the process, in Equations (\ref{errorrate}) above, we
+do not even need to take limits.
+
+{\bf Equations (\ref{errorrate}) follow a pattern we'll use repeatedly
+in this chapter.  In subsequent examples we will not show the steps with
+the limits, but the limits are indeed there.  Make sure to mentally go
+through these steps yourself.}\footnote{The other way to work this out
+rigorously is to assume that $X_0$ has the distribution $\pi$,
+as in Section \ref{stationmeaning}.  Then no limits are needed in
+(\ref{errorrate}.  But this may be more difficult to understand.}
+
+Now to get $\mu$ in terms of the $\pi_{i}$ note that since $\mu$ is the
+long-run average number of bits between receiver replacements, it is
+then the reciprocal of $\eta$, the long-run fraction of bits that result
+in replacements. For example, say we replace the receiver on average
+every 20 bits.
+Over a period of 1000 bits, then (speaking on an intuitive level) that
+would mean about 50 replacements.  Thus approximately 0.05 (50 out of
+1000) of all bits results in replacements.
+
+\begin{equation}
+\mu = \frac{1}{\eta}
+\end{equation}
+
+Again suppose k = 5. A replacement will occur only from states of the
+form (4,j), and even then only under the condition that the next
+reported bit is a 0. In other words, there are three possible ways in
+which replacement can occur:
+
+\begin{itemize}
+
+\item [(a)] We are in state (4,0). Here, since the receiver has failed,
+the next reported bit will definitely be a 0, regardless of that bit's
+true value. We will then have a total of k = 5 consecutive received 0s,
+and therefore will replace the receiver. 
+
+\item [(b)] We are in the state (4,1), and the next bit to arrive is a
+true 0. It then will be reported as a 0, our fifth consecutive 0, and we
+will replace the receiver, as in (a). 
+
+\item [(c)] We are in the state (4,1), and the next bit to arrive is a
+true 1, but the receiver fails at that time, resulting in the reported
+value being a 0. Again we have five consecutive reported 0s, so we
+replace the receiver. 
+
+\end{itemize}
+
+Therefore,
+
+\begin{equation}
+\label{etaeqn}
+\eta = \pi_{4}+\pi_{9}(0.5+0.5\rho )
+\end{equation}
+
+Again, make sure you work through the full version of (\ref{etaeqn}),
+using the pattern in (\ref{errorrate}).
+
+Thus
+
+\begin{equation}
+\mu =\frac{1}{\eta} = \frac{1}{\pi_{4}+0.5\pi_{9}(1+\rho )}
+\end{equation}
+
+% \checkpoint
+
+This kind of analysis could be used as the core of a cost-benefit
+tradeoff investigation to determine a good value of k. (Note that the
+$\pi_{i}$ are functions of k, and that the above equations for the case
+k = 5 must be modified for other values of k.)
+
+\subsection{Example:  Shared-Memory Multiprocessor}
+
+(Adapted from \textit{Probabiility and Statistics, with Reliability, Queuing
+and Computer Science Applicatiions}, by K.S. Trivedi, Prentice-Hall,
+1982 and 2002, but similar to many models in the research literature.)
+
+\subsubsection{The Model}
+
+Consider a shared-memory multiprocessor system with m memory modules and
+m CPUs.  The address space is partitioned into m chunks, based on either
+the most-significant or least-significant $\log_2m$ bits in the
+address.\footnote{You may recognize this as high-order and
+low-order interleaving, respectively.} 
+
+The CPUs will need to access the memory modules in some random way,
+depending on the programs they are running.  To make this idea concrete,
+consider the Intel assembly language instruction
+
+\begin{verbatim}
+add %eax, (%ebx)
+\end{verbatim}
+
+which adds the contents of the EAX register to the word in memory
+pointed to by the EBX register.  Execution of that instruction will
+(absent cache and other similar effects, as we will assume here and
+below) involve two accesses to memory---one to fetch the old value of
+the word pointed to by EBX, and another to store the new value.
+Moreover, the instruction itself must be fetched from memory.  So,
+altogether the processing of this instruction involves three memory
+accesses.
+
+Since different programs are made up of different instructions, use
+different register values and so on, the sequence of addresses in memory
+that are generated by CPUs are modeled as random variables.  In our
+model here, the CPUs are assumed to act independently of each other, and
+successive requests from a given CPU are independent of each other too.
+A CPU will choose the i$^{th}$ module with probability $q_{i}$. A memory
+request takes one unit of time to process, though the wait may be longer
+due to queuing.  In this very simplistic model, as soon as a CPU's
+memory request is fulfilled, it generates another one.  On the other
+hand, while a CPU has one memory request pending, it does not generate
+another.
+
+Let's assume a crossbar interconnect, which means there are $m^2$
+separate paths from CPUs to memory modules, so that if the m CPUs have
+memory requests to m different memory modules, then all the requests can
+be fulfilled simultaneously.  Also, assume as an approximation that we
+can ignore communication delays.
+
+How good are these assumptions?  One weakness, for instance, is that
+many instructions, for example, do not use memory at all, except for the
+instruction fetch, and as mentioned, even the latter may be suppressed
+due to cache effects.  
+
+Another example of potential problems with the assumptions involves the
+fact that many programs will have code like
+
+\begin{verbatim}
+for (i = 0; i < 10000; i++) sum += x[i];
+\end{verbatim}
+
+Since the elements of the array x will be stored in consecutive
+addresses, successive memory requests from the CPU while executing this
+code will not be independent.  The assumption would be more justified if
+we were including cache effects, or (noticed by Earl Barr) if we are
+studying a timesharing system with a small quantum size.  
+
+Thus, many models of systems like this have been quite complex, in order
+to capture the effects of various things like caching, nonindependence
+and so on in the model.  Nevertheless, one can often get some insight
+from even very simple models too.  In any case, for our purposes here it
+is best to stick to simple models, so as to understand more easily.
+
+Our state will be an m-tuple $(N_{1},...,N_{m})$, where $N_{i}$ is the
+number of requests currently pending at memory module i.  Recalling our
+assumption that a CPU generates another memory request immediately after
+the previous one is fulfilled, we always have that $N_{1}+...+N_{m}=m$.
+
+It is straightforward to find the transition probabilities $p_{ij}$.
+Here are a couple of examples, with m = 2:
+
+\begin{itemize}
+
+\item \texttt{$ p_{(2,0),(1,1)}$}:  Recall that state (2,0) means that
+currently there are two requests pending at Module 1, one being served
+and one in the queue, and no requests at Module 2.  For the transition
+$(2,0)\rightarrow (1,1)$ to occur, when the request being served at
+Module 1 is done, it will make a new request,  this time for Module 2.
+This will occur with probability $q_{2}$.  Meanwhile, the request which
+had been queued at Module 1 will now start service.  So,
+$p_{(2,0),(1,1)}=q_{2}$.
+
+\item $p_{(1,1),(1,1)}$:  In state (1,1), both pending requests will
+finish in this cycle.  To go to (1,1) again, that would mean that the
+two CPUs request different modules from each other---CPUs 1 and 2 choose
+Modules 1 and 2 or 2 and 1.  Each of those two possibilities has
+probability $q_1 q_2$, so $p_{(1,1),(1,1)}=2 q_1 q_2$. 
+
+\end{itemize}
+
+We then solve for the $\pi$, using (\ref{balance}).  It turns out, for
+example, that
+
+\begin{equation}
+\pi_{(1,1)} = \frac{q_1 q_2}{1-2q_1 q_2}
+\end{equation} 
+
+\subsubsection{Going Beyond Finding $\pi$}  
+
+Let B denote the number of memory requests completed in a given memory cycle.
+Then we may be interested in E(B), the number of requests  completed per
+unit time, i.e. per cycle. We can find E(B) as follows. Let S denote the
+current state.  Then, continuing the case m = 2, we have from the Law of
+Total Expectation,\footnote{Actually, we could take a more direct route
+in this case, noting that B can only take on the values 1 and 2.  Then
+$EB = P(B = 1) + 2 P(B = 2) = \pi_{(2,0} + \pi_{s(0,2)} + 2 \pi_{(1,1)}.$
+But the analysis below extends better to the case of general m.}
+
+\begin{eqnarray}
+E(B) &=& E[E(B|S)] \\
+&=& P(S=(2,0)) E(B|S=(2,0))+
+P(S = (1,1)) E(B|S=(1,1))+
+P(S = (0,2)) E(B|S=(0,2)) \\
+&=& \pi_{(2,0)}E(B|S=(2,0))+\pi_{(1,1)}E(B|S=(1,1))+\pi_{(0,2)}E(B|S=(0,2)) 
+\end{eqnarray}
+
+All this equation is doing is finding the overall mean of B by breaking
+down into the cases for the different states. 
+
+Now if we are in state (2,0), only one request will be completed this
+cycle, and B will be 1.  Thus $E(B|S=(2,0)) = 1$.  Similarly,
+$E(B|S=(1,1)) = 2$ and so on.  After doing all the algebra, we find that
+
+\begin{equation}
+EB = \frac{1-q_{1}q_{2}}{1-2q_{1}q_{2}}
+\end{equation}
+
+% \checkpoint
+
+The maximum value of E(B) occurs when $q_{1}=q_{2}=\frac{1}{2}$, in
+which case E(B)=1.5. This is a lot less than the maximum capacity of the
+memory system, which is m = 2 requests per cycle. 
+
+So, we can learn a lot even from this simple model, in this case
+learning that there may be a substantial underutilization of the system.
+This is a common theme in probabilistic modeling:  Simple models may be
+worthwhile in terms of insight provided, even if their numerical
+predictions may not be too accurate.
+
+\subsection{Example:  Slotted ALOHA}
+
+Recall the slotted ALOHA model from Chapter \ref{probcalc}:
+
+\begin{itemize}
+
+\item Time is divided into slots or epochs.
+
+\item There are n nodes, each of which is either idle or has a {\bf
+single} message transmission pending.  So, a node doesn't generate a new
+message until the old one is successfully transmitted (a very
+unrealistic assumption, but we're keeping things simple here).
+
+\item In the middle of each time slot, each of the idle nodes generates
+a message with probability q.   
+
+\item Just before the end of each time slot, each active node attempts
+to send its message with probability p.
+
+\item If more than one node attempts to send within a given time slot,
+there is a \textbf{collision}, and each of the transmissions involved
+will fail.  
+
+\item So, we include a {\bf backoff} mechanism: At the middle of each
+time slot, each node with a message will with probability q attempt to
+send the message, with the transmission time occupying the remainder of
+the slot.  
+
+\end{itemize}
+
+So, q is a design parameter, which must be chosen carefully.  If q is
+too large, we will have too mnay collisions, thus increasing the average
+time to send a message.  If q is too small, a node will often refrain
+from sending even if no other node is there to collide with.
+
+Define our state for any given time slot to be the number of nodes currently
+having a message to send at the very beginning of the time slot (before new
+messages are generated). Then for $0 < i < n$ and $0 < j < n-i$ (there
+will be a few special boundary cases to consider too), we have
+
+\begin{equation}
+p_{i,i-1} = \underbrace{(1-q)^{n-i}}_{\rm no~new~msgs}
+\cdot
+\underbrace{i(1-p)^{i-1}p}_{\rm one~xmit}
+\end{equation}
+
+\begin{equation}
+\label{kindalong} 
+p_{ii} =
+\underbrace{(1-q)^{n-i} \cdot [1-i(1-p)^{i-1}p]}_{\rm no~new~msgs~and~no~succ~xmits} +
+\underbrace{(n-i)(1-q)^{n-i-1}q \cdot (i+1)(1-p)^ip}_{\rm one~new~msg~and~one~xmit}
+\end{equation}
+
+\begin{eqnarray}
+p_{i,i+j} &=& 
+\underbrace{
+\binom{n-i}{j} q^{j}(1-q)^{n-i-j}
+\cdot [1-(i+j)(1-p)^{i+j-1}p]}
+_\textrm{ j new msgs and no succ xmit} \nonumber \\
+&+& \underbrace{
+\binom{n-i}{j+1}
+q^{j+1}(1-q)^{n-i-j-1}
+\cdot (i+j+1)(1-p)^{i+j}p}_
+\textrm{ j+1 new msgs and 
+succ xmit} \label{toolong}
+\end{eqnarray}
+
+% where C(r,s) is the number of combinations of r things taken s at a
+% time:
+% 
+% \begin{equation}
+% C(r,s) = \binom{r}{s}
+% \end{equation}
+
+Note that in (\ref{kindalong}) and (\ref{toolong}), we must take into
+account the fact that a node with a newly-created messages might try to
+send it.  In (\ref{toolong}), for instance, in the first term we have j
+new messages, on top of the i we already had, so i+j messages might try
+to send.  The probability that there is no successful transmission is
+then $1-(i+j)(1-p)^{i+j-1}p$.
+
+The matrix P is then quite complex.  We always hope to find a
+closed-form solution, but that is unlikely in this case.  Solving it on
+a computer is easy, though, say by using the {\bf solve()} function in
+the R statistical language.
+
+% How might we find such a solution?  Note first that the entries
+% $p_{i,i-j}$ for $j > 1$ are all 0s. This suggests that a way to ease our
+% computational burden.  Set
+% 
+% \begin{eqnarray}
+% r_{i} & = & p_{i,i-1}\\
+% s_{i} & = & p_{ii}\\
+% t_{ij} & = & p_{i,i+j}
+% \end{eqnarray}
+% 
+% for $0<j\leq n-i$. Then Equation (\ref{pieqn}) becomes
+% 
+% \begin{equation}
+% \pi_{i}=r_{i+1}\pi_{i+1}+\pi_{i}s_{i}+\sum_{0<j\leq i}\pi_{i-j}t_{i-j,,j}
+% \end{equation}
+% 
+% In other words,
+% 
+% \begin{equation}
+% \pi_{i+1} =
+% \frac{1}{r_{i+1}}
+% [(1-s_{i})\pi_{i}-\sum_{0<j\leq i}\pi_{i-j}t_{i-j,j}]
+% \end{equation}
+% 
+% This is a recurrence relation, giving the higher-subscripted
+% probabilities in terms of the lower ones.  So, we could find $\pi_1$ in
+% terms of $\pi_0$, then get $\pi_2$in terms of $\pi_1$and $\pi_0$ and
+% thus get $\pi_2$ in terms of $\pi_0$, and so on, until we have all of
+% the $\pi_i$ in terms of $\pi_0$.  
+% 
+% If we are lucky, we might even find a pattern, to help us get
+% closed-form expressions.  We then would use 
+% 
+% \begin{equation}
+% \sum_{i}\pi_{i}=1
+% \end{equation}  
+% 
+% then solve for $\pi_0$, then get the other $\pi_i$ from $\pi_0$.
+
+\subsubsection{Going Beyond Finding $\pi$}  
+\label{firstib}
+
+Once again various interesting quantities can be derived as functions of
+the $\pi$, such as the system throughput $\tau$, i.e. the number of
+successful transmissions in the network per unit time.  Here's how to
+get $\tau$:
+
+First, suppose for concreteness that in steady-state the probability of
+there being a successful transmission in a given slot is 20\%.  Then
+after, say, 100,000 slots, about 20,000 will have successful
+transmissions---a throughput of 0.2.  So, the long-run probability of
+successful transmission is the same as the long-run fraction of slots in
+which there are successful transmissions!  That in turn can be broken
+down in terms of the various states:
+
+\begin{eqnarray}
+\label{taueqn}
+\tau &=& P(\textrm{success xmit})  \\
+& = & \sum_{s}P(\textrm{success xmit }|\textrm{ in state s}) P(\textrm{in state s}) \nonumber 
+\end{eqnarray}
+
+Now, to calculate $P(\textrm{success xmit }|\textrm{ in state s})$,
+recall that in state s we start the slot with s nonidle nodes, but that
+we may acquire some new ones; each of the n-s idle nodes will create a
+new message, with probability q.  So,
+
+\begin{equation}
+P(\textrm{success xmit }|\textrm{ in state s}) = 
+\sum_{j=0}^{n-s} \binom{n-s}{j} q^j (1-q)^{n-s-j} \cdot 
+(s+j)(1-p)^{s+j-1}p
+\end{equation}
+
+Substituting into (\ref{taueqn}), we have
+
+\begin{equation}
+\tau = \sum_{s=0}^{n} 
+\sum_{j=0}^{n-s} \binom{n-s}{j} q^j (1-q)^{n-s-j} \cdot 
+(s+j)(1-p)^{s+j-1}p \cdot
+\pi_s
+\end{equation}
+
+With some more subtle reasoning, one can derive the mean time a message
+waits before being successfully transmitted, as follows:
+
+Focus attention on one particular node, say Node 0.  It will repeatedly
+cycle through idle and busy periods, I and B.  We wish to find E(B).  I
+has a geometric distribution with parameter q,\footnote{If a message is
+sent in the same slot in which it is created, we will count B as 1.  If
+it is sent in the following slot, B = 2, etc.  B will have a modified
+geometric distribution starting at 0 instead of 1, but we will ignore
+this here for the sake of simplicity.} so
+
+\begin{equation}
+\label{ei}
+E(I)=\frac{1}{q}
+\end{equation}
+
+Then if we can find E(I+B), we will get E(B) by subtraction.
+
+To find E(I+B), note that there is a one-to-one correspondence between
+I+B cycles and successful transmissions; each I+B period ends with a
+successful transmission at Node 0.  Imagine again observing this node
+for, say, 100000 time slots, and say E(I+B) is 2000.  That would mean
+we'd have about 50 cycles, thus 50 successful transmissions from this
+node.
+In other words, the throughput would be approximately 50/100000 = 0.02 =
+1/E(I+B).  So, a fraction
+
+\begin{equation}
+\frac{1}{E(I+B)}  
+\end{equation}
+
+of the time slots have successful
+transmissions from this node. 
+
+But that quantity is the throughput for this node (number of successful
+transmissions per unit time), and due to the symmetry of the system,
+that throughput is 1/n of the total throughput of the n nodes in the
+network, which we denoted above by $\tau$.
+
+So, 
+
+\begin{equation}
+E(I+B)=\frac{n}{\tau}
+\end{equation}
+
+Thus from (\ref{ei}) we have
+
+\begin{equation}
+E(B)=\frac{n}{\tau }-\frac{1}{q}
+\end{equation}  
+
+where of course $\tau$ is the function of the $\pi_{i}$ in
+(\ref{taueqn}).
+
+Now let's find the proportion of attempted transmissions which are
+successful.  This will be
+
+\begin{equation}
+\label{propsucc}
+\frac{E(\textrm{number of successful transmissions in a slot})}
+{E(\textrm{number of attempted transmissions in a slot})}
+\end{equation}
+
+(To see why this is the case, again think of watching the network for
+100,000 slots.)  Then the proportion of successful transmissions during
+that period of time is the number of successful transmissions divided by
+the number of attempted transmissions.  Those two numbers are
+approximately the numerator and denominator of \ref{propsucc}.
+
+Now, how do we evaluate (\ref{propsucc})?  Well, the numerator is easy,
+since it is $\tau$, which we found before.  The denominator will be
+
+\begin{equation}
+\sum_s \pi_s [sp + (n-s)pq]
+\end{equation}
+
+The factor sp+spq comes from the following reasoning.  If we are in
+state s, the s nodes which already have something to send will each
+transmit with probability p, so there will be an expected number sp of
+them that try to send.  Also, of the n-s which are idle at the beginning
+of the slot, an expected sq of them will generate new messages, and of
+those sq, and estimated sqp will try to send.
+
+\section{Simulation of Markov Chains}
+
+Simulation of Markov chains is identical to the patterns we've seen in
+earlier chapters, except for one somewhat subtle difference.  To see
+this, consider the first simulation code presented in this book, in
+Section \ref{alohasim}.  
+
+There we were simulating $X_1$ and $X_2$, the state of the system during
+the first two time slots.  A rough outline of the code is
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+do nreps times
+   simulate X1 and X2
+   record X1, X1 and update counts
+calculate probabilities as counts/nreps
+\end{Verbatim}
+
+We ``played the movie'' {\bf nreps} times, calculating the behavior of
+ $X_1$ and $X_2$ over many plays.
+
+But suppose instead that we had been interested in finding
+
+\begin{equation}
+\lim_{n \rightarrow \infty} \frac{X_1+...+X_n}{n}
+\end{equation}
+
+i.e. the long-run average number of active nodes over infinitely many
+time slots.  {\bf In that case, we would need to play the movie only
+once.}
+
+Here's an example, simulating the stuck-at 0 example from Section
+\ref{stuckat}:
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+# simulates the stuck-at 0 fault example, finding mean time between
+# replacements; we'll keep simulating until we have nreplace replacements
+# of the receiver, then divide that into the number of bits received, to
+# get the mean time between replacements
+sasim <- function(nreplace,rho,k) {
+   replace <- 0  # number of receivers replaced so far
+   up <- TRUE  # receiver is up
+   nbits <- 0  # number of bits received so far
+   ncsec0 <- 0  # current number of consecutive 0s 
+   while (TRUE) {
+      bit <- sample(0:1,1)
+      nbits <- nbits + 1
+      if (runif(1) < rho) {
+         up <- FALSE
+         bit <- 0
+      }
+      if (bit == 0) {
+         ncsec0 <- ncsec0 + 1
+         if (ncsec0 == k) {
+            replace <- replace + 1
+            ncsec0 <- 0
+            up <- TRUE
+         }
+      }
+      if (replace == nreplace) break
+   }
+   return(nbits/nreplace)
+}
+\end{Verbatim}
+
+This follows from the fact that the limit in (\ref{limnt}) occurs even
+in ``one play.''
+
+\section{Hidden Markov Models}
+
+The word {\it hidden} in the term {\it Hidden Markov Model} (HMM)
+refers to the fact that the state of the process is hidden, i.e.
+unobservable.  
+
+Actually, we've already seen an example of this, back in Section
+\ref{stuckat}.  There the state, actually just part of it, was
+unobservable, namely the status of the receiver being up or down.  But
+here we are not trying to guess $X_n$ from $Y_n$ (see below), so it
+probably would not be considered an HMM. 
+
+Note too the connection to mixture models, Section \ref{mix}.
+
+An HMM consists of a Markov chain $X_n$ which is unobservable, together
+with observable values $Y_n$.  The $X_n$ are governed by the transition
+probabilities $p_{ij}$, and the $Y_n$ are generated from the $X_n$
+according to
+
+\begin{equation}
+r_{km} = P(Y_n = m | X_n = k)
+\end{equation}
+
+Typically the idea is to guess the $X_n$ from the $Y_n$ and our
+knowledge of the $p_{ij}$ and $r_{km}$.  The details are too complex to
+give here, but you can at least understand that Bayes' Rule comes into
+play.
+
+A good example of HMMs would be in text mining applications.  Here the
+$Y_n$ might be words in the text, and $X_n$ would be their parts of
+speech (POS)---nouns, verbs, adjectives and so on.  Consider the word
+{\it round}, for instance.  Your first thought might be that it is an
+adjective, but it could be a noun (e.g. an elimination round in a
+tournament) or a verb (e.g. to round off a number or round a corner).
+The HMM would help us to guess which, and therefore guess the true
+meaning of the word.  
+
+HMMs are also used in speech process, DNA modeling and many other
+applications.
+
+\section{Continuous-Time Markov Chains}
+\label{continmc}
+
+In the Markov chains we analyzed above, events occur only at integer
+times.  However, many Markov chain models are of the
+\textbf{continuous-time} type, in which events can occur at any times.
+Here the \textbf{holding time}, i.e. the time the system spends in one
+state before changing to another state, is a continuous random variable.
+
+The state of a Markov chain at any time now has a continuous subscript.
+Instead of the chain consisting of the random variables $X_n, ~ n =
+1,2,3,...$  (you can also start n at 0 in the sense of Section
+\ref{stationmeaning}), it now consists of $\{X_t: t \in [0,\infty)\}$.
+The Markov property is now
+
+\begin{equation}
+P(X_{t+u} = k | X_s \textrm{ for all } 0 \leq s \leq t) =
+P(X_{t+u} = k | X_t) \textrm{ for all } t,u \geq 0
+\end{equation}
+
+\subsection{Holding-Time Distribution}
+
+In order for the Markov property to hold, the distribution of holding
+time at a given state needs to be ``memoryless.'' You may recall that
+exponentially distributed random variables have this property. In other
+words, if a random variable W has density
+
+\begin{equation}
+\label{lambdaeqn}
+f(t)=\lambda e^{-\lambda t}
+\end{equation}
+
+for some $\lambda$ then
+
+\begin{equation}
+\label{exponnomem}
+P(W>r+s|W>r)=P(W>s)
+\end{equation}
+
+for all positive r and s. Actually, one can show that exponential
+distributions are the only continuous distributions which have this
+property. Therefore, \textsl{holding times in Markov chains must be
+exponentially distributed.}  
+
+It is difficult for the beginning modeler to fully appreciate the
+memoryless property.  You are urged to read the material on exponential
+distributions in Section \ref{expon} before continuing.
+
+Because it is central to the Markov property, the exponential distribution
+is assumed for all basic activities in Markov models. In queuing models,
+for instance, both the interarrival time and service time are assumed to
+be exponentially distributed (though of course with different values of
+$\lambda$). In reliability modeling, the lifetime of a component is
+assumed to have an exponential distribution.
+
+Such assumptions have in many cases been verified empirically. If you go to
+a bank, for example, and record data on when customers arrive at the
+door, you will find the exponential model to work well (though you may
+have to restrict yourself to a given time of day, to account for
+nonrandom effects such as heavy traffic at the noon hour). In a study of
+time to failure for airplane air conditioners, the distribution was also
+found to be well fitted by an exponential density.  On the other hand,
+in many cases the distribution is not close to exponential, and purely
+Markovian models cannot be used for anything more than a rough
+approximation.
+
+\subsection{The Notion of ``Rates''}
+\label{rates}
+
+A key point is that the parameter $\lambda$ in (\ref{lambdaeqn}) has the
+interpretation of a rate, in the sense we will now discuss.  First,
+recall that $1/\lambda$ is the mean.  Say light bulb lifetimes have an
+exponential distribution with mean 100 hours, so $\lambda = 0.01$.  In
+our lamp, whenever its bulb burns out, we immediately replace it with a
+new on.  Imagine watching this lamp for, say, 100,000 hours.  During
+that time, we will have done approximately 100000/100 = 1000
+replacements.  That would be using 1000 light bulbs in 100000 hours, so
+we are using bulbs at the rate of 0.01 bulb per hour.  For a general
+$\lambda$, we would use light bulbs at the rate of $\lambda$ bulbs per
+hour.  This concept is crucial to what follows.
+
+\subsection{Stationary Distribution}
+
+We again define $\pi_{i}$ to be the long-run proportion of time the
+system is in state i, and we again will derive a system of linear
+equations to solve for these proportions. 
+
+\subsubsection{Intuitive Derivation}
+
+To this end, let $\lambda_{i}$ denote the parameter in the
+holding-time distribution at state i, and define the
+quantities 
+
+\begin{equation}
+\label{rhors}
+\rho_{rs} = \lambda_r p_{rs}
+\end{equation}
+
+with the following interpretation.  In the context of the ideas in our
+example of the rate of light bulb replacements in Section \ref{rates},
+one can view (\ref{rhors}) as the rate of transitions from r to s, {\it
+during the time we are in state r}.  
+
+Then, equating the rate of transitions into i and the rate out of i, we
+have
+
+\begin{equation}
+\label{newbalance}
+\pi_i \lambda_i = \sum_{j \neq i} \pi_j \lambda_j p_{ji}
+\end{equation}
+
+These equations can then be solved for the $\pi_i$.
+
+\subsubsection{Computation}
+
+Motivated by (\ref{newbalance}), define the matrix Q by
+
+\begin{equation}
+q_{ij} = 
+\begin{cases}
+\lambda_j p_{ji}, & \text{if $i \neq j$}\\
+-\lambda_i, & \text{if $i = j$}
+\end{cases}
+\end{equation}
+
+Q is called the {\bf infinitesimal generator} of the system, so named
+because it is the basis of the system of differential equations that can
+be used to find the finite-time probabilistic behavior of $X_t$.  
+
+The name also reflects the rates notion we've been discussing, due to
+the fact that, say in our light bulb example in Section \ref{rates},
+
+\begin{equation}
+P(\textrm{bulb fails in next h time}) = \lambda h + o(h)
+\end{equation}
+
+Then (\ref{newbalance}) is stated in matrix form as
+
+\begin{equation}
+Q' \pi = 0
+\end{equation}
+
+Here is R code to solve the system:
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+findpicontin <- function(q) {
+   n <- nrow(q)
+   newq <- t(q)
+   newq[n,] <- rep(1,n)
+   rhs <- c(rep(0,n-1),1)
+   pivec <- solve(newq,rhs)
+   return(pivec)
+}
+\end{Verbatim}
+
+To solve the equations  (\ref{newbalance}), we'll need a property of
+exponential distributions derived previously in Section \ref{min},
+copied here for convenience:
+
+\begin{theorem}
+
+Suppose $W_{1},...,W_{k}$ are independent random variables, with $W_{i}$
+being exponentially distributed with parameter $\lambda_{i}$.  Let
+$Z=\min(W_{1},...,W_{k})$. Then
+
+\begin{itemize}
+
+\item [(a)] Z is exponentially distributed with parameter $\lambda
+_{1}+...+\lambda_{k}$
+
+\item [(b)] $P(Z=W_{i}) =
+\frac{\lambda_{i}}{\lambda_{1}+...+\lambda_{k}}$
+
+\end{itemize}
+
+\end{theorem}
+
+\subsection{Example:  Machine Repair}
+\label{machinerepair}
+
+Suppose the operations in a factory require the use of a certain kind of
+machine.  The manager has installed two of these machines. This is known
+as a \textbf{gracefully degrading system}: When both machines are
+working, the fact that there are two of them, instead of one, leads to a
+shorter wait time for access to a machine.  When one machine has failed,
+the wait is longer, but at least the factory operations may continue. Of
+course, if both machines fail, the factory must shut down until at least
+one machine is repaired.
+
+Suppose the time until failure of a single machine, carrying the full
+load of the factory, has an exponential distribution with mean 20.0, but
+the mean is 25.0 when the other machine is working, since it is not so
+loaded. Repair time is exponentially distributed with mean 8.0.
+
+We can take as our state space \{0,1,2\}, where the state is the number
+of working machines. Now, let us find the parameters $\lambda_{i}$ and
+$p_{ji}$ for this system. For example, what about $\lambda_{2}$?
+The holding time in state 2 is the minimum of the two lifetimes of the
+machines, and thus from the results of Section \ref{min}, has parameter
+$\frac{1}{25.0}+\frac{1}{25.0}=0.08$. 
+
+For $\lambda_{1}$, a transition out of state 1 will be either to state
+2 (the down machine is repaired) or to state 0 (the up machine fails).
+The time until transition will be the minimum of the lifetime of the up
+machine and the repair time of the down machine, and thus will have
+parameter $\frac{1}{20.0}+\frac{1}{8.0}=0.175$.  Similarly, $\lambda
+_{0}=\frac{1}{8.0}+\frac{1}{8.0}=0.25$.
+
+It is important to understand how the Markov property is being used
+here. Suppose we are in state 1, and the down machine is repaired,
+sending us into state 2.  Remember, the machine which had already been
+up has ``lived'' for some time now. But the memoryless property of the
+exponential distribution implies that this machine is now ``born
+again.''
+
+What about the parameters $p_{ji}$? Well, $p_{21}$ is certainly easy to
+find; since the transition $2\rightarrow 1$ is the \textit{only}
+transition possible out of state 2, $p_{21} = 1$.
+
+For $p_{12}$, recall that transitions out of state 1 are to states 0 and
+2, with rates 1/20.0 and 1/8.0, respectively.  So,
+
+\begin{equation}
+p_{12} = \frac{1/8.0}{1/20.0+1/8.0} = 0.72
+\end{equation}
+
+Working in this manner, we finally arrive at the complete system of equations
+(\ref{newbalance}):
+
+\begin{eqnarray}
+\pi_{2}(0.08) & = & \pi_{1}(0.125)\\
+\pi_{1}(0.175) & = & \pi_{2}(0.08)+\pi_{0}(0.25)\\
+\pi_{0}(0.25) & = & \pi_{1}(0.05)
+\end{eqnarray} 
+
+Of course, we also have the constraint $\pi_{2}+\pi_{1}+\pi_{0}=1$.
+The solution turns out to be
+
+\begin{equation}
+\pi =(0.072,0.362,0.566)
+\end{equation}  
+
+Thus for example, during 7.2\% of the time, there will be no machine available
+at all.
+
+Several variations of this problem could be analyzed. We could compare
+the two-machine system with a one-machine version. It turns out that the
+proportion of down time (i.e. time when no machine is available)
+increases to 28.6\%. Or we could analyze the case in which only one
+repair person is employed by this factory, so that only one machine can
+be repaired at a time, compared to the situation above, in which we
+(tacitly) assumed that if both machines are down, they can be repaired
+in parallel. We leave these variations as exercises for the reader.
+
+\subsection{Example:  Migration in a Social Network}
+
+The following is a simplified version of research in online social
+networks.
+
+There is a town with two social groups, with each person being in
+exactly one group.  People arrive from outside town, with exponentially
+distributed interarrival times at rate $\alpha$, and join one of the
+groups with probability 0.5 each.  Each person will occasionally switch
+groups, with one possible ``switch'' being to leave town entirely.  A
+person's time before switching is exponentially distributed with rate
+$\sigma$; the switch will either be to the other group or to the outside
+world, with probabilities q and 1-q, respectively.  Let the state of the
+system be (i,j), where i and j are the number of current members in
+groups 1 and 2, respectively.
+
+Let's find a typical balance equation, say for the state (8,8):
+
+\begin{equation}
+\pi_{(8,8)} (\alpha + 16 \cdot \sigma ) =
+( \pi_{(9,8)} + \pi_{(8,9)}) \cdot 9 \sigma (1-q) +
+( \pi_{(9,7)} + \pi_{(7,9)}) \cdot 9 \sigma q +
+( \pi_{(8,7)} + \pi_{(7,8)}) \cdot 0.5 \alpha
+\end{equation}
+
+The reasoning is straightforward.  How can we move out of state (8,8)?
+Well, there could be an arrival (rate $\alpha$), or any one of the 16
+people could switch groups (rate $16 \sigma$), etc.
+
+Now, in a ``going beyond finding the $\pi$'' vein, let's find the
+long-run fraction of transfers into group 1 that come from group 2, as
+opposed to from the outside.
+
+The rate of transitions into that group from outside is $0.5 \alpha$.
+When the system is in state (i,j), the rate of transitions into group 1
+from group 2 is $j \sigma q$, so the overall rate is $\sum_{i,j}
+\pi_{(i,j)} j \sigma q$.  Thus the fraction of new members coming in to
+group 1 from transfers is
+
+\begin{equation}
+\frac{\sum_{i,j} \pi_{(i,j)} j \sigma q}
+{\alpha + \sum_{i,j} \pi_{(i,j)} j \sigma q}
+\end{equation}
+
+The above reasoning is very common, quite applicable in many situations.
+By the way, note that $\sum_{i,j} \pi_{(i,j)} j \sigma q = \sigma q EN$,
+where N is the number of members of group 1.
+
+\subsection{Continuous-Time Birth/Death Processes}
+
+We noted earlier that the system of equations for the $\pi_i$ may not be
+easy to solve. In many cases, for instance, the state space is infinite
+and thus the system of equations is infinite too. However, there is a
+rich class of Markov chains for which closed-form solutions have been
+found, called \textbf{birth/death processes}.\footnote{Though we treat
+the continuous-time case here, there is also a discrete-time analog.} 
+
+Here the state space consists of (or has been mapped to) the
+set of nonnegative integers, and $p_{ji}$ is nonzero only in cases in
+which $|i-j| = 1$. (The name ``birth/death'' has its origin in Markov
+models of biological populations, in which the state is the current
+population size.) Note for instance that the example of the gracefully
+degrading system above has this form. An M/M/1 queue---one server,
+``Markov'' (i.e.  exponential) interarrival times and Markov service
+times---is also a birth/death process, with the state being the number
+of jobs in the system.
+
+Because the $p_{ji}$ have such a simple structure, there is hope that
+we can find a closed-form solution to (\ref{newbalance}), and it turns
+out we can.  Let $u_i = \rho_{i,i+1}$ and $d_i = \rho_{i,i-1}$ (`u' for
+``up,'' `d' for ``down'').  Then (\ref{newbalance}) is
+
+\begin{equation}
+\pi_{i+1} d_{i+1} + \pi_{i-1} u_{i-1} = \pi_i \lambda_i 
+= \pi_i (u_i+d_i), ~ i \geq 1
+\end{equation}
+
+\begin{equation}
+\pi_1 d_1 = \pi_0 \lambda_0 = \pi_0 u_0
+\end{equation}
+
+In other words,
+
+\begin{equation}
+\label{recurs}
+\pi_{i+1} d_{i+1} - \pi_i u_i = \pi_i d_i - \pi_{i-1} u_{i-1}, ~ i \geq 1
+\end{equation}
+
+\begin{equation}
+\label{base}
+\pi_1 d_1 - \pi_0 u_0 = 0
+\end{equation}
+
+Applying (\ref{recurs}) recursively to the base (\ref{base}), we see
+that
+
+\begin{equation}
+\pi_i d_i - \pi_{i-1} u_{i-1} = 0,
+~ i \geq 1
+\end{equation}
+
+so that 
+
+\begin{equation}
+\pi_i = \pi_{i-1} \frac{u_{i-1}}{d_i}
+~ i \geq 1
+\end{equation}
+
+and thus
+
+\begin{equation}
+\label{pir}
+\pi_i = \pi_0 r_i
+\end{equation}
+
+where
+
+\begin{equation}
+r_{i}=\Pi ^{i}_{k=1}\frac{u_{k-1}}{d_k}
+\end{equation}
+
+where $r_i = 0$ for $i > m$ if the chain has no states past m.
+
+Then since the $\pi_i$ must sum to 1, we have that
+
+\begin{equation}
+\pi_{0}=\frac{1}{1+\sum ^{\infty }_{i=1}r_{i}}
+\end{equation}  
+
+and the other $\pi_i$ are then found via (\ref{pir}).  
+
+Note that the chain might be finite, i.e. have $u_i = 0$ for some i.  In
+that case it is still a birth/death chain, and the formulas above for
+$\pi$ still apply.
+
+\section{Hitting Times Etc.}
+\label{hitting}
+
+In this section we're interested in the amount of time it takes to get
+from one state to another, including cases in which this might be
+infinite.
+
+\subsection{Some Mathematical Conditions}
+
+There is a rich mathematical theory regarding the asymptotic behavior of
+Markov chains. We will not present such material here in this brief
+introduction, but we will give an example of the implications the theory
+can have.
+
+A state in a Markov chain is called \textbf{recurrent} if it is
+guaranteed that, if we start at that state, we will return to the state
+infinitely many times.  A nonrecurrent state is called
+\textbf{transient.} 
+
+Let $T_{ii}$ denote the time needed to return to state i if we start
+there.  Keep in mind that $T_{ii}$ is the time from one entry to state i
+to the next entry to state i.  So, it includes time spent in i, which is
+1 unit of time for a discrete-time chain and a random exponential amount
+of time in the continuous-time case, and then time spent away from i, up
+to the time of next entry to i.  Note that an equivalent definition of
+recurrence is that $P(T_{ii}<\infty )=1$, i.e.  we are sure to return to
+i at least once.  By the Markov property, if we are sure to return once,
+then we are sure to return again once after that, and so on, so this
+implies infinitely many visits.
+
+A recurrent state i is called \textbf{positive recurrent} if
+$E(T_{ii})<\infty$, while a state which is recurrent but not positive
+recurrent is called \textbf{null recurrent}. 
+
+Let $T_{ij}$ be the time it takes to get to state j if we are now in i.
+Note that this is measured from the time that we enter state i to the
+time we enter state j.
+
+One can show that in the discrete time case, a state i is recurrent if
+and only if
+
+\begin{equation}
+\label{sumpii}
+\sum_{n=0}^{\infty} P(T_{ii} = n) = \infty
+\end{equation}
+
+This can be easily seen in the ``only if'' case:   Let $A_n$ denote the
+indicator random variable for the event $T_{ii} = n$ (Section
+\ref{indicator}).  Then $P(T_{ii} = n) = EA_n$, so the left-hand side of
+(\ref{sumpii}) is the expected value of the total number of visits to
+state i.  If state i is recurrent, then we will visit i infinitely
+often, and thus that sum should be equal to infinity.
+
+Consider an \textbf{irreducible} Markov chain, meaning one which has the
+property that one can get from any state to any other state (though not
+necessarily in one step).  One can show that in an irreducible chain, if
+one state is recurrent then they all are.  The same statement holds if
+``recurrent'' is replaced by ``positive recurrent.''
+
+Again, this should make intuitive sense to you for the recurrent case:
+We make infinitely many visits to state i, and each time we have a
+nonzero probability of going to state j from there.  Thus we should make
+infinitely many visits to j as well.
+
+\subsection{Example:  Random Walks}
+
+Consider the famous \textbf{random walk} on the full set of
+integers: At each time step, one goes left one integer or right one
+integer (e.g.  to +3 or +5 from +4), with probability 1/2 each.  In
+other words, we flip a coin and go left for heads, right for tails.
+
+If we start at 0, then we return to 0 when we have accumulated an equal
+number of heads and tails.  So for even-numbered n, i.e. n = 2m, we have
+
+\begin{equation}
+P(T_{ii} = n) =  P(\textrm {m heads and m tails}) =
+\binom{2m}{m} \frac{1}{2^{2m}}
+\end{equation}
+
+One can use Stirling's approximation,
+
+\begin{equation}
+m! \approx \sqrt{2 \pi} e^{-m} m^{m+1/2}
+\end{equation}
+
+to show that the series (\ref{sumpii}) diverges in this case.  So, this
+chain (meaning all states in the chain) is recurrent.  However, it turns
+out not to be not positive recurrent, as we'll see below. 
+
+The same is true for the corresponding random walk on the
+two-dimensional integer lattice (moving up, down, left or right with
+probability 1/4 each). However, in the three-dimensional case, the chain
+is not even null recurrent; it is transient.
+
+\subsection{Finding Hitting and Recurrence Times}
+
+For a positive recurrent state i in a discrete-time
+Markov chain,
+
+\begin{equation}
+\label{etii}
+\pi_{i}=\frac{1}{E(T_{ii})}
+\end{equation}
+
+The approach to deriving this is similar to that of Section
+\ref{firstib}.  Define alternating On and Off subcycles, where On means
+we are at state i and Off means we are elsewhere.  An On subcycle has
+duration 1, and an Off subcycle has duration $T_{ii}-1$.  Define a full
+cycle to consist of an On subcycle followed by an Off subcycle.  
+
+Then intuitively the proportion of time we are in state i is 
+
+\begin{equation}
+\pi_i = \frac{E(\textrm{On})}{E(\textrm{On}) + E(\textrm{Off})} 
+= \frac{1}{ET_{ii}}
+\end{equation}
+
+The equation is similar for the continuous-time case.  Here
+$E(\textrm{On}) = 1/\lambda_i$.  The Off subcycle has mean duration
+$ET_{ii}-1/\lambda_i$.  Note again that $T_{ii}$ is measured from the
+time we enter state i once until the time we enter it again.  We then
+have
+
+\begin{equation}
+\pi_i = \frac{1/\lambda_i}{E(T_{ii})}
+\end{equation}
+
+Thus positive recurrence means that $\pi_{i}>0$. For a null recurrent
+chain, the limits in Equation (\ref{limnt}) are 0, which means that
+there may be rather little one can say of interest regarding the long-run
+behavior of the chain.
+
+We are often interested in finding quantities of the form $E(T_{ij})$.
+We can do so by setting up systems of equations similar to the balance
+equations used for finding stationary distributions.
+
+First consider the discrete case.  Conditioning on the first step we
+take after being at state i, and using the Law of Total Expectation, we
+have
+
+\begin{equation}
+\label{etij}
+E(T_{ij}) = \sum_{k \neq j} p_{ik} [1+E(T_{kj})] + p_{ij} \cdot 1
+= 1 + \sum_{k \neq j} p_{ik} E(T_{kj})
+\end{equation}
+
+By varying i and j in (\ref{etij}), we get a system of linear equations
+which we can solve to find the $ET_{ij}$.  Note that (\ref{etii}) gives
+us equations we can use here too.
+
+The continuous version uses the same reasoning:
+
+\begin{equation}
+\label{etijcontin}
+E(T_{ij}) = \sum_{k \neq j} p_{ik} \left [ \frac{1}{\lambda_i}+E(T_{kj})
+\right ] +  
+p_{ij} \cdot \frac{1}{\lambda_i}
+= \frac{1}{\lambda_i}+ \sum_{k \neq j} p_{ik} E(T_{kj})
+\end{equation}
+
+% \checkpoint
+
+One can use a similar analysis to determine the probability of ever
+reaching a state, in chains in which this probability is not 1.  (Some
+chains have have transient or even {\bf absorbing} states, i.e. states u
+such that $p_{uv} = 0$ whenever $v \neq u$.)
+
+For fixed j define
+
+\begin{equation}
+\alpha_{ij} = P(T_{ij} < \infty)
+\end{equation}
+
+Then denoting by S the state we next visit after i, we have
+
+\begin{eqnarray}
+\label{absorb}
+\alpha_{ij} &=& P(T_{ij} < \infty) \\
+&=& \sum_{k} P(S = k \textrm{ and } T_{ij} < \infty) \\
+&=& \sum_{k \neq j} P(S = k \textrm{ and } T_{kj} < \infty) + P(S = j) \\
+&=& \sum_{k \neq j} P(S = k) ~ P(T_{kj} < \infty | S = k) + P(S = j) \\
+&=& \sum_{k \neq j} p_{ik} ~ \alpha_{kj} + p_{ij} \\
+\end{eqnarray}
+
+So, again we have a system of linear equations that we can solve for the
+$\alpha_{ij}$.
+
+\subsection{Example:  Finite Random Walk}
+
+Let's go back to the example in Section \ref{finite}.
+
+Suppose we start our random walk at 2.  How long will it take to reach
+state 4?  Set $b_i = E(T_{i4}|\textrm{start at i})$.  From (\ref{etij})
+we could set up equations like
+
+\begin{equation}
+b_2 = \frac{1}{3} (1+b_1) + \frac{1}{3} (1+b_2) + \frac{1}{3} (1+b_3)
+\end{equation}
+
+Now change the model a little, and make states 1 and 6 absorbing.
+Suppose we start at position 3.  What is the probability that we
+eventually are absorbed at 6 rather than 1?  We could set up equations
+like (\ref{absorb}) to find this. 
+
+\subsection{Example:  Tree-Searching}
+\label{treesearch}
+
+Consider the following Markov chain with infinite state space
+\{0,1,2,3,...\}.\footnote{Adapted from {\it Performance Modelling of
+Communication Networks and Computer Architectures}, by P. Harrison and
+N. Patel, pub. by Addison-Wesley, 1993.} The transition matrix is
+defined by $p_{i,i+1}=q_{i}$ and $p_{i0}=1-q_{i}$. This kind of model
+has many different applications, including in computer science
+tree-searching algorithms.  (The state represents the level in the tree
+where the search is currently, and a return to 0 represents a backtrack.
+More general backtracking can be modeled similarly.)
+
+The question at hand is, What conditions on the $q_{i}$ will give us
+a positive recurrent chain?
+
+Assuming $0<q_{i}<1$ for all i, the chain is clearly irreducible.
+Thus, to check for recurrence, we need check only one state, say state
+0.
+
+For state 0 (and thus the entire chain) to be recurrent, we need to show
+that $P(T_{00}<\infty )=1$. But
+
+\begin{equation}
+P(T_{00}>n)=\Pi_{i=0}^{n-1}q_{i}
+\end{equation}
+
+Therefore, the chain is recurrent if and only if 
+
+\begin{equation}
+\lim_{n\rightarrow \infty }\Pi_{i=0}^{n-1}q_{i}=0
+\end{equation}
+
+For positive recurrence, we need $E(T_{00})<\infty$. Now, one can show
+that for any nonnegative integer-valued random variable Y
+
+\begin{equation}
+E(Y)=\sum ^{\infty }_{n=0}P(Y>n)
+\end{equation}
+
+Thus for positive recurrence, our condition on the $q_i$ is
+
+\begin{equation}
+\sum ^{\infty }_{n=0}\Pi ^{n-1}_{i=0}q_{i}<\infty 
+\end{equation} 
+
+\startproblemset
+
+\oneproblem
+Consider a ``wraparound'' variant of the random walk in Section
+\ref{finite}.  We still have a reflecting barrier at 1, but at 5, we go
+back to 4, stay at 5 or ``wrap around'' to 1, each with probability 1/3.
+Find the new set of stationary probabilities.
+
+\oneproblem
+Consider the Markov model of the shared-memory multiprocessor system 
+in our PLN.  In each part below, your answer will be a function of 
+$q_1,...,q_m$.
+
+\begin{itemize}
+
+\item [(a)] For the case m = 3, find $p_{(2,0,1),(1,1,1)}$.
+
+\item [(b)] For the case m = 6, give a compact expression for
+$p_{(1,1,1,1,1,1),(i,j,k,l,m,n)}$.
+
+Hint:  We have an instance of a famous parametric distribution family here.
+
+\end{itemize}
+
+\oneproblem
+This problem involves the analysis of call centers. This is a subject  
+of much interest in the business world, with there being commercial 
+simulators sold to analyze various scenarios. Here are our assumptions:
+
+\begin{itemize}
+
+\item Calls come in according to a Poisson process with intensity
+parameter $\lambda$.
+
+\item Call duration is exponentially distributed with parameter $\eta$.
+
+\item There are always at least b operators in service, and at most b+r.
+
+\item Operators work from home, and can be brought into or out of
+service instantly when needed.  They are paid only for the time in
+service.
+
+\item If a call comes in when the current number of operators is larger
+than b but smaller than b+r, another operator is brought into
+service to process the call.
+
+\item If a call comes in when the current number of operators is b+r,
+the call is rejected.
+
+\item When an operator completes processing a call, and the current
+number of operators (including this one) is greater than b, then that
+operator is taken out of service.
+
+\end{itemize}
+
+Note that this is a birth/death process, with the state being the
+number of calls currently in the system.
+
+\begin{itemize}
+
+\item [(a)] Find approximate closed-form expressions for the $\pi_i$ for
+large b+r, in terms of b, r, $\lambda$ and $\eta$.  (You should not have
+any summation symbols.)
+
+\item [(b)] Find the proportion of rejected calls, in terms of $\pi_i$
+and b, r, $\lambda$ and $\eta$.
+
+\item [(c)] An operator is paid while in service, even if he/she is
+idle, in which case the wages are ``wasted.'' Express the proportion of
+wasted time in terms of the $\pi_i$ and b, r, $\lambda$ and $\eta$.       
+
+\item [(d)] Suppose b = r = 2, and $\lambda = \eta = 1.0$. When a call
+completes while we are in state b+1, an operator is sent away. Find the
+mean time until we make our next summons to the reserve pool.            
+
+\end{itemize}
+
+\oneproblem
+The {\bf bin-packing problem} arises in many computer science
+applications.  Items of various sizes must be placed into fixed-sized
+bins.  The goal is to find a packing arrangement that minimizes unused
+space.  Toward that end, work the following problem.
+
+We are working in one dimension, and have a continuing stream of items
+arriving, of lengths $L_1, L_2, L_3,...$.  We place the items in the
+bins in the order of arrival, i.e. without optimizing.  We continue to
+place items in a bin until we encounter an item that will not fit in the
+remaining space, in which case we go to the next bin.
+
+Suppose the bins are of length 5, and an item has length 1, 2, 3 or 4,
+with probability 0.25 each.  Find the long-run proportion of wasted
+space.
+
+Hint:  Set up a discrete-time Markov chain, with ``time'' being the
+number of items packed so far, and the state being the amount of
+occupied space in the current bin.  Define $T_n$ to be 1 or 0, according
+to whether the $n^{th}$ item causes us to begin packing a new bin, so
+that the number of bins used by ``time'' n is $T_1+...+T_n$.
+
+\oneproblem
+Suppose we keep rolling a die.  Find the mean number of rolls needed to
+get three consecutive 4s.
+
+Hint:  Use the material in Section \ref{hitting}.
+
+\oneproblem
+A system consists of two machines, with exponentially distributed
+lifetimes having mean 25.0. There is a single repairperson, but he is
+not usually on site.  When a breakdown occurs, he is summoned (unless he
+is already on his way or on site), and it takes him a random amount of
+time to reach the site, exponentially distributed with mean 2.0. Repair
+time is exponentially distributed with mean 8.0. If after completing a
+repair the repairperson finds that the other machine needs fixing, he
+will  repair it; otherwise he will leave. Repair is performed on a First
+Come, First Served schedule.  Find the following:
+
+\begin{itemize}
+
+\item [(a)] The long-run proportion of the time that the repairperson is
+on site.
+
+\item [(b)] The rate per unit time of calls to the repairperson.
+
+\item [(c)] The mean time to repair, i.e. the mean time between a
+breakdown of a machine and completion of repair of that machine.
+
+\item [(d)] The probability that, when two machines are up and one of
+them goes down, the second machine fails before the repairperson
+arrives.
+
+\end{itemize}
+
+\oneproblem
+Consider again the random walk in Section \ref{finite}.  Find
+
+\begin{equation}
+\lim_{n \rightarrow \infty} \rho(X_n,X_{n+1})
+\end{equation}
+
+Hint:  Apply the Law of Total Expectation to $E(X_n X_{n+1})$.
+
+\oneproblem
+Consider a random variable $X$ that has a continuous density.  That 
+implies that $G(u) = P(X > u)$ has a derivative.  Differentiate
+(\ref{exponnomem}) with respect to r, then set r = 0, resulting in a
+differential equation for $G$.  Solve that equation to show that the
+only continuous densities that produce the memoryless property are those
+in the exponential family.
+
+\oneproblem
+Suppose we model a certain database as follows. New items arrive
+according to a Poisson process with intensity parameter $\alpha$. Each item
+stays in the database for an exponentially distributed amount of time
+with parameter $\sigma$, independently of the other items. Our state at time t
+is the number of items in the database at that time. Find closed-form
+expressions for the stationary distribution $\pi$ and the long-run average
+size of the database.
+
+\oneproblem Consider our machine repair example in Section
+\ref{machinerepair}, with the following change: The repairperson is
+offsite, and will not be summoned unless both machines are down. Once
+the repairperson arrives, she will not leave until both machines are up.
+So for example, if she arrives and repairs machine B, then while
+repairing A finds that B has gone down again, she will start work on B
+immediately after finishing with A. Travel time to the site from the
+maintenance office is 0. Repair is performed on a First Come, First
+Served schedule.  The time a machine is in working order has an
+exponential distribution with rate $\omega$, and repair is exponentially
+distributed with rate $\rho$. Find the following in terms of $\omega$
+and $\rho$:
+
+\begin{itemize}
+
+\item [(a)] The long-run proportion of the time that the repairperson is
+on site.
+
+\item [(b)] The rate per unit time of calls to the repairperson.
+
+\item [(c)] The mean time to repair, i.e. the mean time between a
+breakdown of a machine and completion of repair of that machine. (Hint:
+The best approach is to look at rates. First, find the number of
+breakdowns per unit time. Then, ask how many of these occur during a
+time when both machines are up, etc. In each case, what is the mean time
+to repair for the machine that breaks?) 
+
+\end{itemize}
+
+\oneproblem
+There is a town with two social groups, with the following
+dynamics:
+
+\begin{itemize}
+
+\item Everyone is in exactly one group at a time.
+
+\item People arrive from outside town, with exponentially distributed
+interarrival times at rate $\alpha$, and join one of the groups with
+probability 0.5 each.
+
+\item Each person will occasionally switch groups, with one possible ``group''
+being to leave town entirely (never to return).  A person's time before
+switching groups is exponentially distributed with rate $\sigma$.  The
+switch will either be to the other group or to the outside world, with
+probabilities q and 1-q, respectively.
+
+\end{itemize}
+
+Let the state of the system be (i,j), where i and j are the number of
+current members in groups 1 and 2, respectively.  Answer in terms of
+$\alpha$, $\lambda$, $\tau$ and $\pi$:
+
+\begin{itemize}
+
+\item [(a)] Give the balance equation for the state (8,8).
+
+% \item [(b)] We have just entered state (5,0).  What is the mean time
+% until Group 2 becomes nonempty?
+
+\item [(b)] Fill in the blank:  The president of Group 1 tells reporter,
+``We've found over the years that
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\% of entries into our
+group come as transfers from the other group.''
+
+\end{itemize}
+
+

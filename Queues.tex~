@@ -1,0 +1,1225 @@
+\chapter{Introduction to Queuing Models}
+\label{que}
+
+Seems like we spend large parts of our lives standing in line (or as
+they say in New York, standing ``on'' line).  This can be analyzed
+probabilistically, a subject we will be introduced in this chapter.
+
+\section{Introduction}
+
+Like other areas of applied stochastic processes, queuing theory has a
+vast literature, covering a huge number of variations on different types
+of queues.  Our tutorial here can only just scratch the surface to this
+field.
+
+Here is a rough overview of a few of the large categories of queuing theory:
+
+\begin{itemize}
+
+\item Single-server queues.
+
+\item Networks of queues, including {\bf open} networks (in which jobs
+arrive from outside the network, visit some of the servers in the
+network, then leave) and {\bf closed} networks (in which jobs
+continually circulate within the network, never leaving).
+
+\item Non-First Come, First Served (FCFS) service orderings.  For
+example, there are Last Come, First Served (i.e. stacks) and Processor
+Sharing (which models CPU timesharing).
+
+\end{itemize}
+
+In this brief introduction, we will not discuss non-FCFS queues, and
+will only scratch the surface on the other tops.
+
+\section{M/M/1}
+
+The first M here stands for ``Markov'' or ``memoryless," alluding to the
+fact that arrivals to the queue are Markovian, i.e. interarrivals are
+i.i.d. exponentially distributed.  The second M means that the service
+times are also i.i.d. exponential.  Denote the reciprocal-mean
+interarrival and service times by $\lambda$ and $\mu$.
+
+The 1 in M/M/1 refers to the fact that there is a single server.  We
+will assume FCFS job scheduling here, but close inspection of the
+derivation will show that it applies to some other kinds of scheduling
+too.
+
+This system is a continuous-time Markov chain, with the state $X_t$ at
+time t being the number of jobs in the system (not just in the queue but
+also including the one currently being served, if any).  
+
+\subsection{Steady-State Probabilities}
+
+Intuitively the steady-state probabilities $\pi_i$ will exist only if
+$\lambda < \mu$.  Otherwise jobs would come in faster than they could be
+served, and the queue would become infinite.  So, we assume that $u <
+1$, where $u = \frac{\lambda}{\mu}$.
+
+Clearly this is a birth-and-death chain.  For state k, the birth rate
+$\rho_{k,k+1}$ is $\lambda$ and the death rate $\rho_{k,k-1}$ is  $\mu$,
+k = 0,1,2,... (except that the death rate at state 0 is 0).  Using the
+formula derived for birth/death chains, we have that 
+ 
+\begin{equation} 
+\pi_i = u^i \pi_0, ~ i \geq 0 
+\end{equation}
+
+and
+
+\begin{equation}
+\pi_0 = \frac{1}{\sum_{j=0}^\infty u^j} = 1 - u
+\end{equation}
+
+In other words,
+
+\begin{equation}
+\label{mm1pi}
+\pi_i = u^i (1-u), ~ i \geq 0
+\end{equation}
+
+Note by the way that since $\pi_0 = 1-u$, then u is the {\it
+utilization} of the server, i.e.  the proportion of the time the server
+is busy.  In fact, this can be seen intuitively:  Think of a very long
+period of time of length t.  During this time approximately $\lambda t$
+jobs having arrived, keeping the server busy for approximately $\lambda
+t \cdot \frac{1}{\mu}$ time.  Thus the fraction of time during which the
+server is busy is approximantely
+
+\begin{equation}
+\label{intuit}
+\frac{\lambda t \cdot \frac{1}{\mu}} 
+{t}
+= \frac{\lambda}{\mu}
+\end{equation}
+
+% \checkpoint
+
+\subsection{Mean Queue Length}
+\label{meanqueuelength}
+
+Another way to look at Equation (\ref{mm1pi}) is as follows.  Let the
+random variable N have the long-run distribution of $X_{t}$, so that
+
+\begin{equation}
+P(N = i) = u^i (1-u), ~ i \geq 0
+\end{equation}
+
+Then this says that N+1 has a geometric distribution, with ``success''
+probability 1-u.  (N itself is not quite geometrically distributed,
+since N's values begin at 0 while a geometric distribution begins at 1.)
+
+Thus the long-run average value E(N) for $X_t$ will be the mean of that
+geometric distribution, minus 1, i.e. 
+
+\begin{equation}
+\label{nu}
+EN = \frac{1}{1-u} - 1 = \frac{u}{1-u} 
+\end{equation}
+
+The long-run mean queue length E(Q) will be this value minus the mean
+number of jobs being served.  The latter quantity is $1-\pi_0 = u$,
+so 
+
+\begin{equation}
+\label{meanq}
+EQ = \frac{u^2}{1-u}
+\end{equation}
+
+\subsection{Distribution of Residence Time/Little's Rule}
+
+Let R denote the {\bf residence time} of a job, i.e. the time elapsed
+from the job's arrival to its exit from the system.  Little's Rule says
+that
+
+\begin{equation}
+EN = \lambda ER
+\end{equation}
+
+This property holds for a variety of queuing systems, including this
+one.  It can be proved formally, but here is the intuition:
+
+Think of a particular job (in the literature of queuing theory, it is
+called a ``tagged job'') at the time it has just exited the system.  If
+this is an ``average'' job, then it has been in the system for ER amount
+of time, during which an average of $\lambda ER$ new jobs have arrived
+behind it.  These jobs now comprise the total number of jobs in the
+system, which in the average case is EN. 
+
+Applying Little's Rule here, we know EN from Equation (\ref{nu}), so we
+can solve for ER:
+
+\begin{equation}
+\label{meanres1}
+ER = \frac{1}{\lambda} \frac{u}{1-u} = \frac{1/\mu}{1-u}
+\end{equation}  
+
+With a little more work, we can find the actual distribution of R, not
+just its mean.  This will enable us to obtain quantities such as Var(R)
+and P(R $>$ z).  Here is our approach:
+
+When a job arrives, say there are N jobs ahead of it, including one in
+service.  Then this job's value of R can be expressed as
+
+\begin{equation}
+\label{remaining}
+R = S_{self} + S_{1,resid} + S_{2} + ... + S_{N}
+\end{equation}
+
+where $S_{self}$ is the service time for this job, $S_{1,resid}$ is the
+remaining time for the job now being served (i.e. the residual life),
+and for $i > 1$ the random variable $S_{i}$ is the service time for the
+$i^{th}$ waiting job.
+
+Then the Laplace transform of R, evaluated at say w, is
+
+\begin{eqnarray}
+\label{rlt}
+E(e^{-wR}) &=& E[e^{-w(S_{self}+S_{1,resid}+S_{2}+...+S_{N})}] \\
+&=& E \left ( 
+E[e^{-w(S_{self}+S_{1,resid}+S_{2}+...+S_{N})} | N]
+\right ) \\
+&=& E[\{E(e^{-wS})\}^{N+1}] \\
+&=& E[g(w)^{N+1}] \label{heyitsgeom}
+\end{eqnarray}
+
+where 
+
+\begin{equation}
+g(w) = E(e^{-wS})
+\end{equation}
+
+is the Laplace transform of the service variable, i.e. of an exponential
+distribution with parameter equal to the service rate $\mu$.  Here we
+have made use of these facts:
+
+\begin{itemize}
+
+\item The Laplace transform of a sum of independent random variables is
+the product of their individual Laplace transforms.
+
+\item Due to the memoryless property, $S_{1,resid}$ has the same
+distribution as do the other $S_{i}$.
+
+\item The distribution of the service times $S_i$ and queue length N
+observed by our tagged job is the same as the distributions of those
+quantities at all times, not just at arrival times of tagged jobs.  This
+property can be proven for this kind of queue and many others, and is
+called PASTA---Poisson Arrivals See Time Averages.
+
+(Note that the PASTA property is not obvious.  On the contrary, given
+our experience with the Bus Paradox and length-biased sampling in
+Section \ref{busparadox}, we should be wary of such things.  But the
+PASTA property does hold and can be proven.)
+
+\end{itemize}
+
+But that last term in (\ref{heyitsgeom}), $E[g(w)^{N+1}]$, is the
+generating function of N+1, evaluated at g(w).  And we know from Section
+\ref{meanqueuelength} that N+1 has a geometric distribution.  The
+generating function for a nonnegative-integer valued random variable K
+with success probability p is
+
+\begin{equation}
+g_K(s) = E(s^K) = \sum_{i=1}^{\infty} s^i (1-p)^{i-1} p = 
+\frac{ps}{1-s(1-p)}
+\end{equation}
+
+In (\ref{heyitsgeom}), we have p = 1 -u and s = g(w).  So,
+
+\begin{equation}
+\label{vgw}
+E(v^{N+1}) =
+\frac{g(w)(1-u)}{1-u[g(w)]}
+\end{equation}
+
+Finally, by definition of Laplace transform,
+
+\begin{equation}
+\label{gw}
+g(w) = E(e^{-wS}) = \int_{0}^\infty e^{-wt} \mu e^{-\mu t} dt =
+\frac{\mu }{w+\mu }
+\end{equation}  
+
+So, from (\ref{rlt}), (\ref{vgw}) and (\ref{gw}), the Laplace transform
+of R is 
+
+\begin{equation}
+\label{lookit}
+\frac{\mu(1-u)}{w + \mu(1-u)}
+\end{equation}
+
+In principle, Laplace transforms can be inverted, and we could use
+numerical methods to retrieve the distribution of R from (\ref{lookit}).
+But hey, look at that!  Equation (\ref{lookit}) has the same form as
+(\ref{gw}).  In other words, we have discovered that R has an   
+exponential distribution too, only with parameter $\mu(1-u)$ instead
+of $\mu$.  
+
+% \checkpoint
+
+This is quite remarkable.  The fact that the service and interarrival
+times are exponential doesn't mean that everything else will be
+exponential too, so it is surprising that R does turn out to have an
+exponential distribution.  
+
+It is even more surprising in that R is a sum of independent exponential
+random variables, as we saw in (\ref{remaining}), and we know that such
+sums have Erland distributions.  The resolution of this seeming paradox
+is that the number of terms N in (\ref{remaining}) is itself random.  
+Conditional on N, R has an Erlang distribution, but unconditionally R
+has an exponential distribution.
+
+\section{Multi-Server Models}
+
+Here we have c servers, with a common queue.  There are many variations.
+
+\subsection{M/M/c}
+
+Here the servers are homogeneous.  When a job gets to the head of the
+queue, it is served by the first available server.
+
+The state is again the number of jobs in the system, including any jobs
+at the servers.  Again it is a birth/death chain, with
+$u_{i,i+1}=\lambda$ and
+
+\begin{equation}
+u_{i,i-1} = \begin{cases}
+   i \mu, & \text{if 0 $<$ i $<$ c} \\
+   c \mu, & \text{if  i $\geq$ c} \\
+\end{cases}
+\end{equation}
+
+The solution turns out to be
+
+\begin{equation}
+\pi_k = \begin{cases}
+   \pi_0 {(\frac{\lambda}{\mu})}^k \frac{1}{k!}, & \text{k $<$} c\\
+   \pi_0 {(\frac{\lambda}{\mu})}^k \frac{1}{c!c^{k-c}}, & \text{k $\geq$} c\\
+\end{cases}
+\end{equation}
+
+where
+
+\begin{equation}
+\pi_0 = \left [ 
+\sum_{k=0}^{c-1} \frac{{(c u)}^k}{k!} + \frac{{(c u)}^c}{c!}
+\frac{1}{1-u} 
+\right ] ^ {-1}
+\end{equation}
+
+and
+
+\begin{equation}
+u = \frac{\lambda}{c \mu}
+\end{equation}
+
+Note that the latter quantity is still the utilization per server, using
+an argument similar to that which led to (\ref{intuit}).  
+
+Recalling that the Taylor series for $e^z$ is $\sum_{k=0}^{\infty} 
+z^k/k!$ we see that 
+
+\begin{equation}
+\pi_0 \approx e^{-c u}  
+\end{equation}
+
+\subsection{M/M/2 with Heterogeneous Servers}
+
+Here the servers have different rates.  We'll treat the case in which c
+= 2.  Assume $\mu_1 < \mu_2$.  When a job reaches the head of the queue,
+it chooses machine 2 if that machine is idle, and otherwise waits for
+the first available machine.  Once it starts on a machine, it cannot be
+switched to the other.
+
+Denote the state by (i,j,k), where
+
+\begin{itemize}
+
+\item i is the number of jobs at server 1 
+
+\item j is the number of jobs at server 2
+
+\item k is the number of jobs in the queue
+
+\end{itemize}
+
+The key is to notice that states 111, 112, 113, ... act like the M/M/k
+queue.  This will reduce finding the solution of the balance equations
+to solving a finite system of linear equations.
+
+For $k \geq 1$ we have
+
+\begin{equation}
+\label{bdbalance}
+(\lambda + \mu_1 + \mu_2) \pi_{11k} =
+(\mu_1 + \mu_2) \pi_{11,k+1} +
+\lambda \pi_{11,k-1}
+\end{equation}
+
+Collecting terms as in the derivation of the stationary distribution for
+birth/death processes, (\ref{bdbalance}) becomes
+
+\begin{equation}
+\lambda (\pi_{11k} - \pi_{11,k-1}) =
+(\mu_1+\mu_2) (\pi_{11,k+1} - \pi_{11k}), ~ k = 1,2,...
+\end{equation}
+
+Then we have
+
+\begin{equation}
+\label{bdpart}
+(\mu_1+\mu_2) \pi_{11,k+1} - \lambda \pi_{11k} =
+(\mu_1+\mu_2) \pi_{11k} - \lambda \pi_{11,k-1} 
+\end{equation}
+
+So, we now have all the $\pi_{11i}$, i = 2,3,... in terms of $\pi_{111}$
+and $\pi_{110}$, thus reducing our task to solving a finite set of
+linear equations, as promised.  Here are the rest of the equations:
+
+\begin{equation}
+\label{eea}
+\lambda \pi_{000} = \mu_2 \pi_{010} + \mu_1 \pi_{100}
+\end{equation}
+
+\begin{equation}
+\label{eeb}
+(\lambda+\mu_2)  \pi_{010} = \lambda \pi_{000} + \mu_1 \pi_{110}
+\end{equation}
+
+\begin{equation}
+\label{eec}
+(\lambda+\mu_1)  \pi_{100} = \mu_2 \pi_{110}
+\end{equation}
+
+\begin{equation}
+\label{eed}
+(\lambda+\mu_1+\mu_2)  \pi_{110} = \lambda \pi_{010} +  \lambda \pi_{100} +
+(\mu_1+\mu_2) \pi_{111}
+\end{equation}
+
+From (\ref{ed}), we have
+
+\begin{equation}
+\label{baseeqn}
+(\mu_1+\mu_2) \pi_{111} - \lambda \pi_{110} =
+(\mu_1+\mu_2) \pi_{110} - \lambda (\pi_{010}+\pi_{100}) 
+\end{equation}
+
+Look at that last term, $\lambda (\pi_{010}+\pi_{100})$.  By adding
+(\ref{eeb}) and (\ref{eec}), we have that
+
+\begin{equation}
+\label{eee}
+\lambda (\pi_{010}+\pi_{100}) = 
+\lambda \pi_{000} +  \mu_1 \pi_{110} + \mu_2 \pi_{110}
+- \mu_1 \pi_{100} - \mu_2 \pi_{010}
+\end{equation}
+
+Substituting (\ref{eea}) changes (\ref{eee}) to
+
+\begin{equation}
+\lambda (\pi_{010}+\pi_{100}) = 
+\mu_1 \pi_{110} + \mu_2 \pi_{110}
+\end{equation}
+
+So...(\ref{baseeqn}) becomes
+
+\begin{equation}
+(\mu_1+\mu_2) \pi_{111} - \lambda \pi_{110} = 0
+\end{equation}
+
+By induction in (\ref{bdpart}), we have
+
+\begin{equation}
+(\mu_1+\mu_2) \pi_{11,k+1} - \lambda \pi_{11k} = 0, ~ k = 1,2,...
+\end{equation}
+
+and
+
+\begin{equation}
+\pi_{11i} = \delta^i \pi_{110}, ~ i = 0,1,2,...
+\end{equation}
+
+where
+
+\begin{equation}
+\delta = \frac{\lambda}{\mu_1+\mu_2}
+\end{equation}
+
+\begin{eqnarray}
+1 &=& \sum_{i,j,k} \pi_{ijk} \\
+&=& 
+\pi_{000} +
+\pi_{010} +
+\pi_{100} +
+\sum_{i=0}^{\infty} \pi_{11i} \\
+&=& 
+\pi_{000} +
+\pi_{010} +
+\pi_{100} +
+\pi_{110} \sum_{i=0}^{\infty} \delta^i \\
+&=& 
+\pi_{000} +
+\pi_{010} +
+\pi_{100} +
+\pi_{110} \cdot \frac{1}{1-\delta}
+\end{eqnarray}
+
+Finding close-form expressions for the $\pi_i$ is then straightforward.
+
+\section{Loss Models}
+
+One of the earliest queuing models was M/M/c/c:  Markovian interarrival
+and service times, c servers and a buffer space of c jobs.  Any job
+which arrives when c jobs are already in the system is lost.  This was
+used by telephone companies to find the proportion of lost calls for a
+bank of c trunk lines.
+
+\subsection{Cell Communications Model}
+
+Let's consider a more modern example of this sort, involving cellular
+phone systems.  (This is an extension of the example treated in K.S.
+Trivedi, {\it Probability and Statistics, with Reliability and Computer
+Science Applications} (second edition), Wiley, 2002, Sec. 8.2.3.2, which
+is in turn is based on two papers in the {\it IEEE Transactions on
+Vehicular Technology}.)
+
+We consider one particular cell in the system.  Mobile phone users drift
+in and out of the cell as they move around the city.  A call can either
+be a {\bf new call}, i.e. a call which someone has just dialed, or a
+{\bf handoff call}, i.e. a call which had already been in progress in a
+neighboring cell but now has moved to this cell.
+
+Each call in a cell needs a {\bf channel}.\footnote{This could be a
+certain frequency or a certain time slot position.} There are n channels
+available in the cell.  We wish to give handoff calls priority over new
+calls.\footnote{We would rather give the caller of a new call a polite
+rejection message, e.g. ``No lines available at this time, than suddenly
+terminate an existing conversation.}  This is accomplished as follows.
+
+The system always reserves g channels for handoff calls.  When a request
+for a new call (i.e. a non-handoff call) arrives, the system looks at
+$X_t$, the current number of calls in the cell.  If that number is less
+than n-g, so that there are more than g idle channels available, the new
+call is accepted; otherwise it is rejected.
+
+We assume that new calls originate from within the cells according to a
+Poisson process with rate $\lambda_1$, while handoff calls drift in from
+neighboring cells at rate $\lambda_2$.  Meanwhile, call durations are
+exponential with rate $\mu_1$, while the time that a call remains within
+the cell is exponential with rate $\mu_2$.
+
+\subsubsection{Stationary Distribution}
+
+We again have a birth/death process, though a bit more complicated than
+our earlier ones.  Let $\lambda = \lambda_1 + \lambda_2$ and $\mu =
+\mu_1 + \mu_2$.  Then here is a sample balance equation, focused on
+transitions into (left-hand side in the equation) and out of (right-hand
+side) state 1:
+
+\begin{equation}
+\label{state1}
+\pi_0 \lambda + \pi_2 2 \mu = \pi_1 (\lambda + \mu)
+\end{equation}
+
+Here's why:  How can we enter state 1?  Well, we could do so from state
+0, where there are no calls; this occurs if we get a new call (rate
+$\lambda_1$) or a handoff  call (rate $\lambda_2$.  In state 2, we enter
+state 1 if one of the two calls ends (rate $\mu_1$) or one of the two
+calls leaves the cell (rate $\mu_2$).  The same kind of reasoning shows
+that we leave state 1 at rate $\lambda + \mu$. 
+
+As another example, here is the equation for state n-g:
+
+\begin{equation}
+\label{stateng}
+\pi_{n-g} [\lambda_2 + (n-g) \mu] = \pi_{n-g+1} \cdot (n-g+1) \mu +
+\pi_{n-g-1} \lambda
+\end{equation} 
+
+Note the term $\lambda_2$ in (\ref{stateng}), rather than $\lambda$ as
+in (\ref{state1}). 
+
+Using our birth/death formula for the $\pi_i$, we find that
+
+\begin{equation}
+\pi_k = \begin{cases}
+   \pi_0 \frac{A^k}{k!}, & \text{k $\leq$ n-g} \\
+   \pi_0 \frac{A^{n-g}}{k!} A_1^{k-(n-g)}, & \text{k $\geq$ n-g} \\
+\end{cases}
+\end{equation}
+
+where $A = \lambda/\mu$, $A_1 = \lambda_2/\mu$ and
+
+\begin{equation}
+\pi_0 = \left [
+\sum_{k=0}^{n-g-1} \frac{A^k}{k!} + 
+\sum_{k=n-g}^n \frac{A^{n-g}}{k!} A_1^{k-(n-g)}
+\right ] ^ {-1}
+\end{equation}
+
+\subsubsection{Going Beyond Finding the $\pi$}
+
+One can calculate a number of interesting quantities from the $\pi_i$:
+
+\begin{itemize}
+
+\item The probability of a handoff call being rejected is $\pi_n$.  
+
+\item The probability of a new call being dropped is
+
+\begin{equation}
+\sum_{k=n-g}^{n} \pi_k
+\end{equation}
+
+\item Since the per-channel utilization in state i is i/n, the overall
+long-run per-channel utilization is
+
+\begin{equation}
+\sum_{i=0}^n \pi_i \frac{i}{n} 
+\end{equation}
+
+\item The long-run proportion of accepted calls which are handoff calls
+is the rate at which handoff calls are accepted, divided by the rate at
+which calls are accepted:
+
+\begin{equation}
+\frac{\lambda_2 \sum_{i=0}^{n-1} \pi_i} 
+{\lambda_1 \sum_{i=0}^{n-g-1} \pi_i + \lambda_2 \sum_{i=0}^{n-1} \pi_i}
+\end{equation}
+
+
+\end{itemize}
+
+
+
+\section{Nonexponential Service Times}
+
+The Markov property is of course crucial to the analyses we made above.
+Thus dropping the exponential assumption presents a major analytical
+challenge.
+
+One queuing model which has been found tractable is M/G/1:  Exponential
+interarrival times, general service times, one server.  In fact, the
+mean queue length and related quantities can be obtained fairly easily,
+as follows.
+
+Consider the residence time R for a tagged job.  R is the time that our
+tagged job must first wait for completion of service of all jobs, if
+any, which are ahead of it---queued or now in service---plus the tagged
+job's own service time.  Let $T_1, T_2,...$ be i.i.d. with the
+distribution of a generic service time random variable S.  $T_1$
+represents the service time of the tagged job itself.  $T_2,...,T_N$
+represent the service times of the queued jobs, if any.
+
+Let N be the number of jobs in the system, either being served or 
+queued; B be either 1 or 0, depending on whether the system is busy
+(i.e. N $>$ 0) or not; and $S_{1,resid}$ be the remaining service time
+of the job currently being served, if any.  Finally, we define, as
+before, $u = \frac{\lambda}{1/ES}$, the utilization.  Note that that
+implies the EB = u.
+
+Then the distribution of R is that of 
+
+\begin{equation}
+\label{repres}
+B S_{1,resid} + (T_1+...+T_N) + (1-B) T_1
+\end{equation}
+
+Note that if N = 0, then $T_1+...+T_N$ is considered to be 0, i.e. not
+present in (\ref{repres}). 
+
+Then 
+
+\begin{eqnarray}
+\label{mg1}
+E(R) &=& u E(S_{1,resid}) + E(T_1+...+T_N) + (1-u) ET_1\\ 
+&=& u E(S_{1,resid}) + E(N) E(S) + (1-u) ES \\
+&=& u E(S_{1,resid}) + \lambda E(R) E(S) + (1-u) ES
+\end{eqnarray} 
+
+The last equality is due to  Little's Rule.  Note also that we have made
+use of the PASTA property here, so that the distribution of N is the
+same at arrival times as general times. 
+
+Then
+
+\begin{equation}
+E(R) = \frac{u E(S_{1,resid})}{1-u} + ES
+\end{equation}
+
+Note that the two terms here represent the mean residence time as the
+mean queuing time plus the mean service time.
+
+So we must find $E(S_{1,resid})$.  This is just the mean of the
+remaining-life distribution which we saw in Section \ref{reslife} of our
+unit on renewal theory.  Then
+
+\begin{eqnarray}
+E(S_{1,resid}) &=& \int_0^\infty t \frac{1-F_S(t)}{ES} ~ dt  \\
+&=& \frac{1}{ES} \int_0^\infty t \int_t^\infty f_S(u) ~du ~ dt \\
+&=& \frac{1}{ES} \int_{0}^{\infty} f_S(u) \int_{0}^{u} t ~ dt ~ du \\
+&=& \frac{1}{2ES} E(S^2)
+\end{eqnarray}
+
+So, 
+
+\begin{equation}
+\label{meanres2}
+E(R) = \frac{u E(S^2)}{2ES(1-u)} + ES
+\end{equation}
+
+What is remarkable about this famous formula is that E(R) depends not
+only on the mean service time but also on the variance.  This result,
+which is not so intuitively obvious at first glance, shows the power of
+modeling.  We might observe the dependency of E(R) on the variance of
+service time empirically if we do simulation, but here is a compact
+formula that shows it for us.
+
+\section{Reversed Markov Chains}
+
+We can get insight into some kinds of queuing systems by making use of
+the concepts of {\bf reversed} Markov chains, which involve ``playing
+the Markov chain backward,'' just as we could play a movie backward.
+
+Consider a continuous-time, irreducible, positive recurrent Markov chain
+X(t).\footnote{Recall that a Markov chain is irreducible if it is
+possible to get from each state to each other state in a finite number
+of steps, and that the term {\it positive recurrent} means that the
+chain has a long-run state distribution $\pi$.  Also, concerning our
+assumption here of continuous time, we should note that there are
+discrete-time analogs of the various points we'll make below.}  For any
+fixed time $\tau$ (typically thought of as large), define the {\bf
+reversed} version of X(t) as Y(t) = X($\tau$-t), for $0 \leq t \leq
+\tau$.  We will discuss a number of properties of reversed chains.
+These properties will enable what mathematicians call ``soft analysis''
+of some Markov chains, especially those related to queues.  This term
+refers to short, simple, elegant proofs or derivations.
+
+\subsection{Markov Property}
+\label{contintimemarkovproperty}
+
+The first property to note is that Y(t) is a Markov chain!  Here is our
+first chance for soft analysis.  
+
+The ``hard analysis'' approach would be to start with the definition,
+which in continuous time would be that
+
+\begin{equation}
+\label{reverseismarkov}
+P \left (Y(t) = k | Y(u), u \leq s \right ) = P \left (Y(t) = k | Y(s) \right )
+\end{equation}
+
+for all $0 < s < t$ and all k, using the fact that X(t) has the same
+property.  That would involve making substitutions in Equation
+(\ref{reverseismarkov}) like Y(t) = X($\tau$-t), etc.  
+
+But it is much easier to simply observe that the Markov property holds
+if and only if, conditional on the present, the past and the future are
+independent.  Since that property holds for X(t), it also holds for Y(t)
+(with the roles of the ``past'' and the ``future'' interchanged).
+
+\subsection{Long-Run State Proportions}
+
+Clearly, if the long-run proportion of the time X(t) = k is $\pi_i$, the
+same long-run proportion will hold for Y(t).  This of course only makes
+sense if you think of larger and larger $\tau$.
+
+\subsection{Form of the Transition Rates of the Reversed Chain}
+
+Let $\tilde{\rho}_{ij}$ denote the number of transitions from state i to
+state j per unit time in the reversed chain.  That number must be equal
+to the number of transitions from j to i in the original chain.
+Therefore,
+
+\begin{equation}
+\label{newrates}
+\pi_i \tilde{\rho}_{ij} = \pi_j \rho_{ji}
+\end{equation}
+
+This gives us a formula for the $\tilde{\rho}_{ij}$:
+
+\begin{equation}
+\tilde{\rho}_{ij} = \frac{\pi_j}{\pi_i} \rho_{ji}
+\end{equation}
+
+\subsection{Reversible Markov Chains}
+
+In some cases, the reversed chain has the same probabilistic structure
+as the original one!  Note carefully what that would mean.  In the
+continuous-time case, it would mean that $\tilde{\rho}_{ij} = \rho_{ij}$
+for all i and j, where the $\tilde{\rho}_{ij}$ are the transition rates
+of Y(t).\footnote{Note that for a continuous-time Markov chain, the
+transition rates do indeed uniquely determined the probabilistic
+structure of the chain, not just the long-run state proportions.  The
+short-run behavior of the chain is also determined by the transition
+rates, and at least in theory can be calculated by solving differential
+equations whose coefficients make use of those rates.} If this is the
+case, we say that X(t) is {\bf reversible}.
+
+That is a very strong property.  An example of a chain which is not
+reversible is the tree-search model in Section
+\ref{treesearch}.\footnote{That is a discrete-time example, but the
+principle here is the same.}  There the state space consists of all the
+nonnegative integers, and transitions were possible from states n to n+1
+and from n to 0.  Clearly this chain is \underline{not} reversible,
+since we can go from n to 0 in one step but not vice versa.
+
+\subsubsection{Conditions for Checking Reversibility}
+
+Equation (\ref{newrates}) shows that the original chain X(t) is
+reversible if and only if 
+
+\begin{equation}
+\label{detailed}
+\pi_i \rho_{ij} = \pi_j \rho_{ji}
+\end{equation} 
+
+for all i and j.  These equations are called the {\bf detailed balance
+equations}, as opposed to the general {\bf balance equations},
+
+\begin{equation}
+\label{general}
+\sum_{j\neq i}\pi_{j}\rho_{ji}=\pi_{i}\lambda_{i}
+\end{equation}
+
+which are used to find the $\pi$ values.  Recall that (\ref{general})
+arises from equating the flow into state i with the flow out of it.  By
+contrast, Equation (\ref{detailed}) equates the flow into i from a
+particular state j to the flow from i to j.  Again, that is a much
+stronger condition, so we can see that most chains are \underline{not}
+reversible.  However, a number of important ones are reversible, as
+we'll see.
+
+For example, consider birth/death chains.  Here, the only cases in which
+$\rho_{rs}$ is nonzero are those in which $|i -j| = 1$.  Now, Equation
+(\ref{recurs}) in our derivation of $\pi$ for birth/death chains is
+exactly (\ref{detailed})!  So we see that birth/death chains are
+reversible.
+
+More generally, equations (\ref{detailed}) may not be so easy to check,
+since for complex chains we may not be able to find closed-form
+expressions for the $\pi$ values.  Thus it is desirable to have another
+test available for reversibility.  One such test is {\bf Kolmogorov's
+Criterion}:
+
+\begin{quote}
+The chain is reversible if and only if for any {\bf loop} of states,
+the product of the transition rates is the same in both the forward and
+backward directions.
+\end{quote}
+
+For example, consider the loop $i \rightarrow j \rightarrow k
+\rightarrow i$.  Then we would check whether $\rho_{ij} \rho_{jk}
+\rho_{ki} = \rho_{ik} \rho_{kj} \rho_{ji}$.  
+
+Technically, we do have to check {\it all} loops.  However, in many
+cases it should be clear that just a few loops are representative, as
+the other loops have the same structure.
+
+Again consider birth/death chains.  Kolmogorov's Criterion trivially
+shows that they are reversible, since any loop involves a path which is
+the same path when traversed in reverse.
+
+\subsubsection{Making New Reversible Chains from Old Ones}
+
+Since reversible chains are so useful (when we are lucky enough to have
+them), a very useful trick is to be able to form new reversible chains
+from old ones.  The following two properties are very handy in that
+regard:
+
+\begin{itemize}
+
+\item [(a)] Suppose U(t) and V(t) are reversible Markov chains, and define
+W(t) to be the tuple [U(t),V(t)].  Then W(t) is reversible.  
+
+\item [(b)] Suppose X(t) is a reversible Markov chain, and A is an irreducible
+subset of the state space of the chain, with long-run state distribution
+$\pi$.  Define a chain W(t) with transition rates $\rho\prime_{ij}$ for
+$i \in A$, where $\rho\prime_{ij} = \rho_{ij}$ if $j \in A$ and
+$\rho\prime_{ij} = 0$ otherwise.  Then W(t) is reversible, with
+long-run state distribution given by
+
+\begin{equation}
+\pi\prime_i = \frac{\pi_i}{\sum_{j \in A} \pi_j}
+\end{equation}
+
+\end{itemize}
+
+\subsubsection{Example:  Distribution of Residual Life}
+
+In Section \ref{agedistribution}, we used Markov chain methods to derive
+the age distribution at a fixed observation point in a renewal process.
+From remarks made there, we know that residual life has the same
+distribution.  This could be proved similarly, at some effort, but it
+comes almost immediately from reversibility considerations.  After all,
+the residual life in the reversed process is the age in the original
+process.
+
+\subsubsection{Example:  Queues with a Common Waiting Area}
+
+Consider two M/M/1 queues, with chains G(t) and H(t), with independent
+arrival streams but having a common waiting area, with jobs arriving to
+a full waiting area simply being lost.\footnote{Adapted from Ronald
+Wolff, {\it Stochastic Modeling and the Theory of Queues} Prentice Hall,
+1989.} 
+
+First consider the case of an infinite waiting area.  Let $u_1$ and
+$u_2$ be the utilizations of the two queues, as in (\ref{mm1pi}).  G(t)
+and H(t), being birth/death processes, are reversible.  Then by property
+(a) above, the chain [G(t),H(t)] is also reversible.  Long-run
+proportion of the time that there are m jobs in the first queue and n
+jobs in the second is
+
+\begin{equation}
+\pi_{mn} = (1-u_1)^m u_1 (1-u_2)^n u_2 
+\end{equation}
+
+for m,n = 0,1,2,3,...
+
+Now consider what would happen if these two queues were to have a
+common, finite waiting area.  Denote the amount of space in the waiting
+area by w.  The new process is the restriction of the original process
+to a subset of states A as in (b) above.  (The set A will be precisely
+defined below.)  It is easily verified from the Kolmogorov Criterion
+that the new process is also reversible.
+
+Recall that the state m in the original queue U(t) is the number of
+jobs, including the one in service if any.  That means the number of
+jobs waiting is $(m-1)^+$, where $x^+ = \max(x,0)$.  That means that for
+our new system, with the common waiting area, we should take our subset
+A to be
+
+\begin{equation}
+\{ (m,n): m,n \geq 0, (m-1)^+ + (n-1)^+ \leq w \}
+\end{equation}
+
+So, by property (b) above, we know that the long-run state distribution
+for the queue with the finite common waiting area is
+
+\begin{equation}
+\label{finalcommon}
+\pi_{mn} = \frac{1}{a} (1-u_1)^m u_1 (1-u_2)^n u_2
+\end{equation}
+
+where
+
+\begin{equation}
+a = \sum_{(i,j) \in A} (1-u_1)^i u_1 (1-u_2)^j u_2
+\end{equation}
+
+In this example, reversibility was quite useful.  It would have been
+essentially impossible to derive (\ref{finalcommon}) algebraically.
+And even if intuition had suggested that solution as a guess, it would
+have been quite messy to verify the guess.  
+
+\subsubsection{Closed-Form Expression for $\pi$ for Any Reversible Markov Chain}
+
+(Adapted from Ronald Nelson, {\it Probability, Stochastic Processes and
+Queuing Theory}, Springer-Verlag, 1995.)
+
+Recall that most Markov chains, especially those with infinite state spaces,
+do not have closed-form expressions for the steady-state probabilities.
+But we can always get such expressions for reversible chains, as
+follows.
+
+Choose a fixed state s, and find paths from s to all other states.
+Denote the path to i by
+
+\begin{equation}
+s = j_{i1} \rightarrow j_{i2} \rightarrow ... \rightarrow j_{im_i} = i
+\end{equation} 
+
+Define
+
+\begin{equation}
+\psi_i = \begin{cases}
+   1, & \text{i = s} \\
+   \Pi_{k=1}^{m_i} r_{ik}, & \text{i $\neq$ s} \\
+\end{cases} 
+\end{equation}
+
+where
+
+\begin{equation}
+r_{ik} = \frac
+{\rho(j_{ik},j_{i,k+1})}
+{\rho(j_{i,k+1},j_{i,k})}
+\end{equation}
+
+Then the steady-state probabilities are 
+
+\begin{equation}
+\pi_i = \frac{\psi_i}{\sum_k \psi_k}
+\end{equation} 
+
+You may notice that this looks similar to the derivation for birth/death
+processes, which as has been pointed out, are reversible.
+
+\section{Networks of Queues}
+
+\subsection{Tandem Queues}
+
+Let's first consider an M/M/1 queue.  As mentioned earlier, this is a
+birth/death process, thus reversible.  This has an interesting and very
+useful application, as follows.
+
+Think of the times at which jobs {\it depart} this system, i.e. the
+times at which jobs finish service.  In the reversed process, these
+times are {\it arrivals}.  Due to the reversibility, that means that the
+distribution of departure times is the same as that of arrival times.
+In other words:
+
+\begin{itemize}
+
+\item Departures from this system behave as a Poisson process with rate
+$\lambda$.
+
+\end{itemize}
+
+Also, let the initial state X(0) be distributed according to the
+steady-state probabilities $\pi$.\footnote{Recall Section
+\ref{stationmeaning}.} Due to the PASTA property of Poisson arrivals,
+the distribution of the system state at arrival times is the same as the
+distribution of the system state at nonrandom times t.  Then by
+reversibility, we have that:
+
+\begin{itemize}
+
+\item The state distribution at departure times is the same as at
+nonrandom times.
+
+\end{itemize}
+
+And finally, noting as in Section \ref{contintimemarkovproperty} that,
+given X(t), the states $\{ X(s), s \leq t \}$ of the queue before time t
+are statistically independent of the arrival process after time t,
+reversibility gives us that: 
+
+\begin{itemize}
+
+\item Given t, the departure process before time t is statistically
+independent of the states $\{ X(s), s \geq t \}$ of the queue after time
+t.
+
+\end{itemize}
+
+Let's apply that to {\bf tandem} queues, which are queues acting in
+series.  Suppose we have two such queues, with the first, $X_1(t)$
+feeding its output to the second one, $X_2(t)$, as input.  Suppose the
+input into $X_1(t)$ is a Poisson process with rate $\lambda$, and
+service times at both queues are exponentially distributed, with rates
+$\mu_1$ and $\mu_2$.
+
+$X_1(t)$ is an M/M/1 queue, so its steady-state probabilities for
+$X_1(t)$ are given by Equation (\ref{mm1pi}), with $u = \lambda/\mu_1$.
+
+By the first bulleted item above, we know that the input into $X_2(t)$
+is also Poisson.  Therefore, $X_2(t)$ also is an M/M/1 queue, with
+steady-state probabilities as in Equation (\ref{mm1pi}), with $u =
+\lambda/\mu_2$.
+
+Now, what about the joint distribution of $[X_1(t),X_2(t)]$?  The third
+bulleted item above says that the input to $X_2(t)$ up to time t is
+independent of $\{ X_1(s), s \geq t \}$.  So, using the fact that we are
+assuming that $X_1(0)$ has the steady-state distribution, we have that
+
+\begin{equation}
+P[X_1(t) = i, X_2(t) = j] = (1-u_1)u_1^i P[X_2(t) = j]
+\end{equation}
+
+Now letting $t \rightarrow \infty$, we get that the long-run
+probability of the vector $[X_1(t),X_2(t)]$ being equal to (i,j) is
+
+\begin{equation}
+\label{prod}
+(1-u_1)u_1^j (1-u_2)u_2^j
+\end{equation}
+
+In other words, the steady-state distribution for the vector has the two
+components of the vector being independent.  
+
+Equation (\ref{prod}) is called a {\bf product form solution} to the
+balance equations for steady-state probabilities. 
+
+By the way, the vector $[X_1(t),X_2(t)]$ is {\it not} reversible.
+
+\subsection{Jackson Networks}
+
+The tandem queues discussed in the last section comprise a special case
+of what are known as {\bf Jackson networks}.  Once again, there exists
+an enormous literature of Jackson and other kinds of queuing networks.
+The material can become very complicated (even the notation is very
+complex), and we will only present an introduction here.  Our
+presentation is adapted from I. Mitrani, {\it Modelling of Computer and
+Communcation Systems}, Cambridge University Press, 1987.
+
+Our network consists of N nodes, and jobs move from node to node.  There
+is a queue at each node, and service time at node i is exponentially
+distributed with mean $1/\mu_i$.
+
+\subsubsection{Open Networks}
+
+Each job originally arrives externally to the network, with the arrival
+rate at node i being $\gamma_i$.  After moving among various nodes, the
+job will eventually leave the network.  Specifically, after a job
+completes service at node i, it moves to node j with probability
+$q_{ij}$, where 
+
+\begin{equation}
+\sum_j q_{ij} < 1
+\end{equation}
+
+reflecting the fact that the job will leave the network altogether with
+probability $1-\sum_j q_{ij}$.\footnote{By the way, $q_{ii}$ can be
+nonzero, allowing for feedback loops at nodes.} It is assumed that the
+movement from node to node is memoryless.
+
+As an example, you may wish to think of movement of packets among
+routers in a computer network, with the packets being jobs and the
+routers being nodes.
+
+Let $\lambda_i$ denote the total traffic rate into node i.  By the usual
+equating of flow in and flow out, we have
+
+\begin{equation}
+\label{lambda}
+\lambda_i = \gamma_i + \sum_{j=1}^N \lambda_j q_{ji}
+\end{equation}
+
+Note the in Equations (\ref{lambda}), the knowns are $\gamma_i$ and the
+$q_{ji}$.  We can solve this system of linear equations for the
+unknowns, $\lambda_i$.
+
+The utilization at node i is then $u_i = \lambda_i/\mu_i$, as before. 
+Jackson's Theorem then says that in the long run, node i acts as an
+M/M/1 queue with that utilization, and that the nodes are independent in
+the long run:\footnote{We do not present the proof here, but it really
+is just a matter of showing that the distribution here satisfies the
+balance equations.}
+
+\begin{equation}
+\lim_{t\rightarrow \infty } P[X_1(t)=i_1,...,X_N(t)=i_N] =
+\Pi_{i=1}^N (1-u_i) u^i
+\end{equation}  
+
+So, again we have a product form solution.
+
+Let $L_i$ denote the average number of jobs at node i.  From Equation
+(\ref{nu}), we have $L_i = u_i/(1-u_i)$.  Thus the mean number of jobs
+in the system is
+
+\begin{equation}
+L = \sum_{i=1}^N \frac{u_i}{1-u_i}
+\end{equation}  
+
+From this we can get the mean time that jobs stay in the network, W:
+From Little's Rule, $L = \gamma W$, so
+
+\begin{equation}
+W = \frac{1}{\gamma} \sum_{i=1}^N \frac{u_i}{1-u_i}
+\end{equation}
+
+where $\gamma = \gamma_1 + ... + \gamma_N$ is the total external arrival
+rate.
+
+Jackson networks are not generally reversible.  The reversed versions of
+Jackson networks are worth studying for other reasons, but we cannot
+pursue them here.
+
+\subsection{Closed Networks}
+
+In a closed Jackson network, we have for all i, $\gamma_i = 0$ and 
+
+\begin{equation}
+\sum_j q_{ij} = 1
+\end{equation}
+
+In other words, jobs never enter or leave the network.  There have been
+many models like this in the computer performance modeling literature.
+For instance, a model might consist of some nodes representing CPUs,
+some representing disk drives, and some representing users at terminals.
+
+It turns out that we again get a product form solution.\footnote{This is
+confusing, since the different nodes are now not independent, due to the
+fact that the number of jobs in the overall system is constant.}  The
+notation is more involved, so we will not present it here.
+
+\startproblemset
+
+\oneproblem Investigate the robustness of the M/M/1 queue model with
+respect to the assumption of exponential service times, as follows.
+Suppose the service time is actually uniformly distributed on (0,c), so
+that the mean service time would be c/2.  Assume that arrivals do follow
+the exponential model, with mean interarrival time 1.0.  Find the mean
+residence time, using (\ref{meanres1}), and compare it to the true value
+obtained from (\ref{meanres2}).  Do this for various values of c, and
+graph the two curves using R.
+
+\oneproblem
+Many mathematical analyses of queuing systems use {\bf finite source}
+models.  There are always a fixed number j of jobs in the system.  A job
+queues up for the server, gets served in time $S$, then waits a 
+random time $W$ before queuing up for the server again.  
+
+A typical example would be a file server with j clients.  The time $W$
+would be the time a client does work before it needs to access the file
+server again.
+
+\begin{itemize}
+
+\item [(a)] Use Little's Rule, on two or more appropriately chosen
+boxes, to derive the following relation:
+
+\begin{equation}
+ER = \frac{j ES}{U} - EW
+\end{equation}
+
+where $R$ is residence time (time spent in the queue plus service time)
+in one cycle for a job and $U$ is the utilization fraction of the
+server.
+
+\item [(b)] Set up a continuous time Markov chain, assuming exponential
+distributions for $S$ and $W$, with state being the number of jobs
+currently at the server.  Derive closed-form expressions for the
+$\pi_i$.
+
+\end{itemize}
+
+\oneproblem
+Consider the following variant of an M/M/1 queue: Each customer has a
+certain amount of patience, varying from one customer to another,
+exponentially distributed with rate $\eta$.  When a  customer's patience
+wears out while the customer is in the queue, he/she leaves (but not
+if his/her job is now in service). Arrival and service rates are
+$\lambda$ and $\nu$, respectively.
+
+\begin{itemize}
+
+\item [(a)] Express the $\pi_i$ in terms of $\lambda$, $\nu$ and $\eta$.
+
+\item [(b)] Express the proportion of lost jobs as a function of the $\pi_i$,
+$\lambda$, $\nu$ and $\eta$.
+
+\end{itemize}
+
+\oneproblem
+A shop has two machines, with service time in machine i being
+exponentially distributed with rate $\mu_i$, i = 1,2. Here 
+$\mu_1 > \mu_2$.  When a job reaches the head of the queue, it 
+chooses machine 1 if that machine is idle, and otherwise waits for 
+the first available machine. If when a job finishes on machine 1 
+there is a job in progress at machine 2, the latter job will be 
+transferred to machine 1, getting priority over any queued jobs. 
+Arrivals follow the usual Poisson process, parameter $\lambda$.  
+
+\begin{itemize}
+
+\item [(a)] Find the mean residence time.
+
+\item [(b)] Find the proportion of jobs that are originally assigned to
+machine 2.  
+ 
+\end{itemize}
+
