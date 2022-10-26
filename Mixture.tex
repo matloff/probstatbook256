@@ -86,68 +86,63 @@ in the coin example and $W$ for the geyser are definitely observed.jj
 \section{General Mixture Distributions}
 \label{genmix}
 
-The general definition is rather abstract.  Let's first restrict it to
-discrete outputs:
+\subsection{Notation}
 
-\begin{definition} Let $\{g_t\}_{t \in A}$ be a collection of pmfs, and
-let M be a random variable taking values in A.  Consider discrete and
-continous cases for M, as follows.  The {\bf mixture distribution} of
-the $g_t$ with weights given by the distribution of M is defined as
-follows:
+First, recall the general convention that for any random variable $Y$,
+its probability mass function is denoted by $p_Y$ if $Y$ is discrete,
+and its density is denoted by $f_Y$ in the continuous case.  Its cdf is
+$F_Y$, in any case, discrete, continuous or mixed.
+
+Notation for conditional distribution is similar, but note that now
+these functions will have two arguments instead of one.  For example,
+
+\begin{equation}
+p_{V | U}(i,j) = P(V = j | U = i)
+\end{equation}
+
+Now back in the specific context of mixture distribution,
+let $M$ denote the mixing variable, e.g. $C$ and $T$ above, and let $X$
+be the ``mixee,'' the variable being mixed according to the value of
+$M$.  The conditional distribution of $X$ depends on $M$.  
+
+\subsection{Definition}
+
+It's easiest to define the concept of $X$ having a mixing distribution 
+by just consider some cases:
 
 \begin{itemize}
 
-\item M is discrete:  The mixture distribution is the pmf\footnote{The
-reader should verify that H does qualify as a pmf, i.e. it consists of
-numbers in [0,1] that sum to 1.}
+\item $M$ discrete, $X$ discrete:  
 
 \begin{equation}
-\label{hsum}
-h = \sum_{i \in A} p_M(i) ~ g_i
+\label{mdscxdisc}
+p_X(i) = \sum_j p_{X|M} (i,j) ~ p_M(j)
 \end{equation}
 
-\item M is continuous:  The mixture distribution has the pmf 
+\item $M$ continuous, $X$ continuous:  
 
 \begin{equation}
-\label{continmix}
-h(u) = \int_{t \in A} f_M(t)~  g_t(u) ~ dt
+\label{mcontinxcontin}
+f_X(t) = \int_{s \in A} f_{X|M}(t,s) ~  f_M(s) ~ ds
 \end{equation}
 
 \end{itemize}
 
-{\bf For continuous outcomes, replace ``pmf'' by ``density'' everywhere
-above.}
+The reader can fill in other cases.  For instance, in the geyser
+example, $X$ would be continuous but $M$ discrete.
 
-\end{definition}
+Actually, the definition isn't so abstract after all.  Equation
+(\ref{mdscxdisc}) should look quite familiiar, with the reader having
+encountered this form many times in earlier courses.  Equation
+(\ref{mcontinxcontin}) is probably less familiar, but it is a direct
+analog of (\ref{mdscxdisc}).
 
-\vskip 0.5in
-
-Actually, the definition isn't so abstract after all.  A random variable
-Y having pmf arises first with the random variable $M$, and then if $M =
-i$, $Y$ arises andomly from the distribution $g_i$.  A ``notebook''
-analysis would have columns for both $M$ and $Y$.
-
-In other words, the pmf of $Y$ is a weighted average of the $g_i$, with
+In other words, the distribution of $X$, say in the discrete/discrete case,
+is a weighted average of the condiitonal distribution of $X$, with the
 weights being the pmf of $M$.  Note that this implies that the weights
 most be nonnegative and sum to 1.\footnote{Some readers may recognize
-this as a {\bf convex combination}.}
-
-As noted, the above definition is pretty abstract, but it can be readily
-grasped by considering the above trick coin example.  Here,
-
-\begin{itemize}
-
-\item $Y = N$
-
-\item A = \{0,1\}
-
-\item $p_M(0) = p_M(1) = 0.5$
-
-\item $g_0$ = the pmf for B(i,0.1)
-
-\item $g_1$ = the pmf for B(i,0.9)
-
-\end{itemize}
+this as a {\bf convex combination}.}  In the case of $M$ continuous, the
+weights are nonnegative and integrate to 1.
 
 Mixture distributions occur in a surprisingly wide variety of
 applications, and thus this material should be mastered.  It is somewhat
@@ -268,8 +263,16 @@ E[ E(f_M (G) | G)]
 where $G$ is the mixing variable.  And in both cases
 
 \begin{equation}
+\label{generalmix}
 F_M(t) = E[ P(M \leq t ) | G) ]
 \end{equation}
+
+Actually, (\ref{generalmix}) is the only fully general to state a
+mixture distribution.  For any random variable $X$, its distribution is
+completely characterized by $F_x$.  So, (\ref{generalmix}) defines the
+mixing relation fully, and for any distribution for $G$ and $M$, whether
+discrete, continuous or mixed.
+
 
 \section{Estimation by Method of Maximum Likelihood and the Method of
 Moments}
